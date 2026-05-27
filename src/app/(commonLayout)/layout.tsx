@@ -4,9 +4,8 @@ export default function CommonLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      Common Layout
+    <div className="w-9/10 mx-auto">
       {children}
-    </>
+    </div>
   );
 }
