@@ -51,7 +51,14 @@ const RegisterForm = () => {
         }
 
         toast.success("Registration successful!", { position: "top-center" });
-        router.push("/");
+        const normalizedRole = result.role?.toLowerCase();
+
+        if (normalizedRole === "trainer") {
+          router.push("/trainer-dashboard");
+          return;
+        }
+
+        router.push("/dashboard");
       } 
       
       catch (error: any) {

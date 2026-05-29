@@ -17,6 +17,26 @@ const isProtectedPath = (pathname: string) =>
 
 const normalizeRole = (role: string) => role.toLowerCase();
 
+const decodeRoleFromToken = (token: string) => {
+  try {
+    const payload = token.split(".")[1];
+
+    if (!payload) {
+      return null;
+    }
+
+    const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+    const decoded = JSON.parse(atob(padded));
+
+    const role = decoded?.role ?? decoded?.user?.role ?? decoded?.data?.role;
+
+    return typeof role === "string" ? role : null;
+  } catch {
+    return null;
+  }
+};
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -25,7 +45,7 @@ export function proxy(request: NextRequest) {
   }
 
   const accessToken = request.cookies.get("access_token")?.value;
-  const role = request.cookies.get("role")?.value;
+  const role = accessToken ? decodeRoleFromToken(accessToken) : null;
 
   if (!accessToken || !role) {
     return NextResponse.redirect(new URL("/login", request.url));

@@ -19,6 +19,20 @@ const LoginForm = () => {
 
   const router = useRouter();
 
+  const getDashboardPath = (role?: string) => {
+    const normalizedRole = role?.toLowerCase();
+
+    if (normalizedRole === "admin") {
+      return "/admin-dashboard";
+    }
+
+    if (normalizedRole === "trainer") {
+      return "/trainer-dashboard";
+    }
+
+    return "/dashboard";
+  };
+
   const { mutateAsync } = useMutation({
     mutationFn: (payload: ILoginPayload) => loginAction(payload)
   })

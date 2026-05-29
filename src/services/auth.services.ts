@@ -2,7 +2,6 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { httpClient } from "@/lib/axios/httpClient";
-import { setCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { UserRoles } from "@/types/auth.types";
 import { loginZodSchema, registerZodSchema } from "@/zod/auth.validation";
@@ -52,13 +51,10 @@ export const registerAction = async (payload: IRegisterPayload) => {
     await setTokenInCookies("refresh_token", refresh_token);
     await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7)    //* 7 days;
 
-    if (role) {
-      await setCookie("role", role, 60 * 60 * 24 * 7);
-    }
-
     return {
       success: true,
-      message: "Registration successful"
+      message: "Registration successful",
+      role
     };
 
   }
@@ -91,18 +87,16 @@ export const loginAction = async (payload: ILoginPayload) => {
 
     const { access_token, refresh_token, token, user } = responseData;
     const role = user?.role;
+  
 
     await setTokenInCookies("access_token", access_token);
     await setTokenInCookies("refresh_token", refresh_token);
     await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7)    //* 7 days;
 
-    if (role) {
-      await setCookie("role", role, 60 * 60 * 24 * 7);
-    }
-
     return {
       success: true,
-      message: "Login successful"
+      message: "Login successful",
+      role
     };
 
   }
