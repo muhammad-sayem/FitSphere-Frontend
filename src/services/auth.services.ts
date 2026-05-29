@@ -2,9 +2,9 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { httpClient } from "@/lib/axios/httpClient";
+import { setCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { loginZodSchema } from "@/zod/auth.validation";
-import { redirect } from "next/navigation";
 
 interface ILoginPayload {
   email: string;
@@ -27,13 +27,21 @@ export const loginAction = async (payload: ILoginPayload) => {
     const response = await httpClient.post("/auth/login", parsedPayload.data);
 
     const { access_token, refresh_token, token } = response.data;
+    const role = response.data.user?.role;
 
     await setTokenInCookies("access_token", access_token);
     await setTokenInCookies("refresh_token", refresh_token);
     await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7)    //* 7 days;
 
-    // return response.data;
-    redirect("/");
+    if (role) {
+      await setCookie("role", role, 60 * 60 * 24 * 7);
+    }
+
+    return {
+      success: true,
+      message: "Login successful"
+    };
+    
   }
 
   catch (error: any) {

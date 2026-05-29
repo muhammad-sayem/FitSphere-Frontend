@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -9,10 +10,14 @@ import { Label } from "@/components/ui/label";
 import { loginAction } from "@/services/auth.services";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const router = useRouter();
 
   const { mutateAsync } = useMutation({
     mutationFn: (payload: ILoginPayload) => loginAction(payload)
@@ -32,9 +37,14 @@ const LoginForm = () => {
         const result = await mutateAsync(value) as any;
 
         if (!result.success) {
-          setServerError(result.message || "Login failed");
+          const errorMsg = result.message || "Login failed!";
+          setServerError(errorMsg);
+          toast.error(errorMsg, { position: "top-center" });
           return;
         }
+
+        toast.success("Login successful!", { position: "top-center" });
+        router.push("/");
       }
 
       catch (error: any) {
