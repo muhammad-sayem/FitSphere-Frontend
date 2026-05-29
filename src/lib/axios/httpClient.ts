@@ -10,9 +10,6 @@ const axiosInstance = () => {
   const instance = axios.create({
     baseURL: API_BASE_URL,
     timeout: 30000,
-    headers: {
-      'Content-Type': 'application/json',
-    }
   })
 
   return instance;
@@ -38,9 +35,16 @@ const httpGet = async (endpoint: string, options?: ApiRequestOptions) => {
 
 const httpPost = async (endpoint: string, data: unknown, options?: ApiRequestOptions) => {
   try {
+    const isFormData = typeof FormData !== "undefined" && data instanceof FormData;
+
     const response = await axiosInstance().post(endpoint, data, {
       params: options?.params,
-      headers: options?.headers,
+      headers: isFormData
+        ? options?.headers
+        : {
+            'Content-Type': 'application/json',
+            ...options?.headers,
+          },
     });
     return response.data;
   } catch (error) {
