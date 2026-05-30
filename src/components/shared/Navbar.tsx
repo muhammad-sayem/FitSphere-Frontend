@@ -8,14 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { logoutAction } from "@/services/auth.services";
 
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Trainers", href: "/" },
-  { label: "Products", href: "/" },
-  { label: "About Us", href: "/" },
-  { label: "Contact Us", href: "/" },
-];
-
 const linkClassName =
   "text-sm font-medium text-foreground/80 transition-colors hover:text-foreground";
 
@@ -23,9 +15,27 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
   // const loggedInUser = getLoggedInUser();
   const router = useRouter();
 
+  const dashboardHref = loggedInUser
+    ? loggedInUser.role?.toUpperCase() === "ADMIN"
+      ? "/admin-dashboard"
+      : loggedInUser.role?.toUpperCase() === "TRAINER"
+        ? "/trainer-dashboard"
+        : "/dashboard"
+    : null;
+
+  const navItems = [
+    { label: "Home", href: "/" },
+    { label: "Trainers", href: "/trainers" },
+    { label: "Products", href: "/" },
+    { label: "About Us", href: "/" },
+    { label: "Contact Us", href: "/" },
+    { label: "BMI Calculator", href: "/" },
+    { label: "Dashboard", href: dashboardHref || "/login" },
+  ];
+
   const handleLogout = async () => {
     await logoutAction();
-    router.push("/login");
+    router.push("/");
     router.refresh();
   };
 

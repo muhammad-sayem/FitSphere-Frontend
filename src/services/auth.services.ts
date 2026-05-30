@@ -7,22 +7,21 @@ import { setTokenInCookies } from "@/lib/tokenUtils";
 import { UserRoles } from "@/types/auth.types";
 import { loginZodSchema, registerZodSchema } from "@/zod/auth.validation";
 
-interface IRegisterPayload {
-  name: string;
-  image?: File | null;
-  role: UserRoles["USER"] | UserRoles["TRAINER"];
-  email: string;
-  password: string;
-}
-
 interface ILoginPayload {
   email: string;
   password: string;
 }
 
-export const registerAction = async (payload: IRegisterPayload) => {
-  const { image, ...rest } = payload;
-  const parsedPayload = registerZodSchema.safeParse(rest);
+export const registerAction = async (formData: FormData) => {
+  const rawPayload = {
+    name: formData.get("name"),
+    role: formData.get("role"),
+    email: formData.get("email"),
+    password: formData.get("password"),
+  };
+
+  const image = formData.get("image");
+  const parsedPayload = registerZodSchema.safeParse(rawPayload);
 
   if (!parsedPayload.success) {
     const firstError = parsedPayload.error.issues[0].message || "Invalid input";
@@ -34,14 +33,14 @@ export const registerAction = async (payload: IRegisterPayload) => {
   }
 
   try {
-    const formData = new FormData();
-    formData.append("data", JSON.stringify(parsedPayload.data));
+    const requestPayload = new FormData();
+    requestPayload.append("data", JSON.stringify(parsedPayload.data));
 
     if (image instanceof File) {
-      formData.append("file", image);
+      requestPayload.append("file", image);
     }
 
-    const response = await httpClient.post("/auth/register", formData);
+    const response = await httpClient.post("/auth/register", requestPayload);
     const responseBody = response?.data ?? response;
     const responseData = responseBody?.data ?? responseBody;
 

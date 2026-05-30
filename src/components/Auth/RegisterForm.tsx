@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { registerAction } from "@/services/auth.services";
+import { httpClient } from "@/lib/axios/httpClient";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -26,7 +26,22 @@ const RegisterForm = () => {
   const router = useRouter();
 
   const { mutateAsync } = useMutation({
-    mutationFn: (payload: RegisterFormValues) => registerAction(payload),
+    mutationFn: async (payload: RegisterFormValues) => {
+      const formData = new FormData();
+      formData.append("data", JSON.stringify({
+        name: payload.name,
+        role: payload.role,
+        email: payload.email,
+        password: payload.password,
+      }));
+
+      if (payload.image instanceof File) {
+        formData.append("file", payload.image);
+      }
+
+      const response = await httpClient.post("/auth/register", formData);
+      return response;
+    },
   });
 
   const form = useForm({
@@ -42,16 +57,17 @@ const RegisterForm = () => {
 
       try {
         const result = (await mutateAsync(value)) as any;
+        const responseData = result?.data ?? result;
 
-        if (!result.success) {
-          const errorMsg = result.message || "Registration failed!";
+        if (!responseData?.success && !responseData?.data && !responseData?.user) {
+          const errorMsg = responseData?.message || "Registration failed!";
           setServerError(errorMsg);
           toast.error(errorMsg, { position: "top-center" });
           return;
         }
 
         toast.success("Registration successful!", { position: "top-center" });
-        const normalizedRole = result.role?.toLowerCase();
+        const normalizedRole = responseData?.data?.user?.role?.toLowerCase() ?? responseData?.user?.role?.toLowerCase() ?? responseData?.role?.toLowerCase();
 
         if (normalizedRole === "trainer") {
           router.push("/trainer-dashboard");

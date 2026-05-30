@@ -1,15 +1,20 @@
 import DashboardNavbar from "@/components/DashboardLayouts/shared/DashboardNavbar";
 import DashboardSidebar from "@/components/DashboardLayouts/shared/DashboardSidebar";
+import { userServices } from "@/services/user.services";
 
-export default function RootDashboardLayout({
+export default async function RootDashboardLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const loggedInUser = await userServices.getLoggedInUser();
+  console.log("Logged In User in Dashboard Layout:", loggedInUser);
+  const role = loggedInUser?.role;
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Dashboard Sidebar */}
-      <DashboardSidebar />
+      <DashboardSidebar role={role} />
 
       <div className="flex flex-1 flex-col overflow-hidden">
         {/* DashboardNavbar */}

@@ -5,7 +5,11 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-base-color-01: #F34E3A;
+  --color-primary-01: #F34E3A;
+  --color-primary-02: #F9A79C;
+  --color-secondary-01: #717274;
+  --color-secondary-02: #808080;
+  --color-secondary-03: #E4E3E3; 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
@@ -50,7 +54,11 @@
 }
 
 :root {
-  --color-base-color-01: #F34E3A;
+  --color-primary-01: #F34E3A;
+  --color-primary-02: #F9A79C;
+  --color-secondary-01: #717274;
+  --color-secondary-02: #808080;
+  --color-secondary-03: #E4E3E3; 
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
