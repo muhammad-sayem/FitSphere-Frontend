@@ -2,6 +2,7 @@
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { httpClient } from "@/lib/axios/httpClient";
+import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { UserRoles } from "@/types/auth.types";
 import { loginZodSchema, registerZodSchema } from "@/zod/auth.validation";
@@ -87,7 +88,7 @@ export const loginAction = async (payload: ILoginPayload) => {
 
     const { access_token, refresh_token, token, user } = responseData;
     const role = user?.role;
-  
+
 
     await setTokenInCookies("access_token", access_token);
     await setTokenInCookies("refresh_token", refresh_token);
@@ -109,4 +110,24 @@ export const loginAction = async (payload: ILoginPayload) => {
     };
   }
 
+}
+
+export const logoutAction = async () => {
+  try {
+    const response = await httpClient.post("/auth/logout", {});
+
+    await deleteCookie("access_token");
+    await deleteCookie("refresh_token");
+    await deleteCookie("better-auth.session_token");
+
+    return response.data ?? response;
+  }
+
+  catch (error: any) {
+    const errorMessage = error.response?.data?.message || "Logout failed. Please try again.";
+    return {
+      success: false,
+      message: errorMessage
+    };
+  }
 }

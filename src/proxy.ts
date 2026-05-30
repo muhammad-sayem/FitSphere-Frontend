@@ -44,10 +44,10 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const accessToken = request.cookies.get("access_token")?.value;
-  const role = accessToken ? decodeRoleFromToken(accessToken) : null;
+  const access_token = request.cookies.get("access_token")?.value;
+  const role = access_token ? decodeRoleFromToken(access_token) : null;
 
-  if (!accessToken || !role) {
+  if (!access_token || !role) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
