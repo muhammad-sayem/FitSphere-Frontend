@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const sidebarMenus = [
+  { title: "Dashboard Home", path: "/dashboard" },
   { title: "My Bookings", path: "/dashboard/my-bookings" },
   { title: "My Orders", path: "/dashboard/my-orders" },
   { title: "My Payments", path: "/dashboard/my-payments" },

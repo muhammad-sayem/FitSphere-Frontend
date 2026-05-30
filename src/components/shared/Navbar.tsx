@@ -12,7 +12,6 @@ const linkClassName =
   "text-sm font-medium text-foreground/80 transition-colors hover:text-foreground";
 
 const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
-  // const loggedInUser = getLoggedInUser();
   const router = useRouter();
 
   const dashboardHref = loggedInUser

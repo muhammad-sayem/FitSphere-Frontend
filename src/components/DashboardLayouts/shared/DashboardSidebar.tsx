@@ -1,6 +1,7 @@
 import UserDashboardSidebar from "../User/UserDasboardSidebar";
-import TrainerDashboardSidebar from "../Trainer/TrainerDAshboardSidebar";
 import AdminDashboardSidebar from "../Admin/AdminDashboardSidebar";
+import TrainerDashboardSidebar from "../Trainer/TrainerDashboardSidebar";
+
 
 const DashboardSidebar = ({ role }: { role: string }) => {
   return (
