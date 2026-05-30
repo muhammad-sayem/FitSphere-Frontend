@@ -1,9 +1,9 @@
-import React from 'react';
+import CreateTrainerProfileForm from "@/components/DashboardLayouts/Trainer/CreateTrainerProfileForm";
 
 const CreateTrainerProfile = () => {
   return (
     <div>
-      <h1>Create Trainer Profile</h1>
+      <CreateTrainerProfileForm />
     </div>
   );
 };

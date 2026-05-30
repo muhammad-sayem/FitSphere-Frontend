@@ -4,7 +4,6 @@
 import { httpClient } from "@/lib/axios/httpClient";
 import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
-import { UserRoles } from "@/types/auth.types";
 import { loginZodSchema, registerZodSchema } from "@/zod/auth.validation";
 
 interface ILoginPayload {

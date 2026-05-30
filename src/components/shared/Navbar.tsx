@@ -34,7 +34,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
 
   const handleLogout = async () => {
     await logoutAction();
-    router.push("/");
+    router.push("/login");
     router.refresh();
   };
 

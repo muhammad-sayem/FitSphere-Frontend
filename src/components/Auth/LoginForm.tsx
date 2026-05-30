@@ -35,8 +35,7 @@ const LoginForm = () => {
 
   const { mutateAsync } = useMutation({
     mutationFn: (payload: ILoginPayload) => loginAction(payload)
-  })
-
+  });
 
   const form = useForm({
     defaultValues: {
