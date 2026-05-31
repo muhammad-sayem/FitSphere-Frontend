@@ -48,7 +48,9 @@ const httpPost = async (endpoint: string, data: unknown, options?: ApiRequestOpt
           },
     });
     return response.data;
-  } catch (error) {
+  }
+
+  catch (error) {
     console.error(`POST request to ${endpoint} failed:`, error);
     throw error;
   }

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { httpClient } from "@/lib/axios/httpClient";
+import type { ApiRequestOptions } from "@/lib/axios/httpClient";
 
 export interface ICreateTrainerProfilePayload {
   bio?: string;
@@ -9,6 +10,34 @@ export interface ICreateTrainerProfilePayload {
 }
 
 export const trainerServices = {
+  createTrainerProfile: async (payload: ICreateTrainerProfilePayload) => {
+    try {
+      console.log("[trainerServices.createTrainerProfile] request payload:", payload);
+
+      const response = await httpClient.post("/trainer-profiles/create-trainer-profile", payload);
+
+      console.log("[trainerServices.createTrainerProfile] api response:", response);
+
+      return {
+        success: true,
+        data: response.data,
+        message: "Trainer profile created successfully"
+      };
+    }
+
+    catch (error: any) {
+      console.error("[trainerServices.createTrainerProfile] api error:", error);
+
+      const serverErrorMessage = error?.response?.data?.message || "Failed to create trainer profile";
+
+      return {
+        success: false,
+        data: null,
+        message: serverErrorMessage
+      };
+    }
+  },
+
   getAllTrainers: async () => {
     try {
       const trainers = await httpClient.get("/trainer-profiles");
@@ -24,30 +53,19 @@ export const trainerServices = {
     }
   },
 
-  createTrainerProfile: async(payload: ICreateTrainerProfilePayload) => {
-    try{
-      console.log("[trainerServices.createTrainerProfile] request payload:", payload);
-      
-      const response = await httpClient.post("/trainer-profiles/create-trainer-profile", payload);
-      console.log("[trainerServices.createTrainerProfile] api response:", response);
+  getTrainerProfileByUserId: async (userId: string, options?: ApiRequestOptions) => {
+    try {
+      const trainerProfile = await httpClient.get(`/trainer-profiles/userId/${userId}`, options);
 
-      return {
-        success: true,
-        data: response.data,
-        message: "Trainer profile created successfully"
-      };
+      return trainerProfile;
     }
 
-    catch (error: any) {
-    console.error("[trainerServices.createTrainerProfile] api error:", error);
-    
-    const serverErrorMessage = error?.response?.data?.message || "Failed to create trainer profile";
-    
-    return {
-      success: false,
-      data: null,
-      message: serverErrorMessage
-    };
-  }
+    catch (error) {
+      console.error("Error fetching trainer profile:", error);
+      return {
+        data: null,
+        error: { message: "Failed to fetch trainer profile" }
+      };
+    }
   }
 }
