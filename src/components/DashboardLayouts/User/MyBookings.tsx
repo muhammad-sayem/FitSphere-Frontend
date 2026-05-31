@@ -2,16 +2,15 @@
 
 import { getMe } from "@/services/auth.services";
 import { bookingServices } from "@/services/booking.services";
-
 import { useQuery } from "@tanstack/react-query";
 
 const MyBookings = () => {
-  const {data: loggedInUSerResponse} = useQuery({
+  const {data: loggedInUserResponse} = useQuery({
     queryKey: ["loggedin-user"],
     queryFn: getMe,
   });
 
-  const loggedInUser = loggedInUSerResponse?.data;
+  const loggedInUser = loggedInUserResponse?.data;
 
   const {data: myBookingsResponse} = useQuery({
     queryKey: ["my-bookings"],

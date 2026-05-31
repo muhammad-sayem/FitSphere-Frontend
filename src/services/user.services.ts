@@ -1,4 +1,3 @@
-import { httpClient } from "@/lib/axios/httpClient";
 import { jwtUtils } from "@/lib/jwtUtils";
 import { cookies } from "next/headers";
 
