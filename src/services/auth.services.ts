@@ -129,3 +129,16 @@ export const logoutAction = async () => {
     };
   }
 }
+
+//* For get user info into client components *//
+export const getMe = async () => {
+  try {
+    const response = await httpClient.get("/users/me");
+    return response.data;
+  }
+
+  catch (error) {
+    console.error("Error fetching user info:", error);
+    return null;
+  }
+}
