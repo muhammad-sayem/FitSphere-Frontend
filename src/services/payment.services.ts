@@ -1,9 +1,9 @@
-import { httpClient } from "@/lib/axios/httpClient";
+import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
 export const paymentServices = {
-  getMyPayments: () => {
+  getMyPayments: (options?: ApiRequestOptions) => {
     try{
-      const response = httpClient.get("/payments/my-payments");
+      const response = httpClient.get("/payments/my-payments", options);
       return response;
     }
 

@@ -7,7 +7,7 @@ const MyPaymentsPage = async () => {
 
   await queryClient.prefetchQuery({
     queryKey: ["my-payments"],
-    queryFn: paymentServices.getMyPayments,
+    queryFn: () => paymentServices.getMyPayments(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

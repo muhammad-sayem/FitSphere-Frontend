@@ -9,7 +9,7 @@ const sidebarMenus = [
   { title: "My Slots", path: "/trainer-dashboard/my-slots" },
   { title: "My Orders", path: "/trainer-dashboard/my-orders" },
   { title: "My Payments", path: "/trainer-dashboard/my-payments" },
-  { title: "My reviews", path: "/trainer-dashboard/my-reviews" },
+  { title: "My reviews", path: "/trainer-dashboard/my-received-reviews" },
   { title: "Home", path: "/" },
 ]
 

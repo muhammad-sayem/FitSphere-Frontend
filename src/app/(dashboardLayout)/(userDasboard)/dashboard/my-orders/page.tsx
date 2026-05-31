@@ -7,7 +7,7 @@ const MyOrdersPage = async () => {
 
   await queryClient.prefetchQuery({
     queryKey: ["my-orders"],
-    queryFn: orderServices.getMyOrders,
+    queryFn: () => orderServices.getMyOrders(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

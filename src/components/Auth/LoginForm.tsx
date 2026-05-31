@@ -52,11 +52,11 @@ const LoginForm = () => {
         if (!result.success) {
           const errorMsg = result.message || "Login failed!";
           setServerError(errorMsg);
-          toast.error(errorMsg, { position: "top-center" });
+          toast.error(errorMsg, { position: "top-right" });
           return;
         }
 
-        toast.success("Login successful!", { position: "top-center" });
+        toast.success("Login successful!", { position: "top-right" });
         router.push("/");
       }
 

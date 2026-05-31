@@ -15,6 +15,7 @@ const MySlotsPage = async () => {
   }
 
   const cookieStore = await cookies();
+  
   const cookieHeader = cookieStore
     .getAll()
     .map(({ name, value }) => `${name}=${value}`)

@@ -1,9 +1,9 @@
-import { httpClient } from "@/lib/axios/httpClient";
+import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
 export const orderServices = {
-  getMyOrders: () => {
+  getMyOrders: (options?: ApiRequestOptions) => {
     try{
-      const response = httpClient.get("/orders/user/my-orders");
+      const response = httpClient.get("/orders/user/my-orders", options);
       return response;
     }
 
