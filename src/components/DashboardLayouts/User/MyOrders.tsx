@@ -13,6 +13,7 @@ const MyOrders = () => {
   });
 
   const myOrders = myOrdersResponse?.data;
+  console.log("My Orders: ", myOrders);
 
   return (
     <div>
