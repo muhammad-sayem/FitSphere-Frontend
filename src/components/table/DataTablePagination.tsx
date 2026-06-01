@@ -1,18 +1,19 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { Table as TanstackTable } from "@tanstack/react-table";
+import { PaginationState, Table as TanstackTable } from "@tanstack/react-table";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo, useEffect, useState } from "react";
 
 type PaginationToken = number | "start-ellipsis" | "end-ellipsis";
 
@@ -68,6 +69,7 @@ interface DataTablePaginationProps<TData> {
   totalRows?: number;
   totalPages?: number;
   isLoading?: boolean;
+  onPaginationChange?: (state: PaginationState) => void;
 }
 
 const DataTablePagination = <TData,>({
@@ -75,23 +77,34 @@ const DataTablePagination = <TData,>({
   totalRows,
   totalPages,
   isLoading,
+  onPaginationChange,
 }: DataTablePaginationProps<TData>) => {
   const pagination = table.getState().pagination;
   const pageSize = pagination.pageSize;
   const currentPage = pagination.pageIndex + 1;
   const computedTotalPages = totalPages ?? table.getPageCount();
 
-  const [isCustomMode, setIsCustomMode] = useState<boolean>(!isDefaultPageSize(pageSize));
   const [customPageSize, setCustomPageSize] = useState<string>(String(pageSize));
+  const [selectMode, setSelectMode] = useState<string>(isDefaultPageSize(pageSize) ? String(pageSize) : "custom");
 
-  const isCurrentPageSizeCustom = !isDefaultPageSize(pageSize);
-  const showCustomInput = isCustomMode || isCurrentPageSizeCustom;
-  const pageSizeSelectValue = showCustomInput ? "custom" : String(pageSize);
+  useEffect(() => {
+    setCustomPageSize(String(pageSize));
+    setSelectMode(isDefaultPageSize(pageSize) ? String(pageSize) : "custom");
+  }, [pageSize]);
 
   const paginationItems = useMemo(
     () => getPaginationItems(currentPage, computedTotalPages),
     [currentPage, computedTotalPages],
   );
+
+  const updatePagination = (nextPagination: PaginationState) => {
+    if (onPaginationChange) {
+      onPaginationChange(nextPagination);
+      return;
+    }
+
+    table.setPagination(nextPagination);
+  };
 
   const applyCustomPageSize = () => {
     const parsed = Number(customPageSize);
@@ -99,18 +112,15 @@ const DataTablePagination = <TData,>({
       return;
     }
 
-    setIsCustomMode(!isDefaultPageSize(parsed));
-
-    table.setPagination({
+    updatePagination({
       pageIndex: 0,
       pageSize: parsed,
     });
   };
 
   const onPageSizeSelect = (value: string) => {
+    setSelectMode(value);
     if (value === "custom") {
-      setIsCustomMode(true);
-      setCustomPageSize(String(pageSize));
       return;
     }
 
@@ -119,10 +129,7 @@ const DataTablePagination = <TData,>({
       return;
     }
 
-    setIsCustomMode(false);
-    setCustomPageSize(String(parsed));
-
-    table.setPagination({
+    updatePagination({
       pageIndex: 0,
       pageSize: parsed,
     });
@@ -141,22 +148,22 @@ const DataTablePagination = <TData,>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.previousPage()}
+          onClick={() => updatePagination({ pageIndex: Math.max(0, pagination.pageIndex - 1), pageSize })}
           disabled={!table.getCanPreviousPage() || isLoading}
         >
           <ChevronLeft className="h-4 w-4" />
           Prev
         </Button>
 
-        {paginationItems.map((item) => {
+        {paginationItems.map((item, index) => {
           if (item === "start-ellipsis") {
             return (
               <Button
-                key="start-ellipsis"
+                key={`start-ellipsis-${index}`}
                 variant="ghost"
                 size="sm"
                 className="min-w-9 px-2"
-                onClick={() => table.setPageIndex(jumpBackwardTarget - 1)}
+                onClick={() => updatePagination({ pageIndex: jumpBackwardTarget - 1, pageSize })}
                 disabled={isLoading}
               >
                 ...
@@ -167,11 +174,11 @@ const DataTablePagination = <TData,>({
           if (item === "end-ellipsis") {
             return (
               <Button
-                key="end-ellipsis"
+                key={`end-ellipsis-${index}`}
                 variant="ghost"
                 size="sm"
                 className="min-w-9 px-2"
-                onClick={() => table.setPageIndex(jumpForwardTarget - 1)}
+                onClick={() => updatePagination({ pageIndex: jumpForwardTarget - 1, pageSize })}
                 disabled={isLoading}
               >
                 ...
@@ -182,11 +189,11 @@ const DataTablePagination = <TData,>({
           const isActive = item === currentPage;
           return (
             <Button
-              key={item}
+              key={`page-${item}`}
               variant={isActive ? "default" : "outline"}
               size="sm"
               className={cn("min-w-9", isActive && "pointer-events-none")}
-              onClick={() => table.setPageIndex(item - 1)}
+              onClick={() => updatePagination({ pageIndex: item - 1, pageSize })}
               disabled={isLoading}
             >
               {item}
@@ -197,7 +204,7 @@ const DataTablePagination = <TData,>({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => table.nextPage()}
+          onClick={() => updatePagination({ pageIndex: Math.min(computedTotalPages - 1, pagination.pageIndex + 1), pageSize })}
           disabled={!table.getCanNextPage() || isLoading}
         >
           Next
@@ -206,8 +213,8 @@ const DataTablePagination = <TData,>({
       </div>
 
       <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-        <Select value={pageSizeSelectValue} onValueChange={onPageSizeSelect}>
-          <SelectTrigger className="w-24" aria-label="Rows per page">
+        <Select value={selectMode} onValueChange={onPageSizeSelect}>
+          <SelectTrigger className="w-24 text-black" aria-label="Rows per page">
             <SelectValue placeholder="Limit" />
           </SelectTrigger>
 
@@ -220,14 +227,14 @@ const DataTablePagination = <TData,>({
             <SelectItem value="custom">Custom</SelectItem>
           </SelectContent>
         </Select>
-        <span>rows</span>
+        <span className="text-black">rows</span>
 
-        {showCustomInput && (
+        {selectMode === "custom" && (
           <div className="flex items-center gap-2">
             <Input
               type="number"
               min={1}
-              className="h-9 w-24"
+              className="h-9 w-24 text-black"
               value={customPageSize}
               onChange={(event) => setCustomPageSize(event.target.value)}
               onKeyDown={(event) => {
@@ -242,13 +249,14 @@ const DataTablePagination = <TData,>({
               variant="outline"
               onClick={applyCustomPageSize}
               disabled={isLoading}
+              className="text-black border border-black"
             >
               Apply
             </Button>
           </div>
         )}
 
-        <span className="ml-2">
+        <span className="ml-2 text-black">
           Total {totalRows ?? 0} items, {computedTotalPages} pages
         </span>
       </div>
