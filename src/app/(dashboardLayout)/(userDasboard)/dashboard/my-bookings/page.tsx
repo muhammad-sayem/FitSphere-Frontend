@@ -18,31 +18,32 @@ const MyBookedSlots = async () => {
     .map(({ name, value }) => `${name}=${value}`)
     .join("; ");
 
-  // const myBookings = await bookingServices.getBookingsByUserId(loggedInUser.userId, {
-  //   headers: {
-  //     Cookie: cookieHeader,
-  //   },
-  // });
-  // console.log("[MyBookedSlots] myBookings:", myBookings);
-
   const queryClient = new QueryClient();
+  
+  const initialQueryParams = {
+    page: "1",
+    limit: "10",
+    sortBy: "slot.date",
+    sortOrder: "desc",
+  };
 
   await queryClient.prefetchQuery({
-    queryKey: ["my-bookings"],
-    queryFn: () => bookingServices.getBookingsByUserId(loggedInUser.userId, {
-      headers: {
-        Cookie: cookieHeader,
-      },
-    }),
+    queryKey: ["my-bookings", loggedInUser.userId, initialQueryParams],
+    queryFn: () =>
+      bookingServices.getBookingsByUserId(loggedInUser.userId, {
+        headers: {
+          Cookie: cookieHeader,
+        },
+        params: initialQueryParams,
+      }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
   return (
     <div>
-      <h1>My Booked Slots</h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <MyBookings />
+        <MyBookings initialUser={loggedInUser} />
       </HydrationBoundary>
     </div>
   );

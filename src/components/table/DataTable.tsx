@@ -196,7 +196,8 @@ const DataTable = <TData,>({
       )}
 
       <div className="rounded-lg border border-black">
-        <Table>
+        <div className="w-full overflow-x-auto">
+          <Table className="min-w-[900px]">
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
               <TableRow key={hg.id}>
@@ -246,7 +247,8 @@ const DataTable = <TData,>({
               </TableRow>
             )}
           </TableBody>
-        </Table>
+          </Table>
+        </div>
 
         {pagination && (
           <DataTablePagination
