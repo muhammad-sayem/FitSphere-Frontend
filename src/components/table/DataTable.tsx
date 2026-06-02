@@ -195,9 +195,9 @@ const DataTable = <TData,>({
         </div>
       )}
 
-      <div className="rounded-lg border border-black">
+      <div className="rounded-lg border">
         <div className="w-full overflow-x-auto">
-          <Table className="min-w-[900px]">
+          <Table className="min-w-225">
           <TableHeader>
             {table.getHeaderGroups().map((hg) => (
               <TableRow key={hg.id}>

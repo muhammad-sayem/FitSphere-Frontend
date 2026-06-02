@@ -13,13 +13,22 @@ const MyPaymentsPage = async () => {
 
   const queryClient = new QueryClient();
 
+  const initialParams = {
+    page: "1",
+    limit: "10",
+    sortBy: "createdAt",
+    sortOrder: "desc",
+  };
+
   await queryClient.prefetchQuery({
-    queryKey: ["my-payments"],
-    queryFn: () => paymentServices.getMyPayments({
-      headers: {
-        Cookie: cookieHeader,
-      },
-    }),
+    queryKey: ["my-payments", initialParams],
+    queryFn: () =>
+      paymentServices.getMyPayments({
+        params: initialParams,
+        headers: {
+          Cookie: cookieHeader,
+        },
+      }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
