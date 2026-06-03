@@ -26,7 +26,7 @@ type MyOrder = {
 const getStatusStyles = (status: OrderStatus) => {
   switch (status) {
     case "PAID":
-      return "bg-blue-50 text-blue-600 border-blue-200";
+      return "bg-blue-50 text-blue-600 border-blue-500";
     case "DELIVERED":
       return "bg-green-50 text-green-600 border-green-200";
     case "CANCELLED":
@@ -34,7 +34,7 @@ const getStatusStyles = (status: OrderStatus) => {
     case "SHIPPED":
       return "bg-purple-50 text-purple-600 border-purple-200";
     case "PENDING":
-      return "bg-amber-50 text-amber-600 border-gray-200";
+      return "bg-primary-02/20 text-primary-01 border-primary-01";
     default:
       return "bg-gray-50 text-gray-600 border-gray-200";
   }
