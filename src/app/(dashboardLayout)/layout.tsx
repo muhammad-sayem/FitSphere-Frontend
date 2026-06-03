@@ -22,12 +22,9 @@ export default async function RootDashboardLayout({
         {/* Mobile Interactive Header Navigation */}
         <MobileMenu role={role} />
 
-        {/* Dashboard Navbar if needed in future */}
-        {/* <DashboardNavbar /> */}
-
         {/* Dashboard Content Area */}
         <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8 w-full">
-          <div className="max-w-[1600px] mx-auto w-full">
+          <div className="max-w-400 mx-auto w-full">
             {children}
           </div>
         </main>
