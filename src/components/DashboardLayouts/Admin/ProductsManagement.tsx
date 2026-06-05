@@ -1,29 +1,31 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { trainerServices } from "@/services/trainer.services";
+import { productServices } from "@/services/product.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
-import { useState, useMemo } from "react";
-import { RefreshCw, Trash2, Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { useState, useMemo, useEffect } from "react";
+import { Edit, Trash2, Search, ChevronLeft, ChevronRight, Filter, ArrowUpDown } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 
-interface ITrainer {
+interface IProduct {
   id: string;
   name: string;
-  email: string;
-  emailVerified: boolean;
+  description: string;
+  price: number;
+  category: string;
+  remainingStock: number;
   image: string | null;
-  role: string;
-  status: string;
-  isDeleted: boolean;
   createdAt: string;
   updatedAt: string;
 }
 
-const TrainersManagement = () => {
+const ProductsManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [sortField, setSortField] = useState("createdAt");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
@@ -34,33 +36,34 @@ const TrainersManagement = () => {
     const params: Record<string, any> = {
       page: String(pagination.pageIndex + 1),
       limit: String(pagination.pageSize),
-      sortBy: "name",
-      sortOrder: "asc",
+      sortBy: sortField,
+      sortOrder: sortOrder,
     };
 
-    if (searchTerm) {
-      params.searchTerm = searchTerm;
-    }
-
-    if (statusFilter) {
-      params.status = statusFilter;
-    }
+    if (searchTerm) params.searchTerm = searchTerm;
+    if (categoryFilter) params.category = categoryFilter;
 
     return params;
-  }, [searchTerm, statusFilter, pagination]);
+  }, [searchTerm, categoryFilter, sortField, sortOrder, pagination]);
 
-  const { data: trainersResponse } = useQuery({
-    queryKey: ["admin-trainers-management", queryParams],
+  const { data: productsResponse } = useQuery({
+    queryKey: ["admin-products-management", queryParams],
     queryFn: () =>
-      trainerServices.getAllTrainersFromUsersSchema({
+      productServices.getAllProducts({
         params: queryParams,
       }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
-  const trainers = (trainersResponse?.data as ITrainer[]) || [];
-  const meta = trainersResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
+  const products = (productsResponse?.data as IProduct[]) || [];
+  const meta = productsResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
+
+  useEffect(() => {
+    if (meta.limit) {
+      setCustomInput(String(meta.limit));
+    }
+  }, [meta.limit]);
 
   const getInitials = (name: string) => {
     if (!name) return "";
@@ -74,8 +77,18 @@ const TrainersManagement = () => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatusFilter(e.target.value);
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCategoryFilter(e.target.value);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortOrder(sortOrder === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortOrder("asc");
+    }
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
@@ -89,34 +102,46 @@ const TrainersManagement = () => {
     }
   };
 
+  const handlePageChange = (newPageIndex: number) => {
+    setPagination((prev) => ({
+      ...prev,
+      pageIndex: newPageIndex,
+    }));
+  };
+
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
-          <h1 className="text-xl sm:text-2xl font-black text-black tracking-tight">Trainers Management</h1>
-          <p className="text-xs sm:text-sm text-secondary-01/80 font-medium">{meta.total} trainers found</p>
+          <h1 className="text-xl sm:text-2xl font-black text-black tracking-tight">Products Management</h1>
+          <p className="text-xs sm:text-sm text-secondary-01/80 font-medium">{meta.total} products found</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto items-center">
           <div className="relative w-full">
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
             <select
-              value={statusFilter}
-              onChange={handleStatusChange}
+              value={categoryFilter}
+              onChange={handleCategoryChange}
               className="w-full pl-9 pr-8 py-2 border border-secondary-01/20 rounded-xl text-sm focus:outline-none focus:border-primary-01/40 bg-white transition-colors duration-200 text-black font-medium appearance-none cursor-pointer"
             >
-              <option value="">All Status</option>
-              <option value="ACTIVE">Active</option>
-              <option value="BANNED">Banned</option>
+              <option value="">All Categories</option>
+              <option value="TRADEMILL">Treadmill</option>
+              <option value="MASSAGER">Massager</option>
+              <option value="DUMMBBELL">Dumbbell</option>
+              <option value="BENCHES">Benches</option>
+              <option value="FLOOR_MAT">Floor Mat</option>
+              <option value="EXERCISE_BIKE">Exercise Bike</option>
+              <option value="OTHER">Other</option>
             </select>
             <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-neutral-500 w-0 h-0" />
           </div>
 
-          <div className="relative w-full">
+          <div className="relative w-full sm:col-span-2">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
             <input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name or description..."
               value={searchTerm}
               onChange={handleSearchChange}
               className="w-full pl-9 pr-4 py-2 border border-secondary-01/20 rounded-xl text-sm focus:outline-none focus:border-primary-01/40 bg-white transition-colors duration-200 text-black font-medium"
@@ -127,29 +152,40 @@ const TrainersManagement = () => {
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-200">
+          <table className="w-full text-left border-collapse min-w-225">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-xs text-secondary-01 font-black uppercase tracking-wider">
                 <th className="px-6 py-4">Image</th>
                 <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Delete Status</th>
+                <th className="px-6 py-4">Description</th>
+                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort("price")}>
+                  <div className="flex items-center gap-1.5">
+                    <span>Price</span>
+                    <ArrowUpDown className="w-3.5 h-3.5 text-secondary-01/60" />
+                  </div>
+                </th>
+                <th className="px-6 py-4">Category</th>
+                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort("remainingStock")}>
+                  <div className="flex items-center gap-1.5">
+                    <span>Remaining Stock</span>
+                    <ArrowUpDown className="w-3.5 h-3.5 text-secondary-01/60" />
+                  </div>
+                </th>
                 <th className="px-6 py-4 text-center">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
-              {trainers.map((item) => (
+              {products.map((item) => (
                 <tr key={item.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
                   <td className="px-6 py-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
                       {item.image ? (
                         <Image
                           src={item.image}
                           alt={item.name}
                           width={40}
                           height={40}
-                          className="w-10 h-10 rounded-full object-cover"
+                          className="w-10 h-10 rounded-xl object-cover"
                         />
                       ) : (
                         <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
@@ -159,34 +195,29 @@ const TrainersManagement = () => {
                     </div>
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{item.name}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-secondary-01">{item.email}</td>
+                  <td className="px-6 py-3 max-w-xs truncate text-secondary-01">{item.description || "N/A"}</td>
+                  <td className="px-6 py-3 whitespace-nowrap text-black font-black">৳{item.price}</td>
                   <td className="px-6 py-3 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
-                        item.status === "ACTIVE"
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                          : "bg-amber-50 text-amber-700 border-amber-200"
-                      }`}
-                    >
-                      {item.status}
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
+                      {item.category === "TRADEMILL" ? "Treadmill" : item.category === "DUMMBBELL" ? "Dumbbell" : item.category?.replace("_", " ") || "N/A"}
                     </span>
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap">
-                    {item.isDeleted ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
-                        Deleted
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-green-50 text-green-700 border border-green-200">
-                        Not Deleted
-                      </span>
-                    )}
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
+                        item.remainingStock > 2
+                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                          : "bg-rose-50 text-rose-700 border-rose-200"
+                      }`}
+                    >
+                      {item.remainingStock} items left
+                    </span>
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
                       <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary-01 bg-primary-02/40 hover:bg-primary-02/60 rounded-xl transition-colors duration-200">
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        <span>Change Status</span>
+                        <Edit className="w-3.5 h-3.5" />
+                        <span>Edit</span>
                       </button>
                       <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-200">
                         <Trash2 className="w-3.5 h-3.5" />
@@ -196,10 +227,10 @@ const TrainersManagement = () => {
                   </td>
                 </tr>
               ))}
-              {trainers.length === 0 && (
+              {products.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-10 text-center text-secondary-01 font-semibold">
-                    No trainers found
+                  <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
+                    No products found
                   </td>
                 </tr>
               )}
@@ -210,7 +241,7 @@ const TrainersManagement = () => {
         <div className="px-6 py-4 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.max(prev.pageIndex - 1, 0) }))}
+              onClick={() => handlePageChange(Math.max(pagination.pageIndex - 1, 0))}
               disabled={meta.page === 1 || meta.totalPages <= 1}
               className="inline-flex items-center gap-1 px-3 py-1.5 border border-secondary-01/20 rounded-xl bg-white hover:bg-neutral-50 text-sm font-medium text-neutral-700 disabled:opacity-50 disabled:hover:bg-white transition-colors duration-200"
             >
@@ -221,7 +252,7 @@ const TrainersManagement = () => {
             {Array.from({ length: meta.totalPages || 1 }).map((_, index) => (
               <button
                 key={index}
-                onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
+                onClick={() => handlePageChange(index)}
                 className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
                   meta.page === index + 1
                     ? "bg-black text-white border-black"
@@ -233,7 +264,7 @@ const TrainersManagement = () => {
             ))}
 
             <button
-              onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.min(prev.pageIndex + 1, meta.totalPages - 1) }))}
+              onClick={() => handlePageChange(Math.min(pagination.pageIndex + 1, meta.totalPages - 1))}
               disabled={meta.page === meta.totalPages || meta.totalPages <= 1}
               className="inline-flex items-center gap-1 px-3 py-1.5 border border-secondary-01/20 rounded-xl bg-white hover:bg-neutral-50 text-sm font-medium text-neutral-700 disabled:opacity-50 disabled:hover:bg-white transition-colors duration-200"
             >
@@ -245,13 +276,20 @@ const TrainersManagement = () => {
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <select
-                value="Custom"
-                disabled
-                className="pl-3 pr-8 py-1.5 border border-secondary-01/20 rounded-xl text-sm font-medium bg-white text-black appearance-none cursor-not-allowed"
+                value={pagination.pageSize}
+                onChange={(e) => {
+                  const size = Number(e.target.value);
+                  setPagination({ pageIndex: 0, pageSize: size });
+                }}
+                className="pl-3 pr-8 py-1.5 border border-secondary-01/20 rounded-xl text-sm font-medium bg-white text-black cursor-pointer focus:outline-none"
               >
-                <option value="Custom">Custom</option>
+                <option value={5}>5 rows</option>
+                <option value={10}>10 rows</option>
+                <option value={20}>20 rows</option>
+                <option value={50}>50 rows</option>
               </select>
-              <span className="text-sm text-neutral-600 font-medium">rows</span>
+              
+              <span className="text-sm text-neutral-400 font-medium">or Custom:</span>
               <input
                 type="number"
                 value={customInput}
@@ -278,4 +316,4 @@ const TrainersManagement = () => {
   );
 };
 
-export default TrainersManagement;
+export default ProductsManagement;
