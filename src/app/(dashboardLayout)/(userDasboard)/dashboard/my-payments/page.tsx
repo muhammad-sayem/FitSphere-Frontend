@@ -24,10 +24,10 @@ const MyPaymentsPage = async () => {
     queryKey: ["my-payments", initialParams],
     queryFn: () =>
       paymentServices.getMyPayments({
-        params: initialParams,
         headers: {
           Cookie: cookieHeader,
         },
+        params: initialParams,
       }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,

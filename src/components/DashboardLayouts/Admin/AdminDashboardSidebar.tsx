@@ -8,7 +8,7 @@ const sidebarMenus = [
   { title: "Users Management", path: "/admin-dashboard/users-management" },
   { title: "Trainers Management", path: "/admin-dashboard/trainers-management" },
   { title: "Products Management", path: "/admin-dashboard/products-management" },
-  {title: "My Profile", path: "/admin-dashboard/my-profile"},
+  { title: "My Profile", path: "/admin-dashboard/my-profile" },
   { title: "Home", path: "/" },
 ]
 
@@ -28,8 +28,8 @@ const AdminDashboardSidebar = () => {
               key={menu.path}
               href={menu.path}
               className={`mb-2 block rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${isActive
-                  ? "border-primary-01 bg-primary-02 text-foreground"
-                  : "border-border/60 bg-background text-foreground/80 hover:border-primary-01 hover:bg-primary-02/40 hover:text-foreground"
+                  ? "border-2 border-primary-01 bg-primary-01 text-white"
+                  : "border-border/60 bg-background text-foreground/80  hover:bg-primary-01 hover:text-white"
                 }`}
             >
               {menu.title}
