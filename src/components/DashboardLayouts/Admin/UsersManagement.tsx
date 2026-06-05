@@ -127,7 +127,7 @@ const UsersManagement = () => {
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-[800px]">
+          <table className="w-full text-left border-collapse min-w-200">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-xs text-secondary-01 font-black uppercase tracking-wider">
                 <th className="px-6 py-4">Image</th>

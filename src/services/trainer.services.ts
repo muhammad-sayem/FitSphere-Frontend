@@ -38,9 +38,9 @@ export const trainerServices = {
     }
   },
 
-  getAllTrainers: async () => {
+  getAllTrainers: async (options: ApiRequestOptions) => {
     try {
-      const trainers = await httpClient.get("/trainer-profiles");
+      const trainers = await httpClient.get("/trainer-profiles", options);
       return trainers;
     }
 
@@ -49,6 +49,22 @@ export const trainerServices = {
       return {
         data: null,
         error: { message: "Failed to fetch trainers" }
+      };
+    }
+  },
+
+  getAllTrainersFromUsersSchema: async (options?: ApiRequestOptions) => {
+    try{
+      const response = await httpClient.get("/trainer-profiles/from-users", options);
+
+      return response;
+    }
+
+    catch(error) {
+      console.error("Error fetching trainers from users schema:", error);
+      return {
+        data: null,
+        error: { message: "Failed to fetch trainers from users schema" }
       };
     }
   },
