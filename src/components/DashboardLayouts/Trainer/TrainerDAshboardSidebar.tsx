@@ -7,8 +7,6 @@ const sidebarMenus = [
   { title: "Dashboard Home", path: "/trainer-dashboard" },
   { title: "Create Trainer Profile", path: "/trainer-dashboard/create-trainer-profile" },
   { title: "My Slots", path: "/trainer-dashboard/my-slots" },
-  { title: "My Orders", path: "/trainer-dashboard/my-orders" },
-  { title: "My Payments", path: "/trainer-dashboard/my-payments" },
   { title: "My reviews", path: "/trainer-dashboard/my-received-reviews" },
   { title: "Home", path: "/" },
 ]
@@ -17,7 +15,7 @@ const TrainerDashboardSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="rounded-2xl border border-border/60 h-full bg-background p-4">
+    <div className="rounded-2xl border border-border h-full bg-background p-4">
       <h2 className="mb-4 text-lg font-semibold text-foreground">Trainer Dashboard</h2>
 
       {
@@ -31,7 +29,7 @@ const TrainerDashboardSidebar = () => {
               className={`mb-2 block rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
                   ? "border-2 border-primary-01 bg-primary-01 text-white"
-                  : "border-border/60 bg-background text-foreground/80  hover:bg-primary-01 hover:text-white"
+                  : "border-2 bg-background text-foreground/80  hover:bg-primary-01 hover:text-white"
               }`}
             >
               {menu.title}

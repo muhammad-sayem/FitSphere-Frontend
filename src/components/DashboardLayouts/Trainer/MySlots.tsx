@@ -98,6 +98,7 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
         id: "sessionCharge",
         accessorKey: "trainer.feePerHour",
         header: "Session Charge",
+        enableSorting: false,
         cell: ({ row }) => {
           const fee = row.original.trainer?.feePerHour || 0;
           return `$${fee}`;

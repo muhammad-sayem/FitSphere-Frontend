@@ -16,7 +16,7 @@ const UserDashboardSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="rounded-2xl border border-border/60 h-full bg-background p-4">
+    <div className="rounded-2xl border h-full bg-background p-4">
       <h2 className="mb-4 text-lg font-semibold text-foreground">User Dashboard</h2>
 
       {
@@ -30,7 +30,7 @@ const UserDashboardSidebar = () => {
               className={`mb-2 block rounded-xl border px-4 py-3 text-sm font-medium transition-colors ${
                 isActive
                   ? "border-2 border-primary-01 bg-primary-01 text-white"
-                  : "border-border/60 bg-background text-foreground/80  hover:bg-primary-01 hover:text-white"
+                  : "border bg-background text-foreground/80  hover:bg-primary-01 hover:text-white"
               }`}
             >
               {menu.title}
