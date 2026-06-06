@@ -1,4 +1,4 @@
-import ProductsManagement from "@/components/DashboardLayouts/Admin/ProductsManagement";
+import ProductsManagement from "@/components/DashboardLayouts/Admin/productsManagement/ProductsManagement";
 import { productServices } from "@/services/product.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";

@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { createTrainerProfileAction } from "@/actions/trainer.action";
 import { ICreateTrainerProfilePayload, trainerServices } from "@/services/trainer.services";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
