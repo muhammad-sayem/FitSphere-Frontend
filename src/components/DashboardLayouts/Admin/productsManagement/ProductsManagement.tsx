@@ -6,11 +6,11 @@ import { productServices } from "@/services/product.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo, useEffect } from "react";
-import { Search, ChevronLeft, ChevronRight, Filter, ArrowUpDown, PlusCircle } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Filter, ArrowUpDown } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import DeleteProductButton from "./DeleteProductButton";
 import EditProductButton from "./EditProductButton";
-import Link from "next/link";
+import CreateProductModal from "./CreateProductModal";
 
 export interface IProduct {
   id: string;
@@ -49,7 +49,7 @@ const ProductsManagement = () => {
     return params;
   }, [searchTerm, categoryFilter, sortField, sortOrder, pagination]);
 
-  const { data: productsResponse } = useQuery({
+  const { data: productsResponse, refetch } = useQuery({
     queryKey: ["admin-products-management", queryParams],
     queryFn: () =>
       productServices.getAllProducts({
@@ -121,14 +121,10 @@ const ProductsManagement = () => {
         </div>
 
         <div>
-          <Link href="/admin-dashboard/create-product" className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white bg-primary-01 hover:bg-primary-01/80 rounded-xl transition-colors duration-200">
-            <PlusCircle className="w-4 h-4" />
-            <span>Add New Product</span>
-          </Link>
+          <CreateProductModal refetch={refetch} />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full lg:w-auto items-center">
-
           <div className="relative w-full">
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
             <select
@@ -186,53 +182,52 @@ const ProductsManagement = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
-              {
-                products.map((product) => (
-                  <tr key={product.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                    <td className="px-6 py-3">
-                      <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
-                        {product.image ? (
-                          <Image
-                            src={product.image}
-                            alt={product.name}
-                            width={40}
-                            height={40}
-                            className="w-10 h-10 rounded-xl object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
-                            {getInitials(product.name)}
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{product.name}</td>
-                    <td className="px-6 py-3 max-w-xs truncate text-secondary-01">{product.description || "N/A"}</td>
-                    <td className="px-6 py-3 whitespace-nowrap text-black font-black">৳{product.price}</td>
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
-                        {product.category === "TRADEMILL" ? "Treadmill" : product.category === "DUMMBBELL" ? "Dumbbell" : product.category?.replace("_", " ") || "N/A"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${product.remainingStock > 2
+              {products.map((product) => (
+                <tr key={product.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                  <td className="px-6 py-3">
+                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
+                      {product.image ? (
+                        <Image
+                          src={product.image}
+                          alt={product.name}
+                          width={40}
+                          height={40}
+                          className="w-10 h-10 rounded-xl object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
+                          {getInitials(product.name)}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{product.name}</td>
+                  <td className="px-6 py-3 max-w-xs truncate text-secondary-01">{product.description || "N/A"}</td>
+                  <td className="px-6 py-3 whitespace-nowrap text-black font-black">৳{product.price}</td>
+                  <td className="px-6 py-3 whitespace-nowrap">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
+                      {product.category === "TRADEMILL" ? "Treadmill" : product.category === "DUMMBBELL" ? "Dumbbell" : product.category?.replace("_", " ") || "N/A"}
+                    </span>
+                  </td>
+                  <td className="px-6 py-3 whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
+                        product.remainingStock > 2
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-rose-50 text-rose-700 border-rose-200"
-                          }`}
-                      >
-                        {product.remainingStock} items left
-                      </span>
-                    </td>
-                    <td className="px-6 py-3 whitespace-nowrap">
-                      <div className="flex items-center justify-center gap-2">
-                        <EditProductButton product={product as IProduct} />
-                        <DeleteProductButton product={product as IProduct} />
-                      </div>
-                    </td>
-                  </tr>
-                ))
-              }
+                      }`}
+                    >
+                      {product.remainingStock} items left
+                    </span>
+                  </td>
+                  <td className="px-6 py-3 whitespace-nowrap">
+                    <div className="flex items-center justify-center gap-2">
+                      <EditProductButton product={product as IProduct} />
+                      <DeleteProductButton product={product as IProduct} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
               {products.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
@@ -259,10 +254,11 @@ const ProductsManagement = () => {
               <button
                 key={index}
                 onClick={() => handlePageChange(index)}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${meta.page === index + 1
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                  }`}
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
+                  meta.page === index + 1
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
+                }`}
               >
                 {index + 1}
               </button>
