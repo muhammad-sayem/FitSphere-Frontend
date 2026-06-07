@@ -222,7 +222,7 @@ const ProductsManagement = () => {
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
-                      <EditProductButton product={product as IProduct} />
+                      <EditProductButton product={product as IProduct} refetch={refetch} />
                       <DeleteProductButton product={product as IProduct} />
                     </div>
                   </td>

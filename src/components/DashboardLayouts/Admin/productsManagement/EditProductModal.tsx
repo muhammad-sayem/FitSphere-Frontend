@@ -4,42 +4,43 @@
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
-import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { productServices } from "@/services/product.services";
+import { IProduct } from "./ProductsManagement";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 
-interface CreateProductModalProps {
+interface EditProductModalProps {
+  product: IProduct;
   refetch: () => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
-const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductModalProps) => {
   const [serverError, setServerError] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { mutateAsync } = useMutation({
     mutationFn: async (formData: FormData) => {
-      const res = await productServices.createProduct(formData as any);
+      const res = await productServices.updateProduct(product.id, formData as any);
       return res;
     },
   });
 
   const form = useForm({
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      category: "",
-      remainingStock: 0,
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price || 0,
+      category: product?.category || "",
+      remainingStock: product?.remainingStock || 0,
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
@@ -59,19 +60,18 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
         const result = (await mutateAsync(formData)) as any;
 
         if (!result.success) {
-          const errorMsg = result.message || "Product creation failed!";
+          const errorMsg = result.message || "Product update failed!";
           setServerError(errorMsg);
           toast.error(errorMsg, { position: "top-center" });
           return;
         }
 
-        toast.success("Product created successfully!", { position: "top-center" });
-        form.reset();
+        toast.success("Product updated successfully!", { position: "top-center" });
         setSelectedFile(null);
         setIsOpen(false);
         refetch();
       } catch (error: any) {
-        const errorMsg = error?.message || "Product creation failed";
+        const errorMsg = error?.message || "Product update failed";
         setServerError(errorMsg);
         toast.error(errorMsg, { position: "top-center" });
       }
@@ -80,12 +80,6 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-md font-bold text-primary-01 border border-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer rounded-xl transition-colors duration-200">
-          <PlusCircle className="w-4 h-4" />
-          <span>Add New Product</span>
-        </button>
-      </DialogTrigger>
       <DialogContent className="sm:max-w-3xl lg:max-w-4xl overflow-y-auto max-h-[90vh]">
         <DialogHeader>
           <div className="mb-2">
@@ -94,10 +88,10 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
             </p>
           </div>
           <DialogTitle className="text-2xl font-semibold tracking-tight text-secondary-01 md:text-3xl">
-            Create new product
+            Edit product
           </DialogTitle>
           <DialogDescription className="max-w-2xl text-sm leading-6 text-secondary-02">
-            Add your product name, description, price, category, stock, and image in a clean minimal layout.
+            Edit your product name, description, price, category, stock, and image in a clean minimal layout.
           </DialogDescription>
         </DialogHeader>
 
@@ -227,44 +221,45 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
               )}
             </form.Field>
 
-          <div className="space-y-2">
-            <label htmlFor="product-image" className="text-sm font-medium text-secondary-01">
-              Product Image
-            </label>
-            <input
-              id="product-image"
-              type="file"
-              accept="image/*"
-              onChange={(event) => {
-                if (event.target.files && event.target.files[0]) {
-                  setSelectedFile(event.target.files[0]);
-                }
-              }}
-              className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-2.5 text-sm text-secondary-01 outline-none transition-colors file:mr-4 file:rounded-xl file:border-0 file:bg-secondary-01 file:px-4 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-secondary-01/90"
-            />
+            {/* ইমেজ আপলোড ইনপুট ফিল্ডটি এখানে আবার যুক্ত করা হয়েছে */}
+            <div className="space-y-2">
+              <label htmlFor="product-image" className="text-sm font-medium text-secondary-01">
+                Product Image
+              </label>
+              <input
+                id="product-image"
+                type="file"
+                accept="image/*"
+                onChange={(event) => {
+                  if (event.target.files && event.target.files[0]) {
+                    setSelectedFile(event.target.files[0]);
+                  }
+                }}
+                className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-2.5 text-sm text-secondary-01 outline-none transition-colors file:mr-4 file:rounded-xl file:border-0 file:bg-secondary-01 file:px-4 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-secondary-01/90"
+              />
+            </div>
           </div>
-        </div>
 
-        <div className="flex items-center justify-end gap-3 border-t border-secondary-03 pt-6">
-          <DialogClose asChild>
-            <button
-              type="button"
-              className="rounded-2xl border border-secondary-03 px-5 py-3 text-sm font-medium text-secondary-01 transition-colors hover:border-primary-02 hover:bg-primary-02/10"
-            >
-              Cancel
-            </button>
-          </DialogClose>
-          <form.Subscribe selector={(state) => state.isSubmitting}>
-            {(isSubmitting) => (
+          <div className="flex items-center justify-end gap-3 border-t border-secondary-03 pt-6">
+            <DialogClose asChild>
               <button
-                type="submit"
-                className="rounded-2xl bg-primary-01 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-01/90 disabled:cursor-not-allowed disabled:opacity-70"
-                disabled={isSubmitting}
+                type="button"
+                className="rounded-2xl border border-secondary-03 px-5 py-3 text-sm font-medium text-secondary-01 transition-colors hover:border-primary-02 hover:bg-primary-02/10"
               >
-                {isSubmitting ? "Submitting..." : "Submit"}
+                Cancel
               </button>
-            )}
-          </form.Subscribe>
+            </DialogClose>
+            <form.Subscribe selector={(state) => state.isSubmitting}>
+              {(isSubmitting) => (
+                <button
+                  type="submit"
+                  className="rounded-2xl bg-primary-01 px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-primary-01/90 disabled:cursor-not-allowed disabled:opacity-70"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit"}
+                </button>
+              )}
+            </form.Subscribe>
           </div>
         </form>
       </DialogContent>
@@ -272,4 +267,4 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
   );
 };
 
-export default CreateProductModal;
+export default EditProductModal;

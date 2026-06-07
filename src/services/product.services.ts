@@ -19,6 +19,15 @@ export interface ICreateProductPayload  {
   image?: string;
 }
 
+export interface IUpdateProductPayload  {
+  name?: string;
+  description?: string;
+  price?: number;
+  category?: ProductCategories;
+  remainingStock?: number;
+  image?: string;
+}
+
 export const productServices = {
   createProduct: async (payload: ICreateProductPayload) => {
     try{
@@ -46,6 +55,19 @@ export const productServices = {
     }
   },
 
+  updateProduct: async(productId: string, payload: IUpdateProductPayload) => {
+    try{
+      const response = await httpClient.patch(`/products/update-product/${productId}`, payload); 
+      return response;
+    }
+
+    catch (error) {
+      console.error("[productServices.updateProduct] api error:", error);
+      const serverErrorMessage = error || "Failed to update product";
+      throw serverErrorMessage;
+    }
+  },
+ 
   deleteProduct: async (productId: string, options?: ApiRequestOptions) => {
     try {
       const response = await httpClient.delete(`/products/delete-product/${productId}`, options);
