@@ -6,19 +6,17 @@ import { useMutation } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usersManagementServices } from "@/services/users-management.services";
 
-interface ChangeStatusControlProps {
-  currentStatus: string;
+interface ChangeUserStatusControlProps {
   userId: string;
-  onSuccessCallback?: () => void;
+  currentStatus: string;
+  onSuccessCallback: () => void;
 }
 
-const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: ChangeStatusControlProps) => {
-
-  const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
+const ChangeUserStatusControl = ({ userId, currentStatus, onSuccessCallback }: ChangeUserStatusControlProps) => {
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      const response = await usersManagementServices.changeUserStatus(userId, newStatus);
+    mutationFn: async (targetStatus: string) => {
+      const response = await usersManagementServices.changeUserStatus(userId, targetStatus);
       return response;
     },
 
@@ -32,9 +30,7 @@ const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: Chang
         if (onSuccessCallback) {
           onSuccessCallback();
         }
-      } 
-      
-      else {
+      } else {
         Swal.fire({
           title: "Error!",
           text: response?.message || "Failed to update user status.",
@@ -52,10 +48,13 @@ const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: Chang
     },
   });
 
-  const handleStatusChange = () => {
+  const handleStatusChange = (chosenStatus: string) => {
+    // যদি বর্তমান স্ট্যাটাসই আবার ক্লিক করা হয়, তবে মিউটেশন দরকার নেই
+    if (chosenStatus === currentStatus) return;
+
     Swal.fire({
       title: "Are you sure?",
-      text: `Do you want to change status to ${newStatus.toLowerCase()}?`,
+      text: `Do you want to change status to ${chosenStatus.toLowerCase()}?`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#10b981",
@@ -63,21 +62,21 @@ const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: Chang
       confirmButtonText: "Yes, change it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutate();
+        mutate(chosenStatus);
       }
     });
   };
 
   return (
     <Select value={currentStatus} onValueChange={handleStatusChange} disabled={isPending}>
-      <SelectTrigger size="sm" className="h-8 min-w-28 font-bold text-xs rounded-xl">
+      <SelectTrigger size="sm" className="h-8 min-w-28 font-bold text-xs rounded-xl text-black">
         <SelectValue placeholder="Change Status" />
       </SelectTrigger>
-      <SelectContent align="end" className="rounded-xl min-w-28">
-        <SelectItem value="ACTIVE" className="text-emerald-700 font-semibold focus:text-emerald-700">
+      <SelectContent align="end" className="rounded-xl min-w-28 bg-white border border-secondary-01/10">
+        <SelectItem value="ACTIVE" className="text-emerald-700 font-semibold focus:text-emerald-700 cursor-pointer">
           Active
         </SelectItem>
-        <SelectItem value="BANNED" className="text-rose-700 font-semibold focus:text-rose-700">
+        <SelectItem value="BANNED" className="text-rose-700 font-semibold focus:text-rose-700 cursor-pointer">
           Banned
         </SelectItem>
       </SelectContent>
@@ -85,4 +84,4 @@ const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: Chang
   );
 };
 
-export default ChangeStatusControl;
+export default ChangeUserStatusControl;

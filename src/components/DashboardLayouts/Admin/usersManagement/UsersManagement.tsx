@@ -5,8 +5,10 @@ import { usersManagementServices } from "@/services/users-management.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import { RefreshCw, Trash2, Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
+import ChangeUserStatusControl from "./ChangeUserStatusControl";
+import DeleteUserControl from "./DeleteUserControl";
 
 interface IUser {
   id: string;
@@ -49,7 +51,7 @@ const UsersManagement = () => {
     return params;
   }, [searchTerm, statusFilter, pagination]);
 
-  const { data: usersResponse } = useQuery({
+  const { data: usersResponse, refetch } = useQuery({
     queryKey: ["admin-users-management", queryParams],
     queryFn: () =>
       usersManagementServices.getAllUsers({
@@ -91,12 +93,14 @@ const UsersManagement = () => {
 
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
+      {/* Top Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-black tracking-tight">Users Management</h1>
           <p className="text-xs sm:text-sm text-secondary-01/80 font-medium">{meta.total} users found</p>
         </div>
 
+        {/* Filters and Search */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full lg:w-auto">
           <div className="relative w-full">
             <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
@@ -125,77 +129,92 @@ const UsersManagement = () => {
         </div>
       </div>
 
+      {/* Table Section */}
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-200">
+        <div className="w-full overflow-x-auto lg:overflow-x-visible">
+          <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
             <thead>
-              <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-xs text-secondary-01 font-black uppercase tracking-wider">
-                <th className="px-6 py-4">Image</th>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Delete Status</th>
-                <th className="px-6 py-4 text-center">Actions</th>
+              <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
+                <th className="px-3 py-4 lg:px-4 text-center w-14">Image</th>
+                <th className="px-3 py-4 lg:px-4 text-center">Name</th>
+                <th className="px-3 py-4 lg:px-4 text-center">Email</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-24">Status</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-28">Delete Status</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-64">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
-              {users.map((item) => (
-                <tr key={item.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-6 py-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
-                      {item.image ? (
+
+            <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
+              {users.map((user) => (
+                <tr key={user.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                  {/* Image Column */}
+                  <td className="px-3 py-2.5 lg:px-4 text-center">
+                    <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0 mx-auto">
+                      {user.image ? (
                         <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-full object-cover"
+                          src={user.image}
+                          alt={user.name}
+                          width={36}
+                          height={36}
+                          className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
-                          {getInitials(item.name)}
+                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-[10px] lg:text-xs font-black">
+                          {getInitials(user.name)}
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{item.name}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-secondary-01">{item.email}</td>
-                  <td className="px-6 py-3 whitespace-nowrap">
+
+                  {/* Name Column */}
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-black font-bold max-w-35 truncate text-center">
+                    {user.name}
+                  </td>
+
+                  {/* Email Column */}
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-secondary-01 max-w-40 truncate text-center">
+                    {user.email}
+                  </td>
+
+                  {/* Status Column */}
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
-                        item.status === "ACTIVE"
+                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
+                        user.status === "ACTIVE"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-amber-50 text-amber-700 border-amber-200"
                       }`}
                     >
-                      {item.status}
+                      {user.status}
                     </span>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    {item.isDeleted ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+
+                  {/* Delete Status Column */}
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                    {user.isDeleted ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
                         Deleted
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-green-50 text-green-700 border border-green-200">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-green-50 text-green-700 border border-green-200">
                         Not Deleted
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center gap-2">
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary-01 bg-primary-02/40 hover:bg-primary-02/60 rounded-xl transition-colors duration-200">
-                        <RefreshCw className="w-3.5 h-3.5" />
-                        <span>Change Status</span>
-                      </button>
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-200">
-                        <Trash2 className="w-3.5 h-3.5" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
+
+                  {/* Actions Column */}
+                  <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center items-center justify-center">
+                    <ChangeUserStatusControl
+                      userId={user.id}
+                      currentStatus={user.status || "ACTIVE"}
+                      onSuccessCallback={refetch}
+                    />
+                    <DeleteUserControl 
+                    />
                   </td>
                 </tr>
               ))}
+
               {users.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-10 text-center text-secondary-01 font-semibold">
@@ -207,7 +226,8 @@ const UsersManagement = () => {
           </table>
         </div>
 
-        <div className="px-6 py-4 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        {/* Pagination Footer */}
+        <div className="px-4 py-4 lg:px-6 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.max(prev.pageIndex - 1, 0) }))}
@@ -252,6 +272,7 @@ const UsersManagement = () => {
                 <option value="Custom">Custom</option>
               </select>
               <span className="text-sm text-neutral-600 font-medium">rows</span>
+
               <input
                 type="number"
                 value={customInput}

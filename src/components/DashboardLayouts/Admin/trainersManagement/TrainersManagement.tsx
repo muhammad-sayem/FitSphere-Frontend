@@ -8,8 +8,8 @@ import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import ApprovalControl from "./ApprovalControl";
-import ChangeStatusControl from "./ChangeStatusControl";
 import DeleteTrainerControl from "./DeleteTrainerControl";
+import ChangeTrainerStatusControl from "./ChangeTrainerStatusControl";
 
 interface IUser {
   name: string;
@@ -222,7 +222,7 @@ const TrainersManagement = () => {
                         isApproved={trainer.isApproved}
                         onSuccessCallback={refetch}
                       />
-                      <ChangeStatusControl 
+                      <ChangeTrainerStatusControl
                         userId={trainer.userId}
                         currentStatus={trainer.user?.status || "ACTIVE"}
                         onSuccessCallback={refetch}
