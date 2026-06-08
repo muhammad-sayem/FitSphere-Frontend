@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { usersManagementServices } from "@/services/users-management.services";
@@ -15,20 +17,55 @@ const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: Chang
   const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async() => {
+    mutationFn: async () => {
       const response = await usersManagementServices.changeUserStatus(userId, newStatus);
       return response;
     },
 
-    onSuccess: (data) => {
-      if (data && onSuccessCallback) {
-        onSuccessCallback();
+    onSuccess: (response: any) => {
+      if (response?.data?.success || response?.success !== false) {
+        Swal.fire({
+          title: "Updated!",
+          text: "The user status has been successfully updated.",
+          icon: "success",
+        });
+        if (onSuccessCallback) {
+          onSuccessCallback();
+        }
+      } 
+      
+      else {
+        Swal.fire({
+          title: "Error!",
+          text: response?.message || "Failed to update user status.",
+          icon: "error",
+        });
       }
+    },
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.message || "Something went wrong.";
+      Swal.fire({
+        title: "Error!",
+        text: errorMessage,
+        icon: "error",
+      });
     },
   });
 
   const handleStatusChange = () => {
-    mutate();
+    Swal.fire({
+      title: "Are you sure?",
+      text: `Do you want to change status to ${newStatus.toLowerCase()}?`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#10b981",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, change it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate();
+      }
+    });
   };
 
   return (
