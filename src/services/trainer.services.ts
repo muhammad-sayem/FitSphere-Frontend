@@ -12,24 +12,15 @@ export interface ICreateTrainerProfilePayload {
 export const trainerServices = {
   createTrainerProfile: async (payload: ICreateTrainerProfilePayload) => {
     try {
-      console.log("[trainerServices.createTrainerProfile] request payload:", payload);
-
       const response = await httpClient.post("/trainer-profiles/create-trainer-profile", payload);
-
-      console.log("[trainerServices.createTrainerProfile] api response:", response);
-
       return {
         success: true,
         data: response.data,
         message: "Trainer profile created successfully"
       };
     }
-
     catch (error: any) {
-      console.error("[trainerServices.createTrainerProfile] api error:", error);
-
       const serverErrorMessage = error?.response?.data?.message || "Failed to create trainer profile";
-
       return {
         success: false,
         data: null,
@@ -40,10 +31,9 @@ export const trainerServices = {
 
   getAllTrainers: async (options: ApiRequestOptions) => {
     try {
-      const trainers = await httpClient.get("/trainer-profiles", options);
-      return trainers;
+      const response = await httpClient.get("/trainer-profiles", options);
+      return response;
     }
-
     catch (error) {
       console.error("Error fetching trainers:", error);
       return {
@@ -54,13 +44,11 @@ export const trainerServices = {
   },
 
   getAllTrainersFromUsersSchema: async (options?: ApiRequestOptions) => {
-    try{
+    try {
       const response = await httpClient.get("/trainer-profiles/from-users", options);
-
       return response;
     }
-
-    catch(error) {
+    catch (error) {
       console.error("Error fetching trainers from users schema:", error);
       return {
         data: null,
@@ -72,10 +60,8 @@ export const trainerServices = {
   getTrainerProfileByUserId: async (userId: string, options?: ApiRequestOptions) => {
     try {
       const trainerProfile = await httpClient.get(`/trainer-profiles/userId/${userId}`, options);
-
       return trainerProfile;
     }
-
     catch (error) {
       console.error("Error fetching trainer profile:", error);
       return {
@@ -83,5 +69,20 @@ export const trainerServices = {
         error: { message: "Failed to fetch trainer profile" }
       };
     }
+  },
+
+  getNotApprovedTrainers: async (options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.get("/trainer-profiles/trainers/not-approved", options);
+      return response;
+    }
+    catch (error) {
+      console.error("Error fetching not approved trainers:", error);
+      return {
+        success: false,
+        data: [],
+        message: "Failed to fetch not approved trainers"
+      };
+    }
   }
-}
+};

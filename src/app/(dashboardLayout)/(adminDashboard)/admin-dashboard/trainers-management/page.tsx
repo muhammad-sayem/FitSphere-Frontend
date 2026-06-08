@@ -1,4 +1,4 @@
-import TrainersManagement from "@/components/DashboardLayouts/Admin/TrainersManagement";
+import TrainersManagement from "@/components/DashboardLayouts/Admin/trainersManagement/TrainersManagement";
 import { trainerServices } from "@/services/trainer.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";
@@ -25,6 +25,18 @@ const TrainersManagementPage = async () => {
     queryFn: () =>
       trainerServices.getAllTrainersFromUsersSchema({
         params: defaultParams,
+        headers: {
+          Cookie: cookieHeader,
+        },
+      }),
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: ["not-approved-trainers"],
+    queryFn: () =>
+      trainerServices.getNotApprovedTrainers({
         headers: {
           Cookie: cookieHeader,
         },

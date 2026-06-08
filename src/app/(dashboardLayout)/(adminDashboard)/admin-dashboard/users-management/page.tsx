@@ -1,4 +1,4 @@
-import UsersManagement from "@/components/DashboardLayouts/Admin/UsersManagement";
+import UsersManagement from "@/components/DashboardLayouts/Admin/usersManagement/UsersManagement";
 import { usersManagementServices } from "@/services/users-management.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";

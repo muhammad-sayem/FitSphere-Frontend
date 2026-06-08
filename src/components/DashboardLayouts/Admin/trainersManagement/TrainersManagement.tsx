@@ -1,24 +1,32 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { trainerServices } from "@/services/trainer.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import { RefreshCw, Trash2, Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Trash2, Search, ChevronLeft, ChevronRight, Filter, SquarePen, CheckCircle } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 
-interface ITrainer {
-  id: string;
+interface IUser {
   name: string;
   email: string;
-  emailVerified: boolean;
-  image: string | null;
-  role: string;
   status: string;
   isDeleted: boolean;
+  image?: string | null;
+}
+
+interface ITrainerProfile {
+  id: string;
+  userId: string;
+  bio: string;
+  specialties: string;
+  experience: number;
+  feePerHour: number;
+  avgRating: number;
+  isApproved: boolean;
   createdAt: string;
-  updatedAt: string;
+  user: IUser;
 }
 
 const TrainersManagement = () => {
@@ -28,13 +36,15 @@ const TrainersManagement = () => {
     pageIndex: 0,
     pageSize: 10,
   });
+
   const [customInput, setCustomInput] = useState("10");
+  const [isApproveOpen, setIsApproveOpen] = useState(false);
 
   const queryParams = useMemo(() => {
-    const params: Record<string, any> = {
+    const params: Record<string, string> = {
       page: String(pagination.pageIndex + 1),
       limit: String(pagination.pageSize),
-      sortBy: "name",
+      sortBy: "user.name",
       sortOrder: "asc",
     };
 
@@ -43,23 +53,22 @@ const TrainersManagement = () => {
     }
 
     if (statusFilter) {
-      params.status = statusFilter;
+      params["user.status"] = statusFilter;
     }
-
     return params;
   }, [searchTerm, statusFilter, pagination]);
 
   const { data: trainersResponse } = useQuery({
     queryKey: ["admin-trainers-management", queryParams],
     queryFn: () =>
-      trainerServices.getAllTrainersFromUsersSchema({
+      trainerServices.getAllTrainers({
         params: queryParams,
       }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
-  const trainers = (trainersResponse?.data as ITrainer[]) || [];
+  const trainers = (trainersResponse?.data as ITrainerProfile[]) || [];
   const meta = trainersResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
 
   const getInitials = (name: string) => {
@@ -116,7 +125,7 @@ const TrainersManagement = () => {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
             <input
               type="text"
-              placeholder="Search by name..."
+              placeholder="Search by name or email..."
               value={searchTerm}
               onChange={handleSearchChange}
               className="w-full pl-9 pr-4 py-2 border border-secondary-01/20 rounded-xl text-sm focus:outline-none focus:border-primary-01/40 bg-white transition-colors duration-200 text-black font-medium"
@@ -126,79 +135,110 @@ const TrainersManagement = () => {
       </div>
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-200">
+        <div className="w-full overflow-x-auto lg:overflow-x-visible">
+          <table className="w-full text-center border-collapse min-w-[800px] lg:min-w-full table-auto">
             <thead>
-              <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-xs text-secondary-01 font-black uppercase tracking-wider">
-                <th className="px-6 py-4">Image</th>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Email</th>
-                <th className="px-6 py-4">Status</th>
-                <th className="px-6 py-4">Delete Status</th>
-                <th className="px-6 py-4 text-center">Actions</th>
+              <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs text-secondary-01 font-black uppercase tracking-wider">
+                <th className="px-3 py-4 lg:px-4 text-center w-14">Image</th>
+                <th className="px-3 py-4 lg:px-4 text-center">Name</th>
+                <th className="px-3 py-4 lg:px-4 text-center">Email</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-24">Status</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-32">Approve Status</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-28">Delete Status</th>
+                <th className="px-3 py-4 lg:px-4 text-center w-64">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
+
+            <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
               {trainers.map((item) => (
                 <tr key={item.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-6 py-3">
-                    <div className="w-10 h-10 rounded-full overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
-                      {item.image ? (
+                  <td className="px-3 py-2.5 lg:px-4 text-center">
+                    <div className="w-8 h-8 lg:w-9 lg:h-9 rounded-full overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0 mx-auto">
+                      {item.user?.image ? (
                         <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-full object-cover"
+                          src={item.user.image}
+                          alt={item.user.name}
+                          width={36}
+                          height={36}
+                          className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
-                          {getInitials(item.name)}
+                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-[10px] lg:text-xs font-black">
+                          {getInitials(item.user?.name)}
                         </div>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{item.name}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-secondary-01">{item.email}</td>
-                  <td className="px-6 py-3 whitespace-nowrap">
+
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-black font-bold max-w-[140px] truncate text-center">
+                    {item.user?.name}
+                  </td>
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-secondary-01 max-w-[160px] truncate text-center">
+                    {item.user?.email}
+                  </td>
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
-                        item.status === "ACTIVE"
+                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
+                        item.user?.status === "ACTIVE"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-amber-50 text-amber-700 border-amber-200"
                       }`}
                     >
-                      {item.status}
+                      {item.user?.status}
                     </span>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    {item.isDeleted ? (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                    {item.isApproved ? (
+                      <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 w-12">
+                        Yes
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200 w-12">
+                        No
+                      </span>
+                    )}
+                  </td>
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                    {item.user?.isDeleted ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-rose-50 text-rose-700 border border-rose-200">
                         Deleted
                       </span>
                     ) : (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-green-50 text-green-700 border border-green-200">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-green-50 text-green-700 border border-green-200">
                         Not Deleted
                       </span>
                     )}
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center gap-2">
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-primary-01 bg-primary-02/40 hover:bg-primary-02/60 rounded-xl transition-colors duration-200">
-                        <RefreshCw className="w-3.5 h-3.5" />
+
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                    <div className="flex items-center justify-center gap-1.5">
+                      <button
+                        disabled={item.isApproved}
+                        className={`inline-flex items-center gap-1 px-2 py-1 text-[11px] lg:text-xs font-bold rounded-lg transition-colors duration-200 h-7 shrink-0 ${
+                          item.isApproved
+                            ? "bg-green-700 text-white cursor-not-allowed"
+                            : "text-emerald-700 bg-emerald-50 border border-green-200 hover:bg-emerald-100"
+                        }`}
+                      >
+                        <CheckCircle className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+                        <span>{item.isApproved ? "Approved" : "Approve"}</span>
+                      </button>
+                      <button className="inline-flex items-center gap-1 px-2 py-1 text-[11px] lg:text-xs font-bold text-primary-01 bg-primary-02/40 hover:bg-primary-02/60 rounded-lg transition-colors duration-200 h-7 shrink-0">
+                        <SquarePen className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                         <span>Change Status</span>
                       </button>
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-200">
-                        <Trash2 className="w-3.5 h-3.5" />
+                      <button className="inline-flex items-center gap-1 px-2 py-1 text-[11px] lg:text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors duration-200 h-7 shrink-0">
+                        <Trash2 className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
                         <span>Delete</span>
                       </button>
                     </div>
                   </td>
                 </tr>
               ))}
+
               {trainers.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-10 text-center text-secondary-01 font-semibold">
+                  <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
                     No trainers found
                   </td>
                 </tr>
@@ -207,7 +247,7 @@ const TrainersManagement = () => {
           </table>
         </div>
 
-        <div className="px-6 py-4 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="px-4 py-4 lg:px-6 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.max(prev.pageIndex - 1, 0) }))}
@@ -231,7 +271,6 @@ const TrainersManagement = () => {
                 {index + 1}
               </button>
             ))}
-
             <button
               onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.min(prev.pageIndex + 1, meta.totalPages - 1) }))}
               disabled={meta.page === meta.totalPages || meta.totalPages <= 1}
@@ -241,7 +280,6 @@ const TrainersManagement = () => {
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
-
           <div className="flex flex-wrap items-center gap-3">
             <div className="flex items-center gap-2">
               <select
@@ -252,6 +290,7 @@ const TrainersManagement = () => {
                 <option value="Custom">Custom</option>
               </select>
               <span className="text-sm text-neutral-600 font-medium">rows</span>
+
               <input
                 type="number"
                 value={customInput}
@@ -273,6 +312,38 @@ const TrainersManagement = () => {
             </span>
           </div>
         </div>
+      </div>
+
+      <div className="hidden">
+        <Dialog open={isApproveOpen} onOpenChange={setIsApproveOpen}>
+          <DialogContent className="sm:max-w-3xl lg:max-w-4xl overflow-y-auto max-h-[90vh] p-6">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-black text-black tracking-tight">
+                Approve Trainer Modal
+              </DialogTitle>
+              <DialogDescription className="text-sm text-secondary-01/80 font-medium">
+                Review and manage pending trainer approval requests.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex items-center justify-end gap-3 pt-2">
+              <DialogClose asChild>
+                <button
+                  type="button"
+                  className="rounded-xl border border-secondary-01/20 px-5 py-2.5 text-sm font-bold text-neutral-700 transition-colors hover:bg-neutral-50"
+                >
+                  Cancel
+                </button>
+              </DialogClose>
+              <button
+                type="button"
+                onClick={() => setIsApproveOpen(false)}
+                className="rounded-xl bg-black px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-neutral-900"
+              >
+                Save Changes
+              </button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );
