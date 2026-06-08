@@ -84,5 +84,20 @@ export const trainerServices = {
         message: "Failed to fetch not approved trainers"
       };
     }
+  },
+
+  approveTrainer: async (trainerId: string, options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.patch(`/trainer-profiles/approval-control/${trainerId}`, { isApproved: true }, options);
+      return response;
+    }
+
+    catch (error) {
+      console.error("Error approving trainer:", error);
+      return {
+        success: false,
+        message: "Failed to approve trainer"
+      };
+    }
   }
 };
