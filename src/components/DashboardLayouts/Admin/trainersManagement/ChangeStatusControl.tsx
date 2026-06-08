@@ -1,13 +1,50 @@
-import { SquarePen } from "lucide-react";
+"use client";
 
-const ChangeStatusControl = () => {
+import { useMutation } from "@tanstack/react-query";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { usersManagementServices } from "@/services/users-management.services";
+
+interface ChangeStatusControlProps {
+  currentStatus: string;
+  userId: string;
+  onSuccessCallback?: () => void;
+}
+
+const ChangeStatusControl = ({ currentStatus, userId, onSuccessCallback }: ChangeStatusControlProps) => {
+
+  const newStatus = currentStatus === "ACTIVE" ? "BANNED" : "ACTIVE";
+
+  const { mutate, isPending } = useMutation({
+    mutationFn: async() => {
+      const response = await usersManagementServices.changeUserStatus(userId, newStatus);
+      return response;
+    },
+
+    onSuccess: (data) => {
+      if (data && onSuccessCallback) {
+        onSuccessCallback();
+      }
+    },
+  });
+
+  const handleStatusChange = () => {
+    mutate();
+  };
+
   return (
-    <div>
-      <button className="inline-flex items-center gap-1 px-2 py-1 text-[11px] lg:text-xs font-bold text-primary-01 bg-primary-02/40 hover:bg-primary-02/60 rounded-lg transition-colors duration-200 h-7 shrink-0">
-        <SquarePen className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
-        <span>Change Status</span>
-      </button>
-    </div>
+    <Select value={currentStatus} onValueChange={handleStatusChange} disabled={isPending}>
+      <SelectTrigger size="sm" className="h-8 min-w-28 font-bold text-xs rounded-xl">
+        <SelectValue placeholder="Change Status" />
+      </SelectTrigger>
+      <SelectContent align="end" className="rounded-xl min-w-28">
+        <SelectItem value="ACTIVE" className="text-emerald-700 font-semibold focus:text-emerald-700">
+          Active
+        </SelectItem>
+        <SelectItem value="BANNED" className="text-rose-700 font-semibold focus:text-rose-700">
+          Banned
+        </SelectItem>
+      </SelectContent>
+    </Select>
   );
 };
 

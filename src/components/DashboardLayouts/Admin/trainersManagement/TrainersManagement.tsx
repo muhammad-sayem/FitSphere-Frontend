@@ -73,6 +73,7 @@ const TrainersManagement = () => {
 
   const trainers = (trainersResponse?.data as ITrainerProfile[]) || [];
   const meta = trainersResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
+  console.log("Trainers Data:", trainers);
 
   const getInitials = (name: string) => {
     if (!name) return "";
@@ -215,14 +216,21 @@ const TrainersManagement = () => {
                       )}
                     </td>
 
-                    <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center">
+                    <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center items-center justify-center">
                       <ApprovalControl
                         trainerId={trainer.id}
                         isApproved={trainer.isApproved}
                         onSuccessCallback={refetch}
                       />
-                      <ChangeStatusControl />
-                      <DeleteTrainerControl />
+                      <ChangeStatusControl 
+                        userId={trainer.userId}
+                        currentStatus={trainer.user?.status || "ACTIVE"}
+                        onSuccessCallback={refetch}
+                      />
+                      <DeleteTrainerControl 
+                        trainerId={trainer.id}
+                        onSuccessCallback={refetch}
+                      />
                     </td>
                   </tr>
                 ))

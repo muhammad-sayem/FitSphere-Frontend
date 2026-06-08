@@ -11,5 +11,17 @@ export const usersManagementServices = {
       console.error("Error fetching users:", error);
       return null;
     }
+  },
+
+  changeUserStatus: async (userId: string, newStatus: string) => {
+    try {
+      const response = await httpClient.patch(`/users/change-user-status/${userId}`, { status: newStatus });
+      return response;
+    }
+
+    catch (error) {
+      console.error("Error changing user status:", error);
+      return null;
+    }
   }
 }

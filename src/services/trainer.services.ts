@@ -99,5 +99,21 @@ export const trainerServices = {
         message: "Failed to approve trainer"
       };
     }
+  },
+
+  deleteTrainer: async (trainerId: string) => {
+    try{
+      const response = await httpClient.delete(`/trainer-profiles/delete-trainer-profile/${trainerId}`);
+      return response;
+    }
+
+    catch (error) {
+      console.error("Error deleting trainer:", error);
+      return {
+        success: false,
+        message: "Failed to delete trainer"
+      };
+    }
   }
+ 
 };
