@@ -24,8 +24,22 @@ export const slotServices = {
     try {
       const response = await httpClient.get(`/slots/trainer/${trainerId}`, options);
       return response;
-    } catch (error) {
+    } 
+    
+    catch (error) {
       console.error('Error fetching slots:', error);
+      throw error;
+    }
+  },
+
+  deleteMySlot: async (slotId: string, options?: ApiRequestOptions) => {
+    try{
+      const response = await httpClient.delete(`/slots/delete-slot/${slotId}`, options);
+      return response;
+    }
+
+    catch(error){
+      console.error('Error deleting slot:', error);
       throw error;
     }
   }

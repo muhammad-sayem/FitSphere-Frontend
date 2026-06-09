@@ -1,4 +1,5 @@
-import MyReceivedReviews from "@/components/DashboardLayouts/Trainer/MyReceivedReviews";
+
+import MyReceivedReviews from "@/components/DashboardLayouts/Trainer/myReceivedReviews/MyReceivedReviews";
 import { reviewServices } from "@/services/review.services";
 import { trainerServices } from "@/services/trainer.services";
 import { userServices } from "@/services/user.services";

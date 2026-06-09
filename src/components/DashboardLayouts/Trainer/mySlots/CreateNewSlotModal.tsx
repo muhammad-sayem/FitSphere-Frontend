@@ -24,7 +24,7 @@ interface AddNewSlotModalProps {
   refetch?: () => void;
 }
 
-const AddNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
+const CreateNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isCalendarOpen, setIsCalendarOpen] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
@@ -206,4 +206,4 @@ const AddNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
   );
 };
 
-export default AddNewSlotModal;
+export default CreateNewSlotModal;
