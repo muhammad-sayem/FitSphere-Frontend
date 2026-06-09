@@ -1,4 +1,4 @@
-import MySlots from "@/components/DashboardLayouts/Trainer/MySlots";
+import MySlots from "@/components/DashboardLayouts/Trainer/mySlots/MySlots";
 import { slotServices } from "@/services/slot.services";
 import { trainerServices } from "@/services/trainer.services";
 import { userServices } from "@/services/user.services";

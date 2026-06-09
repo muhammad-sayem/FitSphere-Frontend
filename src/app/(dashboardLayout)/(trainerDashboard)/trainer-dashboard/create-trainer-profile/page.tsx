@@ -1,4 +1,4 @@
-import CreateTrainerProfileForm from "@/components/DashboardLayouts/Trainer/CreateTrainerProfileForm";
+import CreateTrainerProfileForm from "@/components/DashboardLayouts/Trainer/createTrainerProfile/CreateTrainerProfileForm";
 
 const CreateTrainerProfile = () => {
   return (

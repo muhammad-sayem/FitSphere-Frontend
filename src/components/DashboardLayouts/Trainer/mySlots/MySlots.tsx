@@ -11,6 +11,7 @@ import DataTable from "@/components/table/DataTable";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import AddNewSlotModal from "./AddNewSlotModal";
 
 interface SlotData {
   id: string;
@@ -59,7 +60,7 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
     return params;
   }, [sorting, pagination, selectedDate]);
 
-  const { data: mySlotsResponse, isLoading } = useQuery({
+  const { data: mySlotsResponse, isLoading, refetch } = useQuery({
     queryKey: ["my-slots-trainer", trainerId, queryParams],
     queryFn: () => slotServices.getMySlots(trainerId,
       { params: queryParams }
@@ -91,7 +92,18 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
         enableSorting: false,
         cell: ({ row }) => {
           const { startTime, endTime } = row.original;
-          return `${startTime} - ${endTime}`;
+          
+          const formatTo12Hour = (timeStr: string) => {
+            if (!timeStr) return "";
+            const [hourStr, minuteStr] = timeStr.split(":");
+            let hour = parseInt(hourStr, 10);
+            const ampm = hour >= 12 ? "PM" : "AM";
+            hour = hour % 12;
+            hour = hour ? hour : 12;
+            return `${hour}:${minuteStr} ${ampm}`;
+          };
+
+          return `${formatTo12Hour(startTime)} - ${formatTo12Hour(endTime)}`;
         },
       },
       {
@@ -165,6 +177,10 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
           <p className="text-sm text-muted-foreground">
             {metaData?.total || 0} slots available
           </p>
+        </div>
+
+        <div>
+          <AddNewSlotModal refetch={refetch} />
         </div>
 
         <div className="flex items-center gap-2">

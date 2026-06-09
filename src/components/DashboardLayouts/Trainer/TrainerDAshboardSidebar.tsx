@@ -7,7 +7,7 @@ const sidebarMenus = [
   { title: "Dashboard Home", path: "/trainer-dashboard" },
   { title: "Create Trainer Profile", path: "/trainer-dashboard/create-trainer-profile" },
   { title: "My Slots", path: "/trainer-dashboard/my-slots" },
-  { title: "My reviews", path: "/trainer-dashboard/my-received-reviews" },
+  { title: "My Received Reviews", path: "/trainer-dashboard/my-received-reviews" },
   { title: "Home", path: "/" },
 ]
 
