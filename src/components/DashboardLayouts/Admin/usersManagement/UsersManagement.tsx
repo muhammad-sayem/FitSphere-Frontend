@@ -210,6 +210,8 @@ const UsersManagement = () => {
                       onSuccessCallback={refetch}
                     />
                     <DeleteUserControl 
+                      userId={user.id}
+                      onSuccessCallback={refetch}
                     />
                   </td>
                 </tr>

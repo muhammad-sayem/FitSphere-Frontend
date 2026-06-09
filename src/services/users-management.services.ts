@@ -23,5 +23,17 @@ export const usersManagementServices = {
       console.error("Error changing user status:", error);
       return null;
     }
+  },
+
+  deleteUser: async (userId: string) => {
+    try {
+      const response = await httpClient.delete(`/users/delete-user/${userId}`);
+      return response;
+    }
+
+    catch (error) {
+      console.error("Error deleting user:", error);
+      return null;
+    }
   }
 }

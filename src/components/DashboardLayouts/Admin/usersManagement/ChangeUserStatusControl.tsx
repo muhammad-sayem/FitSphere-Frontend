@@ -49,7 +49,7 @@ const ChangeUserStatusControl = ({ userId, currentStatus, onSuccessCallback }: C
   });
 
   const handleStatusChange = (chosenStatus: string) => {
-    // যদি বর্তমান স্ট্যাটাসই আবার ক্লিক করা হয়, তবে মিউটেশন দরকার নেই
+
     if (chosenStatus === currentStatus) return;
 
     Swal.fire({
