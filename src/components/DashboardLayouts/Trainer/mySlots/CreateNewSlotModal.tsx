@@ -84,9 +84,9 @@ const CreateNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
     <div>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-md font-bold text-primary-01 border border-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer rounded-xl transition-colors duration-200">
+          <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-md  text-primary-01 border border-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer rounded-xl transition-colors duration-200">
             <PlusCircle className="w-4 h-4" />
-            <span>Add New Slot</span>
+            <span>Create New Slot</span>
           </button>
         </DialogTrigger>
 

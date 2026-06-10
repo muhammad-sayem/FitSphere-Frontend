@@ -52,10 +52,14 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
     }
 
     if (selectedDate) {
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, "0");
-      const day = String(selectedDate.getDate()).padStart(2, "0");
-      params.date = `${year}-${month}-${day}`;
+      const startOfDay = new Date(selectedDate);
+      startOfDay.setHours(0, 0, 0, 0);
+
+      const endOfDay = new Date(selectedDate);
+      endOfDay.setHours(23, 59, 59, 999);
+
+      params["date[gte]"] = startOfDay.toISOString();
+      params["date[lte]"] = endOfDay.toISOString();
     }
 
     return params;
@@ -212,7 +216,7 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
 
                   <td className="px-3 py-2.5 lg:px-4 flex whitespace-nowrap text-center items-center justify-center">
                     <DeleteMySlotButton
-                    isBooked={slot.isBooked}
+                      isBooked={slot.isBooked}
                       slotId={slot.id}
                       refetch={refetch}
                     />
@@ -246,10 +250,11 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
               <button
                 key={index}
                 onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${metaData.page === index + 1
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                  }`}
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
+                  metaData.page === index + 1
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
+                }`}
               >
                 {index + 1}
               </button>
