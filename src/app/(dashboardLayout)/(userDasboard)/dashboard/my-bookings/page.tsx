@@ -1,4 +1,4 @@
-import MyBookings from "@/components/DashboardLayouts/User/MyBookings";
+import MyBookings from "@/components/DashboardLayouts/User/myBookings/MyBookings";
 import { bookingServices } from "@/services/booking.services";
 import { userServices } from "@/services/user.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
@@ -12,7 +12,6 @@ const MyBookedSlots = async () => {
   }
 
   const cookieStore = await cookies();
-
   const cookieHeader = cookieStore
     .getAll()
     .map(({ name, value }) => `${name}=${value}`)
@@ -26,18 +25,17 @@ const MyBookedSlots = async () => {
     sortBy: "slot.date",
     sortOrder: "desc",
   };
+  const initialFilters = {};
 
   await queryClient.prefetchQuery({
-    queryKey: ["my-bookings", loggedInUser.userId, initialQueryParams],
+    queryKey: ["my-bookings", loggedInUser.userId, initialQueryParams, initialFilters],
     queryFn: () =>
-      bookingServices.getBookingsByUserId(loggedInUser.userId, {
+      bookingServices.getBookingsByUserId({
         headers: {
           Cookie: cookieHeader,
         },
         params: initialQueryParams,
       }),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 
   return (

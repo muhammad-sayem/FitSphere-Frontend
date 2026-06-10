@@ -1,4 +1,4 @@
-import MyOrders from "@/components/DashboardLayouts/User/MyOrders";
+import MyOrders from "@/components/DashboardLayouts/User/myOrders/MyOrders";
 import { orderServices } from "@/services/order.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";

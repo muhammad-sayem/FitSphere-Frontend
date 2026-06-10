@@ -10,11 +10,10 @@ import { bookingServices } from "@/services/booking.services";
 import { useQuery } from "@tanstack/react-query";
 import DataTable from "@/components/table/DataTable";
 import { DataTableFilterConfig } from "@/components/table/DataTableFilters";
-import { Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import DeleteMyBookingButton from "./DeleteMyBookingButton";
 
 const MyBookings = ({ initialUser }: { initialUser?: any }) => {
-  const { data: loggedInUserResponse } = useQuery({
+  const { data: loggedInUserResponse, refetch } = useQuery({
     queryKey: ["loggedin-user"],
     queryFn: getMe,
     initialData: initialUser ? { data: initialUser } : undefined,
@@ -59,12 +58,12 @@ const MyBookings = ({ initialUser }: { initialUser?: any }) => {
 
   const { data: myBookingsResponse, isFetching } = useQuery({
     queryKey: ["my-bookings", loggedInUser?.userId, queryParams, filters],
-    queryFn: () => bookingServices.getBookingsByUserId(loggedInUser?.userId, { params: queryParams }),
+    queryFn: () => bookingServices.getBookingsByUserId({ params: queryParams }),
     enabled: !!loggedInUser?.userId,
     placeholderData: (previousData) => previousData,
     staleTime: 1000 * 60 * 2,
   });
-  
+
   const rawBookings = myBookingsResponse?.data ?? [];
   const meta = myBookingsResponse?.meta ?? { page: 1, limit: 10, total: 0, totalPages: 1 };
 
@@ -141,11 +140,12 @@ const MyBookings = ({ initialUser }: { initialUser?: any }) => {
         id: "actions",
         header: "Actions",
         enableSorting: false,
-        cell: () => (
-          <Button variant="ghost" size="icon" className="h-8 w-2/3 p-0 text-white bg-red-500 space-x-1 font-bold hover:bg-red-900 hover:text-white hover:cursor-pointer">
-            <Trash2 className="h-4 w-4" />
-            <p> Delete </p>
-          </Button>
+        cell: ({ row }) => (
+          <DeleteMyBookingButton
+            bookingId={row.original.id}
+            paymentStatus={row.original.paymentStatus}
+            refetch={refetch}
+          />
         ),
       },
     ],
@@ -193,7 +193,6 @@ const MyBookings = ({ initialUser }: { initialUser?: any }) => {
         columns={columnDefs}
         isLoading={isFetching}
         emptyMessage="No bookings found"
-        // meta={{ total: bookings.length, totalPages: meta.totalPages }}
         search={{
           initialValue: searchTerm,
           placeholder: "Search by trainer name or email...",
