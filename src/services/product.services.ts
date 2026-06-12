@@ -10,7 +10,7 @@ enum ProductCategories {
   OTHER = "OTHER"
 }
 
-export interface ICreateProductPayload  {
+export interface ICreateProductPayload {
   name: string;
   description: string;
   price: number;
@@ -19,7 +19,7 @@ export interface ICreateProductPayload  {
   image?: string;
 }
 
-export interface IUpdateProductPayload  {
+export interface IUpdateProductPayload {
   name?: string;
   description?: string;
   price?: number;
@@ -30,7 +30,7 @@ export interface IUpdateProductPayload  {
 
 export const productServices = {
   createProduct: async (payload: ICreateProductPayload) => {
-    try{
+    try {
       const response = await httpClient.post("/products/create-product", payload);
       return response;
     }
@@ -55,9 +55,22 @@ export const productServices = {
     }
   },
 
-  updateProduct: async(productId: string, payload: IUpdateProductPayload) => {
-    try{
-      const response = await httpClient.patch(`/products/update-product/${productId}`, payload); 
+  getProductById: async (productId: string, options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.get(`/products/${productId}`, options);
+      return response;
+    }
+
+    catch (error) {
+      console.error("[productServices.getProductById] api error:", error);
+      const serverErrorMessage = error || "Failed to fetch product details";
+      throw serverErrorMessage;
+    }
+  },
+
+  updateProduct: async (productId: string, payload: IUpdateProductPayload) => {
+    try {
+      const response = await httpClient.patch(`/products/update-product/${productId}`, payload);
       return response;
     }
 
@@ -67,7 +80,7 @@ export const productServices = {
       throw serverErrorMessage;
     }
   },
- 
+
   deleteProduct: async (productId: string, options?: ApiRequestOptions) => {
     try {
       const response = await httpClient.delete(`/products/delete-product/${productId}`, options);

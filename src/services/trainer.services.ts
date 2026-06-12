@@ -29,7 +29,7 @@ export const trainerServices = {
     }
   },
 
-  getAllTrainers: async (options: ApiRequestOptions) => {
+  getAllTrainers: async (options?: ApiRequestOptions) => {
     try {
       const response = await httpClient.get("/trainer-profiles", options);
       return response;

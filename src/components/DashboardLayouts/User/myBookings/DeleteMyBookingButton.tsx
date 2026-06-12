@@ -72,7 +72,7 @@ const DeleteMyBookingButton = ({ bookingId, paymentStatus, refetch }: DeleteMyBo
   const isPaid = paymentStatus === "SUCCEEDED";
 
   return (
-    <div>
+    <div className="flex justify-center items-center">
       <button
         onClick={handleDeleteMyBooking}
         disabled={isPaid}

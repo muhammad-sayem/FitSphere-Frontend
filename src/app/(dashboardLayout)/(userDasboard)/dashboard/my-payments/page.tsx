@@ -1,4 +1,4 @@
-import MyPayments from "@/components/DashboardLayouts/User/MyPayments";
+import MyPayments from "@/components/DashboardLayouts/User/myPayments/MyPayments";
 import { paymentServices } from "@/services/payment.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";

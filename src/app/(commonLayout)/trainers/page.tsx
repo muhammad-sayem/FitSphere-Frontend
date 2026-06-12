@@ -7,7 +7,7 @@ const TrainersPage = async () => {
 
   await queryClient.prefetchQuery({
     queryKey: ["trainers"],
-    queryFn: trainerServices.getAllTrainers,
+    queryFn: () => trainerServices.getAllTrainers(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   })

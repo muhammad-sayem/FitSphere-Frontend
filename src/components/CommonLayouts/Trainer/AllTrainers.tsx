@@ -6,8 +6,8 @@ import { useQuery } from "@tanstack/react-query";
 const AllTrainers = () => {
   const { data } = useQuery({
     queryKey: ["trainers"],
-    queryFn: trainerServices.getAllTrainers,
-    staleTime: 5 * 60 * 1000,
+    queryFn: () => trainerServices.getAllTrainers(),
+    staleTime: 5 * 60 * 1000, 
     gcTime: 10 * 60 * 1000,
   });
 

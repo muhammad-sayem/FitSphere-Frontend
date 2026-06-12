@@ -25,7 +25,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
   const navItems = [
     { label: "Home", href: "/" },
     { label: "Trainers", href: "/trainers" },
-    { label: "Products", href: "/" },
+    { label: "Products", href: "/products" },
     { label: "About Us", href: "/" },
     { label: "Contact Us", href: "/" },
     { label: "BMI Calculator", href: "/" },
