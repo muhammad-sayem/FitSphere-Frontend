@@ -3,8 +3,10 @@
 import { slotServices } from "@/services/slot.services";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Calendar, ArrowUpDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, ArrowUpDown, Filter, User } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
+import Image from "next/image";
+import BookSessionButton from "./BookSessionButton";
 
 export interface ITrainerAvailability {
   id: string;
@@ -20,6 +22,7 @@ export interface ITrainerAvailability {
     user: {
       name: string;
       email: string;
+      image?: string;
     };
   };
 }
@@ -31,15 +34,22 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
   });
   const [customInput, setCustomInput] = useState("10");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [bookingFilter, setBookingFilter] = useState<string>("");
 
   const queryParams = useMemo(() => {
-    return {
+    const params: Record<string, string> = {
       page: String(pagination.pageIndex + 1),
       limit: String(pagination.pageSize),
       sortBy: "date",
       sortOrder: sortOrder,
     };
-  }, [pagination, sortOrder]);
+
+    if (bookingFilter !== "") {
+      params.isBooked = bookingFilter;
+    }
+
+    return params;
+  }, [pagination, sortOrder, bookingFilter]);
 
   const { data: SlotsResponse } = useQuery({
     queryKey: ["individual-trainer-slots", trainerProfileId, queryParams],
@@ -50,6 +60,8 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
 
   const slots = (SlotsResponse?.data as ITrainerAvailability[]) || [];
   const meta = SlotsResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
+
+  console.log("Fetched Slots for Trainer:", slots);
 
   const formatTo12Hour = (timeString: string) => {
     if (!timeString) return "";
@@ -86,12 +98,33 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
+  const handleBookingFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setBookingFilter(e.target.value);
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
   return (
     <div className="p-4 sm:p-6 max-w-7xl mx-auto w-full space-y-6">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-black text-black tracking-tight">Available Slots</h1>
           <p className="text-xs sm:text-sm text-secondary-01/80 font-medium">{meta.total} slots found</p>
+        </div>
+
+        <div className="w-full lg:w-64">
+          <div className="relative w-full">
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary-01/60" />
+            <select
+              value={bookingFilter}
+              onChange={handleBookingFilterChange}
+              className="w-full pl-9 pr-8 py-2 border border-secondary-01/20 rounded-xl text-sm focus:outline-none focus:border-primary-01/40 bg-white transition-colors duration-200 text-black font-medium appearance-none cursor-pointer"
+            >
+              <option value="">All Status</option>
+              <option value="false">Available</option>
+              <option value="true">Booked</option>
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-neutral-500 w-0 h-0" />
+          </div>
         </div>
       </div>
 
@@ -100,6 +133,7 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
           <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
+                <th className="px-3 py-4 lg:px-4 text-center w-20">Image</th>
                 <th className="px-3 py-4 lg:px-4 text-center">Trainer Name</th>
                 <th className="px-3 py-4 lg:px-4 text-center">
                   <button
@@ -120,6 +154,25 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
             <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
               {slots.map((slot) => (
                 <tr key={slot.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                    <div className="flex items-center justify-center">
+                      {slot.trainer?.user?.image ? (
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden border border-secondary-01/10">
+                          <Image
+                            src={slot.trainer.user.image}
+                            alt={slot.trainer.user.name || "Trainer"}
+                            fill
+                            className="object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center border border-secondary-01/10 text-neutral-400">
+                          <User className="w-5 h-5" />
+                        </div>
+                      )}
+                    </div>
+                  </td>
+
                   <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-black font-bold max-w-35 truncate text-center">
                     {slot.trainer?.user?.name}
                   </td>
@@ -141,34 +194,27 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
 
                   <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                     <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
-                        slot.isBooked
+                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${slot.isBooked
                           ? "bg-rose-50 text-rose-700 border-rose-200"
                           : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                      }`}
+                        }`}
                     >
                       {slot.isBooked ? "Booked" : "Available"}
                     </span>
                   </td>
 
                   <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center items-center justify-center">
-                    <button
-                      disabled={slot.isBooked}
-                      className={`px-4 py-1.5 text-xs font-bold rounded-xl transition-all duration-200 ${
-                        slot.isBooked
-                          ? "bg-neutral-100 text-neutral-400 border border-neutral-200 cursor-not-allowed"
-                          : "bg-black text-white border border-black hover:bg-neutral-800 active:scale-[0.98] cursor-pointer"
-                      }`}
-                    >
-                      Book Session
-                    </button>
+                    <BookSessionButton
+                      key={slot.id}
+                      slot={slot}
+                    />
                   </td>
                 </tr>
               ))}
 
               {slots.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-10 text-center text-secondary-01 font-semibold">
+                  <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
                     No slots found
                   </td>
                 </tr>
@@ -192,11 +238,10 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
               <button
                 key={index}
                 onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
-                  meta.page === index + 1
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${meta.page === index + 1
                     ? "bg-black text-white border-black"
                     : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                }`}
+                  }`}
               >
                 {index + 1}
               </button>

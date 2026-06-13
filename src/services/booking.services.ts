@@ -1,7 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
+export interface IBookingSlotPayload {
+  slotId: string;
+  trainerId: string;
+}
+
 export const bookingServices = {
+  createBooking: async (payload: IBookingSlotPayload, options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.post("/bookings/create-booking", payload);
+      return response;
+    } 
+    
+    catch (error: any) {
+      console.error("[bookingServices.createBooking] api error:", error);
+      const serverErrorMessage = error || "Failed to create booking";
+      throw new Error(serverErrorMessage);
+    }
+  },
+
   getBookingsByUserId: async (options?: ApiRequestOptions) => {
     try {
       const response = await httpClient.get(`/bookings/user/my-bookings`, options);
