@@ -2,12 +2,32 @@
 
 import { trainerServices } from "@/services/trainer.services";
 import { useQuery } from "@tanstack/react-query";
+import TrainerCard from "./TrainerCard";
+
+export interface ITrainerProps {
+  id: string;
+  userId: string;
+  bio: string;
+  specialties: string;
+  experience: number;
+  feePerHour: number;
+  avgRating: number;
+  isApproved: boolean;
+  createdAt: string;
+  user: {
+    name: string;
+    email: string;
+    image: string;
+    status: string;
+    isDeleted: boolean;
+  };
+}
 
 const AllTrainers = () => {
   const { data } = useQuery({
     queryKey: ["trainers"],
     queryFn: () => trainerServices.getAllTrainers(),
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 
@@ -16,9 +36,17 @@ const AllTrainers = () => {
   console.log("Trainers data:", trainers);
 
   return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">All Trainers</h1>
-      <p> {trainers.length} trainers found. </p>
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      {
+        trainers.map((trainer: ITrainerProps) => {
+          return (
+            <TrainerCard
+              key={trainer.id}
+              trainer={trainer}
+            />
+          );
+        })
+      }
     </div>
   );
 };

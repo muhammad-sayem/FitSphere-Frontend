@@ -14,7 +14,7 @@ enum ProductCategories {
   OTHER = "OTHER",
 }
 
-export interface IAllProductsProps {
+export interface IProductProps {
   id: string;
   name: string;
   description: string;
@@ -42,7 +42,7 @@ const AllProducts = () => {
       <h1 className="text-3xl font-bold mb-4">All Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         {
-          products.map((product: IAllProductsProps) => {
+          products.map((product: IProductProps) => {
             return (
               <ProductCard
                 key={product.id}

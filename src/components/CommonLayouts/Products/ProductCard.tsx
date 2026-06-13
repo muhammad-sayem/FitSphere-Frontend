@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { IAllProductsProps } from "./AllProducts";
+import { IProductProps } from "./AllProducts";
 import BuyProductButton from "./BuyProductButton";
 
-const ProductCard = ({ product }: { product: IAllProductsProps }) => {
+const ProductCard = ({ product }: { product: IProductProps }) => {
   const productImage = product?.image && product.image.trim() !== "" ? product.image : "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500&auto=format&fit=crop&q=60";
 
   return (
