@@ -1,11 +1,9 @@
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { ILoginPayload } from "@/app/types/auth.types";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { loginAction } from "@/services/auth.services";
@@ -23,22 +21,8 @@ const LoginForm = () => {
 
   const router = useRouter();
 
-  const getDashboardPath = (role?: string) => {
-    const normalizedRole = role?.toLowerCase();
-
-    if (normalizedRole === "admin") {
-      return "/admin-dashboard";
-    }
-
-    if (normalizedRole === "trainer") {
-      return "/trainer-dashboard";
-    }
-
-    return "/dashboard";
-  };
-
   const { mutateAsync } = useMutation({
-    mutationFn: (payload: ILoginPayload) => loginAction(payload)
+    mutationFn: (payload: ILoginPayload) => loginAction(payload),
   });
 
   const form = useForm({
@@ -51,7 +35,7 @@ const LoginForm = () => {
       setServerError(null);
 
       try {
-        const result = await mutateAsync(value) as any;
+        const result = (await mutateAsync(value)) as any;
 
         if (!result.success) {
           const errorMsg = result.message || "Login failed!";
@@ -62,28 +46,33 @@ const LoginForm = () => {
 
         toast.success("Login successful!", { position: "top-right" });
         router.push("/");
-      }
-
-      catch (error: any) {
-        console.log(`Login failed: ${error.message}`);
+      } catch (error: any) {
         setServerError(`Login failed: ${error.message}`);
       }
     },
   });
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12">
-      <Card className="w-full max-w-md border-border/60 bg-background/95 shadow-lg backdrop-blur">
-        <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-2xl font-semibold tracking-tight">
-            Welcome back
-          </CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">
-            Sign in with your email and password.
-          </CardDescription>
-        </CardHeader>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <div className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white shadow-2xl rounded-3xl overflow-hidden border border-gray-200">
 
-        <CardContent>
+        <div className="bg-primary-01 text-white p-10 flex flex-col justify-center">
+          <h1 className="text-3xl font-bold mb-4">Welcome Back</h1>
+          <p className="text-white leading-relaxed">
+            Sign in to continue your journey. Manage your dashboard, track your activity, and stay connected.
+          </p>
+
+          <div className="mt-8 space-y-3 text-sm text-white">
+            <p>✔ Secure login system</p>
+            <p>✔ Fast dashboard access</p>
+            <p>✔ Role based control</p>
+          </div>
+        </div>
+
+        <div className="p-10 bg-white">
+          <h2 className="text-2xl font-bold text-black mb-1">Login</h2>
+          <p className="text-secondary-01 mb-6">Enter your credentials to continue</p>
+
           <form
             noValidate
             onSubmit={(event) => {
@@ -96,15 +85,14 @@ const LoginForm = () => {
             <form.Field name="email">
               {(field) => (
                 <div className="space-y-2">
-                  <Label htmlFor={field.name}>Email</Label>
+                  <Label className="text-black">Email</Label>
                   <Input
-                    id={field.name}
-                    name={field.name}
                     type="email"
-                    placeholder="Enter your email"
+                    placeholder="you@example.com"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(event) => field.handleChange(event.target.value)}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="border-gray-300 focus:border-primary-01 focus:ring-primary-01 text-black rounded-xl"
                   />
                 </div>
               )}
@@ -113,25 +101,24 @@ const LoginForm = () => {
             <form.Field name="password">
               {(field) => (
                 <div className="space-y-2">
-                  <Label htmlFor={field.name}>Password</Label>
+                  <Label className="text-black">Password</Label>
+
                   <div className="relative">
                     <Input
-                      id={field.name}
-                      name={field.name}
                       type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
+                      placeholder="••••••••"
                       value={field.state.value}
                       onBlur={field.handleBlur}
-                      onChange={(event) => field.handleChange(event.target.value)}
-                      className="pr-10"
+                      onChange={(e) => field.handleChange(e.target.value)}
+                      className="pr-10 border-gray-300 focus:border-primary-01 focus:ring-primary-01 text-black rounded-xl"
                     />
+
                     <button
                       type="button"
-                      onClick={() => setShowPassword((current) => !current)}
-                      className="absolute inset-y-0 right-3 flex items-center text-muted-foreground transition-colors hover:text-foreground"
-                      aria-label={showPassword ? "Hide password" : "Show password"}
+                      onClick={() => setShowPassword((p) => !p)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-secondary-01 hover:text-primary-01"
                     >
-                      {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                      {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                     </button>
                   </div>
                 </div>
@@ -140,21 +127,25 @@ const LoginForm = () => {
 
             <form.Subscribe selector={(state) => state.isSubmitting}>
               {(isSubmitting) => (
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? "Logging in..." : "Log In"}
+                <Button
+                  type="submit"
+                  className="w-full bg-primary-01 text-white font-semibold rounded-xl hover:opacity-90 transition"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Logging in..." : "Sign In"}
                 </Button>
               )}
             </form.Subscribe>
           </form>
 
-          <p className="mt-4 text-center text-sm text-muted-foreground">
-            Don't have an account?{' '}
-            <Link href="/register" className="font-bold underline underline-offset-4 text-foreground">
-              sign up
+          <p className="mt-6 text-sm text-secondary-01 text-center">
+            Don’t have an account?{" "}
+            <Link href="/register" className="text-primary-01 font-semibold underline">
+              Create account
             </Link>
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

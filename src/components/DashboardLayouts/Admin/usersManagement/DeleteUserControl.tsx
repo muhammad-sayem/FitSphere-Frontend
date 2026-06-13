@@ -18,21 +18,9 @@ const DeleteUserControl = ({ userId, onSuccessCallback }: DeleteUserControlProps
     onSuccess: (response: any) => {
       if (response?.data?.success || response?.success !== false) {
         Swal.fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#3085d6",
-          cancelButtonColor: "#d33",
-          confirmButtonText: "Yes, delete it!"
-        }).then((result) => {
-          if (result.isConfirmed) {
-            Swal.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success"
-            });
-          }
+          title: "Deleted!",
+          text: "User has been deleted successfully.",
+          icon: "success",
         });
       }
 
@@ -47,19 +35,32 @@ const DeleteUserControl = ({ userId, onSuccessCallback }: DeleteUserControlProps
         text: errorMessage,
         icon: "error",
       });
-    }
+    },
   });
 
   const handleDelete = () => {
-    mutate();
-  }
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate();
+      }
+    });
+  };
 
   return (
     <div>
       <button
         onClick={handleDelete}
         disabled={isPending}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-200">
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors duration-200"
+      >
         <Trash2 className="w-3.5 h-3.5" />
         <span>Delete</span>
       </button>

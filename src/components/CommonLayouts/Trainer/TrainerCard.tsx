@@ -5,7 +5,7 @@ const TrainerCard = ({ trainer }: { trainer: ITrainerProps }) => {
   const trainerImage = trainer?.user?.image && trainer.user?.image.trim() !== "" ? trainer.user?.image : "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=500&auto=format&fit=crop&q=60";
 
   return (
-    <div className="group relative w-full aspect-[4/3] bg-neutral-100 border border-neutral-200 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl">
+    <div className="group relative w-full aspect-4/3 bg-neutral-100 border border-neutral-200 rounded-2xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-xl">
       <Image
         src={trainerImage}
         alt={trainer.user.name}

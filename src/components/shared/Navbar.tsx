@@ -26,8 +26,8 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
     { label: "Home", href: "/" },
     { label: "Trainers", href: "/trainers" },
     { label: "Products", href: "/products" },
-    { label: "About Us", href: "/" },
-    { label: "Contact Us", href: "/" },
+    // { label: "About Us", href: "/" },
+    // { label: "Contact Us", href: "/" },
     { label: "BMI Calculator", href: "/bmi-calculator" },
     { label: "Dashboard", href: dashboardHref || "/login" },
   ];
