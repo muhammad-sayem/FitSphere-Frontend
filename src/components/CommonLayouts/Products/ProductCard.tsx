@@ -51,10 +51,12 @@ const ProductCard = ({ product }: { product: IProductProps }) => {
               {product.remainingStock >= 5 ? `${product.remainingStock} Available` : product.remainingStock > 0 ? `Only ${product.remainingStock} Left` : "Out of Stock"}
             </span>
           </div>
-
           <BuyProductButton
+            key={product.id}
+            productId={product.id}
             isDisabled={product.remainingStock === 0}
           />
+
         </div>
       </div>
     </Link>

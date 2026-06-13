@@ -1,6 +1,11 @@
 "use client";
 
-const BuyProductButton = ({ isDisabled }: { isDisabled: boolean }) => {
+interface BuyProductButtonProps {
+  isDisabled: boolean;
+  productId: string;
+}
+
+const BuyProductButton = ({ isDisabled, productId }: BuyProductButtonProps) => {
   return (
     <div>
       <button

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { productServices } from "@/services/product.services";
+import BuyProductButton from "@/components/CommonLayouts/Products/BuyProductButton";
 
 const ProductDetails = async ({ params }: { params: Promise<{ productId: string }> }) => {
   const { productId } = await params;
@@ -26,14 +27,14 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
     <div className="min-h-screen bg-neutral-50/50 py-12 sm:py-16">
       <div className="w-11/12 max-w-7xl mx-auto">
         <div className="mb-8">
-          <Link 
-            href="/products" 
+          <Link
+            href="/products"
             className="inline-flex items-center gap-2 text-sm font-bold text-neutral-500 hover:text-black transition-colors duration-200 group"
           >
-            <svg 
-              className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform"
+              fill="none"
+              stroke="currentColor"
               viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
@@ -48,7 +49,7 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
               <span className="absolute top-4 left-4 z-10 bg-black text-white text-[10px] font-black tracking-widest uppercase px-3 py-1 rounded">
                 {product.category}
               </span>
-              
+
               <Image
                 src={productImage}
                 alt={product.name}
@@ -63,20 +64,18 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
           <div className="lg:col-span-6 flex flex-col justify-between pt-2">
             <div>
               <div className="flex flex-wrap items-center gap-3 mb-4">
-                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase ${
-                  product.remainingStock >= 5 
-                    ? "bg-green-50 text-green-700 border border-green-200" 
-                    : product.remainingStock > 0 
-                    ? "bg-amber-50 text-amber-700 border border-amber-200" 
+                <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase ${product.remainingStock >= 5
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : product.remainingStock > 0
+                    ? "bg-amber-50 text-amber-700 border border-amber-200"
                     : "bg-rose-50 text-rose-700 border border-rose-200"
-                }`}>
-                  <span className={`w-1.5 h-1.5 rounded-full ${
-                    product.remainingStock >= 5 ? "bg-green-600" : product.remainingStock > 0 ? "bg-amber-600" : "bg-rose-600"
-                  }`} />
+                  }`}>
+                  <span className={`w-1.5 h-1.5 rounded-full ${product.remainingStock >= 5 ? "bg-green-600" : product.remainingStock > 0 ? "bg-amber-600" : "bg-rose-600"
+                    }`} />
                   {product.remainingStock >= 5 ? "In Stock" : product.remainingStock > 0 ? "Low Stock" : "Out of Stock"}
                 </span>
-                
-                
+
+
               </div>
 
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-black tracking-tight leading-none mb-4">
@@ -120,18 +119,12 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
 
             <div className="space-y-4 pt-4 border-t border-neutral-100">
               <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  disabled={product.remainingStock === 0}
-                  className="flex-1 h-14 bg-primary-01 hover:bg-black text-white text-sm font-black uppercase tracking-widest rounded-xl transition-colors duration-300 disabled:bg-neutral-100 disabled:text-neutral-400 disabled:cursor-not-allowed shadow-md shadow-primary-01/10 hover:shadow-none"
-                >
-                  Buy Now
-                </button>
-                <button
-                  disabled={product.remainingStock === 0}
-                  className="px-8 h-14 bg-white hover:bg-neutral-50 text-black text-sm font-black uppercase tracking-widest rounded-xl transition-colors duration-300 border-2 border-neutral-900 disabled:border-neutral-200 disabled:text-neutral-400 disabled:cursor-not-allowed"
-                >
-                  Add To Cart
-                </button>
+                <BuyProductButton
+                  key={product.id}
+                  productId={product.id}
+                  isDisabled={product.remainingStock === 0}
+                />
+
               </div>
             </div>
           </div>

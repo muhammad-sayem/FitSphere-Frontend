@@ -57,6 +57,20 @@ export const trainerServices = {
     }
   },
 
+  getTrainerProfileByTrainerProfileId: async (trainerProfileId: string, options?: ApiRequestOptions) => {
+    try {
+      const trainerProfile = await httpClient.get(`/trainer-profiles/${trainerProfileId}`, options);
+      return trainerProfile;
+    }
+    catch (error) {
+      console.error("Error fetching trainer profile:", error);
+      return {
+        data: null,
+        error: { message: "Failed to fetch trainer profile" }
+      };
+    }
+  },
+
   getTrainerProfileByUserId: async (userId: string, options?: ApiRequestOptions) => {
     try {
       const trainerProfile = await httpClient.get(`/trainer-profiles/userId/${userId}`, options);
