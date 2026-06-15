@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { getMe } from "@/services/auth.services";
@@ -166,8 +167,8 @@ const MyAdminProfile = () => {
                   {recent.users?.map((user: any) => (
                     <tr key={user.id} className="hover:bg-neutral-50/50 transition-colors">
                       <td className="py-2.5 pr-2 font-bold">
-                        <div className="truncate max-w-[140px]">{user.name}</div>
-                        <div className="text-[11px] text-secondary-01 font-normal tracking-normal truncate max-w-[140px]">{user.email}</div>
+                        <div className="truncate max-w-35">{user.name}</div>
+                        <div className="text-[11px] text-secondary-01 font-normal tracking-normal truncate max-w-35">{user.email}</div>
                       </td>
                       <td className="py-2.5 pr-2">
                         <span className={`px-2 py-0.5 text-[9px] font-black rounded uppercase tracking-wider ${user.role === "TRAINER" ? "bg-orange-50 text-primary-01" : "bg-neutral-100 text-black"}`}>
