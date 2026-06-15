@@ -1,7 +1,7 @@
 "use server";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { httpClient } from "@/lib/axios/httpClient";
+import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { loginZodSchema, registerZodSchema } from "@/zod/auth.validation";
@@ -131,9 +131,9 @@ export const logoutAction = async () => {
 }
 
 //* For get user info into client components *//
-export const getMe = async () => {
+export const getMe = async (options?: ApiRequestOptions) => {
   try {
-    const response = await httpClient.get("/users/me");
+    const response = await httpClient.get("/auth/me", options);
     return response.data;
   }
 

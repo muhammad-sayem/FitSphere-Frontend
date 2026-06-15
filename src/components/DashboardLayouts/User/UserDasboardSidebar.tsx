@@ -9,6 +9,7 @@ const sidebarMenus = [
   { title: "My Orders", path: "/dashboard/my-orders" },
   { title: "My Payments", path: "/dashboard/my-payments" },
   { title: "My reviews", path: "/dashboard/my-reviews" },
+  { title: "My Profile", path: "/dashboard/my-profile" },
   { title: "Home", path: "/" },
 ]
 
