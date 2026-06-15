@@ -13,6 +13,8 @@ const roleHome = {
 } as const;
 
 const isProtectedPath = (pathname: string) =>
+  pathname === "/payment/payment-success" ||
+  pathname.startsWith("/payment/payment-success/") ||
   protectedRoutes.some(({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
 const normalizeRole = (role: string) => role.toLowerCase();
@@ -53,6 +55,22 @@ export function proxy(request: NextRequest) {
 
   const normalizedRole = normalizeRole(role);
 
+  if (pathname === "/payment/payment-success" || pathname.startsWith("/payment/payment-success/")) {
+    const paymentInitiated = request.cookies.get("payment_initiated")?.value === "true";
+    const hasSessionId = request.nextUrl.searchParams.has("session_id");
+    const hasPaymentIntent = request.nextUrl.searchParams.has("payment_intent");
+
+    if (!paymentInitiated && !hasSessionId && !hasPaymentIntent) {
+      return NextResponse.redirect(new URL(roleHome[normalizedRole as keyof typeof roleHome] || "/", request.url));
+    }
+
+    const response = NextResponse.next();
+    if (paymentInitiated) {
+      response.cookies.delete("payment_initiated");
+    }
+    return response;
+  }
+
   const matchedRoute = protectedRoutes.find(({ prefix }) => pathname === prefix || pathname.startsWith(`${prefix}/`));
 
   if (matchedRoute && normalizedRole !== matchedRoute.role) {
@@ -70,5 +88,7 @@ export const config = {
     "/trainer-dashboard/:path*",
     "/dashboard",
     "/dashboard/:path*",
+    "/payment/payment-success",
+    "/payment/payment-success/:path*",
   ],
 };

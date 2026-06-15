@@ -39,7 +39,9 @@ const BookSessionButton = ({ slot }: BookSessionButtonProps) => {
           if (response?.data?.paymentUrl) {
             setPaymentUrl(response.data.paymentUrl);
             setIsOpen(true);
-          } else {
+          } 
+          
+          else {
             Swal.fire({
               title: "Error!",
               text: "Payment details could not be generated.",
@@ -47,14 +49,18 @@ const BookSessionButton = ({ slot }: BookSessionButtonProps) => {
               confirmButtonColor: "#000000",
             });
           }
-        } catch (error) {
+        } 
+        
+        catch (error) {
           Swal.fire({
             title: "Booking Failed",
             text: error instanceof Error ? error.message : "Something went wrong",
             icon: "error",
             confirmButtonColor: "#000000",
           });
-        } finally {
+        } 
+        
+        finally {
           setIsLoading(false);
         }
       }

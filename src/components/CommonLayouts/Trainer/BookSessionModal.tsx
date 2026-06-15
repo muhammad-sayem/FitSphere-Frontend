@@ -18,6 +18,7 @@ interface BookSessionModalProps {
 const BookSessionModal = ({ isOpen, setIsOpen, paymentUrl }: BookSessionModalProps) => {
   const handlePaymentRedirect = () => {
     if (paymentUrl) {
+      document.cookie = "payment_initiated=true; path=/; max-age=900; SameSite=Lax" + (window.location.protocol === "https:" ? "; secure" : "");
       window.location.href = paymentUrl;
     }
   };
