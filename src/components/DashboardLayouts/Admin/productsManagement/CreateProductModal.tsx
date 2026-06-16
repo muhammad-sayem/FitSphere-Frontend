@@ -70,7 +70,9 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
         setSelectedFile(null);
         setIsOpen(false);
         refetch();
-      } catch (error: any) {
+      } 
+      
+      catch (error: any) {
         const errorMsg = error?.message || "Product creation failed";
         setServerError(errorMsg);
         toast.error(errorMsg, { position: "top-center" });

@@ -1,5 +1,7 @@
+import GiveReviewButton from "@/components/CommonLayouts/Trainer/GiveReviewButton";
 import { reviewServices } from "@/services/review.services";
 import { trainerServices } from "@/services/trainer.services";
+import { userServices } from "@/services/user.services";
 import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,7 +12,7 @@ interface ReviewUser {
   image: string | null;
 }
 
-interface Review {
+interface IReview {
   id: string;
   comment: string;
   rating: number;
@@ -25,7 +27,10 @@ const TrainerDetailsPage = async ({ params }: { params: Promise<{ trainerProfile
   const { trainerProfileId } = await params;
   const { data: trainerProfile } = await trainerServices.getTrainerProfileByTrainerProfileId(trainerProfileId);
 
-  const { data: reviewsOfThisTrainer } = await reviewServices.getReviewsForTrainer(trainerProfileId) as { data: Review[] | null };
+  const { data: reviewsOfThisTrainer } = await reviewServices.getReviewsForTrainer(trainerProfileId) as { data: IReview[] | null };
+
+  const currentUser = await userServices.getLoggedInUser();
+  console.log("Current User in Trainer Details Page:", currentUser);
 
   if (!trainerProfile) {
     return (
@@ -135,7 +140,13 @@ const TrainerDetailsPage = async ({ params }: { params: Promise<{ trainerProfile
       </div>
 
       <div className="mt-8 w-full lg:w-2/3">
-        <h3 className="text-xl font-extrabold text-black mb-4 border-b border-black pb-2">Client Reviews</h3>
+        <div className="flex items-center justify-between pb-2 mb-4">
+          <h3 className="text-xl font-extrabold text-black">Client Reviews</h3>
+          <GiveReviewButton
+            currentUser={currentUser}
+            trainerProfileId={trainerProfileId}
+          />
+        </div>
         {reviewsOfThisTrainer && reviewsOfThisTrainer.length > 0 ? (
           <div className="space-y-4">
             {reviewsOfThisTrainer.map((review) => (

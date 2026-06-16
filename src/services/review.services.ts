@@ -1,9 +1,28 @@
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
+export interface ICreateReviewPayload {
+  trainerId: string;
+  rating: number;
+  comment: string;
+}
+
 export const reviewServices = {
-  getMyReviews: (options?: ApiRequestOptions) => {
+  createReview: async (payload: ICreateReviewPayload, options?: ApiRequestOptions) => {
     try {
-      const response = httpClient.get("/reviews/user/my-reviews", options);
+      const response = await httpClient.post("/reviews/create-review", payload, options);
+      return response;
+    }
+
+    catch (error) {
+      console.error("[reviewServices.createReview] api error:", error);
+      const serverErrorMessage = error || "Failed to create review";
+      throw serverErrorMessage;
+    }
+  },
+
+  getMyReviews: async (options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.get("/reviews/user/my-reviews", options);
       return response;
     }
 
@@ -14,9 +33,9 @@ export const reviewServices = {
     }
   },
 
-  getReviewsForTrainer: (trainerId: string) => {
+  getReviewsForTrainer: async (trainerId: string) => {
     try {
-      const response = httpClient.get(`reviews/trainer/${trainerId}/reviews`);
+      const response = await httpClient.get(`reviews/trainer/${trainerId}/reviews`);
       return response;
     }
 
@@ -25,5 +44,18 @@ export const reviewServices = {
       const serverErrorMessage = error || "Failed to fetch reviews for trainer";
       throw serverErrorMessage;
     }
-  }
+  },
+
+  alreadyReviewedOrNot: async (trainerId: string) => {
+    try {
+      const response = await httpClient.get(`/reviews/is-already-reviewed/${trainerId}`);
+      return response;
+    }
+
+    catch (error) {
+      console.error("[reviewServices.alreadyReviewedOrNot] api error:", error);
+      const serverErrorMessage = error || "Failed to check review status";
+      throw serverErrorMessage;
+    }
+  } 
 }
