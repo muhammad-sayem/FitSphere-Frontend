@@ -23,7 +23,7 @@ const MostPopularTrainers = () => {
         <h2 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-wide uppercase">
           Most Popular <span className="text-primary-01"> Trainers </span>
         </h2>
-        <p className="text-lg text-secondary-01 mt-2 max-w-lg mx-auto">
+        <p className="text-lg text-secondary-01 mt-2 max-w-xl mx-auto">
           Train with our industry-leading experts dedicated to guiding your fitness journey with personalized programs and proven results.
         </p>
       </div>

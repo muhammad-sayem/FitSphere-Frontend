@@ -31,14 +31,14 @@ const HealthTips = () => {
   return (
     <section className="w-full py-12 md:py-16 bg-white">
       
-      <div className="text-center mb-10 md:mb-14 px-4">
+      {/* <div className="text-center mb-10 md:mb-14 px-4">
         <h2 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-wide uppercase">
           HEALTH & <span className="text-primary-01"> VITALITY TIPS </span>
         </h2>
         <p className="text-lg text-secondary-01 mt-2 max-w-lg mx-auto">
           Simple yet powerful daily practices to elevate your physical performance and long-term well-being.
         </p>
-      </div>
+      </div> */}
 
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
