@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import ourProgramsImgage from '../../../../public/assets/our program trainer image.png';
-import { Dumbbell, BicepsFlexed, Bike, Footprints } from 'lucide-react';
+import { Dumbbell, BicepsFlexed, Bike, SportShoe } from 'lucide-react';
 
 const OurPrograms = () => {
   return (
@@ -8,12 +8,12 @@ const OurPrograms = () => {
       <div className="flex gap-4">
         <div className="w-1/2">
           {/* Section Header */}
-          <h2 className="text-3xl font-black text-neutral-900 tracking-wide uppercase mb-2">
-            OUR <span className='text-primary-01'> PROGRAM </span>
+          <h2 className="text-3xl font-black text-black tracking-wide uppercase mb-2">
+            OUR <span className='text-primary-01'> PROGRAMS </span>
           </h2>
-          <div className="w-16 h-1 bg-orange-500 mb-6" />
+          <div className="w-16 h-1 bg-primary-01 mb-6" />
           
-          <p className="text-secondary-01 text-sm leading-relaxed mb-10">
+          <p className="text-secondary-01 text-lg leading-relaxed mb-10">
             Discover our premium, expert-led fitness routines tailored to transform your strength, endurance, and overall health step by step.
           </p>
 
@@ -21,36 +21,36 @@ const OurPrograms = () => {
           <div className="grid grid-cols-2 gap-x-8 gap-y-10">
             {/* Weight Lifting */}
             <div className="flex flex-col gap-3">
-              <Dumbbell className="w-10 h-10 text-orange-500 stroke-[1.5]" />
-              <h3 className="text-xl font-bold text-neutral-900">Weight Lifting</h3>
-              <p className="text-secondary-01 text-sm leading-relaxed">
+              <Dumbbell className="w-10 h-10 text-primary-01 stroke-[1.5]" />
+              <h3 className="text-2xl font-bold text-black">Weight Lifting</h3>
+              <p className="text-secondary-01 text-md leading-relaxed">
                 Build fundamental explosive power, density, and core body strength with specialized free-weight movements.
               </p>
             </div>
 
             {/* Body Building */}
             <div className="flex flex-col gap-3">
-              <BicepsFlexed className="w-10 h-10 text-orange-500 stroke-[1.5]" />
-              <h3 className="text-xl font-bold text-neutral-900">Body Building</h3>
-              <p className="text-secondary-01 text-sm leading-relaxed">
+              <BicepsFlexed className="w-10 h-10 text-primary-01 stroke-[1.5]" />
+              <h3 className="text-2xl font-bold text-black">Body Building</h3>
+              <p className="text-secondary-01 text-md leading-relaxed">
                 Sculpt your physique, increase clean muscular hypertrophy, and improve overall symmetry effectively.
               </p>
             </div>
 
             {/* Cycling */}
             <div className="flex flex-col gap-3">
-              <Bike className="w-10 h-10 text-orange-500 stroke-[1.5]" />
-              <h3 className="text-xl font-bold text-neutral-900">Cycling</h3>
-              <p className="text-secondary-01 text-sm leading-relaxed">
+              <Bike className="w-10 h-10 text-primary-01 stroke-[1.5]" />
+              <h3 className="text-2xl font-bold text-black">Cycling</h3>
+              <p className="text-secondary-01 text-md leading-relaxed">
                 Boost active cardiovascular endurance, burn calories rapidly, and strengthen lower-body muscle groups.
               </p>
             </div>
 
-            {/* Running (Yoga er bodole) */}
+            {/* Running */}
             <div className="flex flex-col gap-3">
-              <Footprints className="w-10 h-10 text-orange-500 stroke-[1.5]" />
-              <h3 className="text-xl font-bold text-neutral-900">Running</h3>
-              <p className="text-secondary-01 text-sm leading-relaxed">
+              <SportShoe  className="w-10 h-10 text-primary-01 stroke-[1.5]" />
+              <h3 className="text-2xl font-bold text-black">Running</h3>
+              <p className="text-secondary-01 text-md leading-relaxed">
                 Enhance your peak stamina, lung capacity, and mental clarity through structural running and pacing setups.
               </p>
             </div>

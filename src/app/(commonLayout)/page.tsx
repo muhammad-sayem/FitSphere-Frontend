@@ -1,5 +1,8 @@
+import HealthTips from "@/components/CommonLayouts/Home/HealthTips";
 import HeroSection from "@/components/CommonLayouts/Home/HeroSection";
+import MostPopularTrainersMain from "@/components/CommonLayouts/Home/MostPopularTrainersMain";
 import OurPrograms from "@/components/CommonLayouts/Home/OurPrograms";
+import QuoteSection from "@/components/CommonLayouts/Home/QuoteSection";
 import { userServices } from "@/services/user.services";
 
 export default async function Home() {
@@ -15,7 +18,10 @@ export default async function Home() {
   return (
     <div>
       <HeroSection />
+      <HealthTips />
       <OurPrograms />
+      <MostPopularTrainersMain />
+      <QuoteSection />
     </div>
   );
 }
