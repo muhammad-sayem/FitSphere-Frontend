@@ -1,4 +1,5 @@
 import HeroSection from "@/components/CommonLayouts/Home/HeroSection";
+import OurPrograms from "@/components/CommonLayouts/Home/OurPrograms";
 import { userServices } from "@/services/user.services";
 
 export default async function Home() {
@@ -14,6 +15,7 @@ export default async function Home() {
   return (
     <div>
       <HeroSection />
+      <OurPrograms />
     </div>
   );
 }

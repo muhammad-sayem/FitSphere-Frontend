@@ -1,4 +1,4 @@
-import BmiCalculator from "@/components/CommonLayouts/Home/BmiCalculator";
+import BmiCalculator from "@/components/CommonLayouts/BmiCalculator/BmiCalculator";
 
 const BmiCalculatorPage = () => {
   return (
