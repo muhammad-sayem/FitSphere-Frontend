@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import QueryProvider from "@/providers/QueryProvider";
 import { Toaster } from "@/components/ui/sonner";
+import AosProvider from "@/providers/AosProvider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -35,8 +36,9 @@ export default async function RootLayout({
       {/* Root Layout */}
       <body className="min-h-full flex flex-col">
         <QueryProvider>
+          <AosProvider />
           {children}
-          <Toaster richColors/>
+          <Toaster richColors />
         </QueryProvider>
       </body>
     </html>

@@ -29,8 +29,8 @@ const HealthTips = () => {
   ];
 
   return (
-    <section className="w-full py-12 md:py-16 bg-white">
-      
+    <section className="w-full py-12 md:py-16 bg-white overflow-hidden">
+
       {/* <div className="text-center mb-10 md:mb-14 px-4">
         <h2 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-wide uppercase">
           HEALTH & <span className="text-primary-01"> VITALITY TIPS </span>
@@ -40,19 +40,19 @@ const HealthTips = () => {
         </p>
       </div> */}
 
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
         {tips.map((tip, index) => {
           const IconComponent = tip.icon;
-          
           const isEven = index % 2 === 1;
-          
+
           return (
             <div
               key={tip.id}
-              className={`flex flex-col items-center text-center px-6 py-12 md:py-16 transition-all duration-300 transform hover:-translate-y-2 hover:border hover:border-primary-01 ${
-                isEven ? "bg-[#EDEDED]" : "bg-[#F8F8F8]"
-              }`}
+
+              data-aos={isEven ? "fade-up" : "fade-down"}
+              data-aos-duration="2000"
+              className={`flex flex-col items-center text-center px-6 py-12 md:py-16 transform transition-transform duration-300 ease-out hover:scale-105 hover:z-10 hover:border hover:border-primary-01 ${isEven ? "bg-[#EDEDED]" : "bg-[#F8F8F8]"
+                }`}
             >
               {/* Centered Brand Color Icon */}
               <div className="mb-4 text-orange-500">

@@ -16,7 +16,7 @@ const Gallery = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
 
-          <div className="md:col-span-2 relative aspect-21/9 md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-down-right" className="md:col-span-2 relative aspect-21/9 md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage1}
               alt="Gallery Image 1"
@@ -25,7 +25,7 @@ const Gallery = () => {
             />
           </div>
 
-          <div className="relative aspect-[16/10] md:aspect-auto md:h-[280px] w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-down-left" className="relative aspect-16/10 md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage2}
               alt="Gallery Image 2"
@@ -34,7 +34,7 @@ const Gallery = () => {
             />
           </div>
 
-          <div className="relative aspect-[16/10] md:aspect-auto md:h-[280px] w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-up-right" className="relative aspect-16/10 md:aspect-auto md:h-[280px] w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage3}
               alt="Gallery Image 3"
@@ -44,7 +44,7 @@ const Gallery = () => {
           </div>
 
           {/* 4th Image adjusted for full context display using object-top alignment */}
-          <div className="md:col-span-2 relative aspect-[21/9] md:aspect-auto md:h-[280px] w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-up-left" className="md:col-span-2 relative aspect-[21/9] md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage4}
               alt="Gallery Image 4"

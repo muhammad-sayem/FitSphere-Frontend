@@ -4,10 +4,9 @@ import { Flame, HeartPulse, Target, Dumbbell } from 'lucide-react';
 
 const OurGoals = () => {
   return (
-    <div className="w-9/10 mx-auto mb-8 md:mb-12 rounded-lg p-6">
+    <div className="w-9/10 mx-auto mb-8 md:mb-12 rounded-lg p-6 overflow-hidden">
       <div className="flex gap-4">
-        <div className="w-1/2">
-          {/* Section Header */}
+        <div data-aos="zoom-out-right" className="w-1/2">
           <h2 className="text-3xl font-black text-black tracking-wide uppercase mb-2">
             OUR <span className='text-primary-01'> GOALS </span>
           </h2>
@@ -17,9 +16,7 @@ const OurGoals = () => {
             Discover our premium, expert-led fitness routines tailored to transform your strength, endurance, and overall health step by step.
           </p>
 
-          {/* Goals Grid */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-12 pt-4">
-            {/* CrossFit */}
             <div className="relative w-full h-60 flex items-center justify-center filter drop-shadow-md group transition-all duration-300 transform hover:-translate-y-2">
               <div 
                 className="absolute inset-0 bg-white transition-colors duration-300 group-hover:bg-primary-01/5" 
@@ -29,7 +26,6 @@ const OurGoals = () => {
                 className="absolute inset-0.5 bg-white pointer-events-none opacity-90 transition-all duration-300 group-hover:border-primary-01"
                 style={{ clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)", boxShadow: "inset 0 0 0 1px #E5E5E5" }}
               />
-              {/* Dynamic adjustment to match hover state borders natively */}
               <div 
                 className="absolute inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-primary-01"
                 style={{ clipPath: "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)" }}
@@ -49,7 +45,6 @@ const OurGoals = () => {
               </div>
             </div>
 
-            {/* Healthy Life */}
             <div className="relative w-full h-60 flex items-center justify-center filter drop-shadow-md group transition-all duration-300 transform hover:-translate-y-2">
               <div 
                 className="absolute inset-0 bg-white transition-colors duration-300 group-hover:bg-primary-01/5" 
@@ -78,7 +73,6 @@ const OurGoals = () => {
               </div>
             </div>
 
-            {/* Strategies */}
             <div className="relative w-full h-60 flex items-center justify-center filter drop-shadow-md group transition-all duration-300 transform hover:-translate-y-2">
               <div 
                 className="absolute inset-0 bg-white transition-colors duration-300 group-hover:bg-primary-01/5" 
@@ -107,7 +101,6 @@ const OurGoals = () => {
               </div>
             </div>
 
-            {/* Workout */}
             <div className="relative w-full h-60 flex items-center justify-center filter drop-shadow-md group transition-all duration-300 transform hover:-translate-y-2">
               <div 
                 className="absolute inset-0 bg-white transition-colors duration-300 group-hover:bg-primary-01/5" 
@@ -138,14 +131,24 @@ const OurGoals = () => {
           </div>
         </div>
 
-        <div className="w-1/2 flex items-center justify-end">
-          <Image 
-            src={ourProgramsImgage}
-            alt="Our Programs Image"
-            width={500}
-            height={500}
-            className="w-100 h-auto"
+        <div 
+        data-aos="zoom-out-left" 
+        className="w-1/2 flex items-center justify-center relative min-h-125">
+          <div 
+            className="absolute inset-0 bg-primary-01 opacity-95 z-0" 
+            style={{ clipPath: "polygon(15% 25%, 100% 15%, 80% 85%, 25% 70%)" }}
           />
+          
+          <div className="relative z-10 w-full h-full flex items-center justify-center transform hover:scale-[1.02] transition-transform duration-500">
+            <Image 
+              src={ourProgramsImgage}
+              alt="Our Programs Image"
+              width={480}
+              height={480}
+              className="w-auto h-120 object-contain drop-shadow-2xl"
+              priority
+            />
+          </div>
         </div>
       </div>
     </div>

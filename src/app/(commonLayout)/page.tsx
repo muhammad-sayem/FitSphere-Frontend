@@ -5,6 +5,7 @@ import MostPopularTrainersMain from "@/components/CommonLayouts/Home/MostPopular
 import OurGoals from "@/components/CommonLayouts/Home/OurGoals";
 import QuoteSection from "@/components/CommonLayouts/Home/QuoteSection";
 import WhyChooseFitSphere from "@/components/CommonLayouts/Home/WhyChooseFitSphere";
+import Footer from "@/components/shared/Footer";
 import { userServices } from "@/services/user.services";
 
 export default async function Home() {
@@ -21,11 +22,12 @@ export default async function Home() {
     <div>
       <HeroSection />
       <HealthTips />
-      <QuoteSection />
       <OurGoals />
+      <QuoteSection />
       <WhyChooseFitSphere />
       <MostPopularTrainersMain />
       <Gallery />
+      <Footer />
     </div>
   );
 }

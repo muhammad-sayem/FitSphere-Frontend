@@ -7,6 +7,8 @@ import { MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { logoutAction } from "@/services/auth.services";
+import logo from "../../../public/assets/logo.png";
+import Image from "next/image";
 
 const linkClassName =
   "text-sm font-medium text-foreground/80 transition-colors hover:text-foreground";
@@ -42,7 +44,12 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/90 backdrop-blur">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
-          FitSphere
+          <Image
+            src={logo}
+            // width={32}
+            // height={32}
+            alt="FitSphere Logo"
+            className="h-25 w-25 object-contain" />
         </Link>
 
         <nav className="hidden items-center gap-6 md:flex">
@@ -60,10 +67,10 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
             </Button>
           ) : (
             <div className="hidden items-center gap-2 md:flex">
-              <Button asChild size="sm" variant="outline">
+              <Button asChild size="sm" variant="outline" className="text-primary-01 border border-primary-01 hover:bg-primary-01 hover:text-white">
                 <Link href="/login">Login</Link>
               </Button>
-              <Button asChild size="sm">
+              <Button asChild size="sm" className="bg-primary-01 text-white hover:bg-[#d6412e]">
                 <Link href="/register">Register</Link>
               </Button>
             </div>
