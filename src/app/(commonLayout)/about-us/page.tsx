@@ -1,7 +1,9 @@
+import AboutUs from "@/components/CommonLayouts/AboutUs/AboutUs";
+
 const AboutUsPage = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold underline">About Us</h1>
+      <AboutUs />
     </div>
   );
 };
