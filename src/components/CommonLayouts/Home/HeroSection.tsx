@@ -1,6 +1,7 @@
 "use client";
 
 import { Typewriter } from 'react-simple-typewriter';
+import Link from 'next/link';
 
 const HeroSection = () => {
   return (
@@ -95,13 +96,13 @@ const HeroSection = () => {
           </div>
 
           <div className="mt-8 flex flex-row gap-4 w-full justify-center lg:justify-start">
-            <button className="bg-primary-01 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold hover:bg-[#d6412e] transition-colors shadow-lg shadow-primary-01/20 text-sm sm:text-base">
+            {/* <button className="bg-primary-01 text-white px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold hover:bg-[#d6412e] transition-colors shadow-lg shadow-primary-01/20 text-sm sm:text-base">
               Get Started
-            </button>
+            </button> */}
 
-            <button className="border border-gray-300 bg-white/50 backdrop-blur-sm px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold hover:bg-gray-50 transition-colors text-sm sm:text-base">
+            <Link href="/trainers" className="text-white bg-primary-01 backdrop-blur-sm px-6 py-3.5 sm:px-8 sm:py-4 rounded-xl font-semibold hover:bg-white hover:text-primary-01 hover:transition-colors duration-300 text-sm sm:text-base hover:border hover:border-primary-01">
               Explore Trainers
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -114,7 +115,8 @@ const HeroSection = () => {
             
             <div className="absolute inset-0 rounded-full border-2 border-dashed border-primary-01/60 animate-[spin_100s_linear_infinite]" />
             
-            <div className="absolute inset-6 rounded-full border-2 border-dashed border-secondary-01/80 animate-[spin_8s_linear_infinite_reverse]" />
+            {/* Speed updated to 100s to match the clockwise ring */}
+            <div className="absolute inset-6 rounded-full border-2 border-dashed border-secondary-01/80 animate-[spin_100s_linear_infinite_reverse]" />
             
             <div className="absolute inset-12 sm:inset-16 rounded-full bg-linear-to-tr from-primary-01 to-[#ff6b57] shadow-[0_15px_50px_rgba(243,78,58,0.4)] flex flex-col items-center justify-center overflow-hidden">
               <div className="absolute top-0 left-0 right-0 h-1/2 bg-linear-to-b from-white/35 to-transparent rounded-t-full pointer-events-none" />

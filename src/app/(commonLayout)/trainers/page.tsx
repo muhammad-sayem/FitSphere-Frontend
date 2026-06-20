@@ -14,7 +14,7 @@ const TrainersPage = async () => {
 
   return (
     <div className="mx-auto w-9/10 px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Trainers Page</h1>
+      <h1 className="text-2xl md:text-4xl font-black mb-4"> Meet Our <span className="text-primary-01">Trainers</span> </h1>
       <HydrationBoundary state={dehydrate(queryClient)}>
         <AllTrainers />
       </HydrationBoundary>
