@@ -34,7 +34,7 @@ const Gallery = () => {
             />
           </div>
 
-          <div data-aos="fade-up-right" className="relative aspect-16/10 md:aspect-auto md:h-[280px] w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-up-right" className="relative aspect-16/10 md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage3}
               alt="Gallery Image 3"
@@ -44,7 +44,7 @@ const Gallery = () => {
           </div>
 
           {/* 4th Image adjusted for full context display using object-top alignment */}
-          <div data-aos="fade-up-left" className="md:col-span-2 relative aspect-[21/9] md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
+          <div data-aos="fade-up-left" className="md:col-span-2 relative aspect-21/9 md:aspect-auto md:h-70 w-full overflow-hidden rounded-2xl border border-neutral-300 shadow-sm group">
             <Image
               src={galleryImage4}
               alt="Gallery Image 4"

@@ -7,7 +7,10 @@ const AboutUs = () => {
   return (
     <div className="w-11/12 max-w-7xl mx-auto py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-150">
-        <div className="relative group overflow-hidden rounded-2xl h-full">
+        <div
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+          className="relative group overflow-hidden rounded-2xl h-full">
           <Image
             src={aboutImage1}
             alt="Our Vision"
@@ -23,7 +26,10 @@ const AboutUs = () => {
           </div>
         </div>
 
-        <div className="grid grid-rows-2 gap-6 h-full">
+        <div
+          data-aos="zoom-in"
+          data-aos-duration="1000"
+          className="grid grid-rows-2 gap-6 h-full">
           <div className="relative group overflow-hidden rounded-2xl h-full">
             <Image
               src={aboutImage2}
@@ -40,7 +46,10 @@ const AboutUs = () => {
             </div>
           </div>
 
-          <div className="relative group overflow-hidden rounded-2xl h-full">
+          <div
+            data-aos="zoom-in"
+            data-aos-duration="1000"
+            className="relative group overflow-hidden rounded-2xl h-full">
             <Image
               src={aboutImage3}
               alt="Why Choose Us"

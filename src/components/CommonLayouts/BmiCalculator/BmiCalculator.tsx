@@ -18,11 +18,14 @@ const BmiCalculator = () => {
 
       if (bmiValue < 18.5) {
         setStatus("Underweight");
-      } else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
+      }
+      else if (bmiValue >= 18.5 && bmiValue <= 24.9) {
         setStatus("Normal weight");
-      } else if (bmiValue >= 25 && bmiValue <= 29.9) {
+      }
+      else if (bmiValue >= 25 && bmiValue <= 29.9) {
         setStatus("Overweight");
-      } else {
+      }
+      else {
         setStatus("Obese");
       }
     }
@@ -35,7 +38,10 @@ const BmiCalculator = () => {
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+        <div 
+        data-aos="fade-left" 
+        data-aos-duration="1000"
+        className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
           <h2 className="text-xl font-semibold mb-6 text-black">Calculate Your BMI</h2>
           <div className="space-y-5">
             <div>
@@ -83,7 +89,10 @@ const BmiCalculator = () => {
           )}
         </div>
 
-        <div className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
+        <div 
+        data-aos="fade-left" 
+        data-aos-duration="1500"
+        className="bg-white p-8 rounded-2xl border border-gray-100 shadow-sm">
           <h2 className="text-xl font-semibold mb-6 text-black">BMI Weight Status Chart</h2>
           <div className="space-y-3">
             <div className="flex justify-between items-center p-3.5 rounded-xl bg-gray-50 border-l-4 border-amber-400">

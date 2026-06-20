@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -11,10 +11,11 @@ import logo from "../../../public/assets/logo.png";
 import Image from "next/image";
 
 const linkClassName =
-  "text-sm font-medium text-foreground/80 transition-colors hover:text-foreground";
+  "text-sm font-medium transition-colors";
 
 const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const dashboardHref = loggedInUser
     ? loggedInUser.role?.toUpperCase() === "ADMIN"
@@ -54,7 +55,11 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
 
         <nav className="hidden items-center gap-6 md:flex">
           {navItems.map((item) => (
-            <Link key={item.label} href={item.href} className={linkClassName}>
+            <Link 
+              key={item.label} 
+              href={item.href} 
+              className={`${linkClassName} ${pathname === item.href ? "text-primary-01 font-bold" : "hover:text-foreground"}`}
+            >
               {item.label}
             </Link>
           ))}
@@ -62,7 +67,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
 
         <div className="flex items-center gap-2">
           {loggedInUser ? (
-            <Button size="sm" variant="outline" className="hidden md:inline-flex" onClick={handleLogout}>
+            <Button size="sm" variant="outline" className="hidden md:inline-flex border border-primary-01 text-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer" onClick={handleLogout}>
               Logout
             </Button>
           ) : (
@@ -96,7 +101,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
                   <SheetClose asChild key={item.label}>
                     <Link
                       href={item.href}
-                      className="rounded-md px-3 py-2 text-base font-medium text-foreground/80 transition-colors hover:bg-muted hover:text-foreground"
+                      className={`rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-muted ${pathname === item.href ? "text-primary-01" : "text-foreground/80 hover:text-foreground"}`}
                     >
                       {item.label}
                     </Link>
