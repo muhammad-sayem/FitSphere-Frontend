@@ -28,7 +28,7 @@ export interface IProductProps {
   updatedAt: string;
 }
 
-const AllProducts = () => {
+const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"name" | "priceDesc" | "priceAsc" | "stockDesc" | "stockAsc">("name");
@@ -201,7 +201,11 @@ const AllProducts = () => {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((product: IProductProps) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              loggedInUser={loggedInUser}
+            />
           ))}
         </div>
       )}

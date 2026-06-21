@@ -1,5 +1,5 @@
-/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { productServices } from "@/services/product.services";
@@ -158,33 +158,33 @@ const ProductsManagement = () => {
       </div>
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse min-w-225">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-left border-collapse table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-xs text-secondary-01 font-black uppercase tracking-wider">
-                <th className="px-6 py-4">Image</th>
-                <th className="px-6 py-4">Name</th>
-                <th className="px-6 py-4">Description</th>
-                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort("price")}>
+                <th className="px-4 py-4 w-16">Image</th>
+                <th className="px-4 py-4 min-w-30">Name</th>
+                <th className="px-4 py-4 max-w-50">Description</th>
+                <th className="px-4 py-4 cursor-pointer select-none w-24" onClick={() => handleSort("price")}>
                   <div className="flex items-center gap-1.5">
                     <span>Price</span>
                     <ArrowUpDown className="w-3.5 h-3.5 text-secondary-01/60" />
                   </div>
                 </th>
-                <th className="px-6 py-4">Category</th>
-                <th className="px-6 py-4 cursor-pointer select-none" onClick={() => handleSort("remainingStock")}>
+                <th className="px-4 py-4 w-32">Category</th>
+                <th className="px-4 py-4 cursor-pointer select-none w-40" onClick={() => handleSort("remainingStock")}>
                   <div className="flex items-center gap-1.5">
                     <span>Remaining Stock</span>
                     <ArrowUpDown className="w-3.5 h-3.5 text-secondary-01/60" />
                   </div>
                 </th>
-                <th className="px-6 py-4 text-center">Actions</th>
+                <th className="px-4 py-4 text-center w-28">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
               {products.map((product) => (
                 <tr key={product.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-6 py-3">
+                  <td className="px-4 py-3">
                     <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
                       {product.image ? (
                         <Image
@@ -201,26 +201,26 @@ const ProductsManagement = () => {
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap text-black font-bold">{product.name}</td>
-                  <td className="px-6 py-3 max-w-xs truncate text-secondary-01">{product.description || "N/A"}</td>
-                  <td className="px-6 py-3 whitespace-nowrap text-black font-black">৳{product.price}</td>
-                  <td className="px-6 py-3 whitespace-nowrap">
+                  <td className="px-4 py-3 wrap-break-word text-black font-bold max-w-40">{product.name}</td>
+                  <td className="px-4 py-3 max-w-50 truncate text-secondary-01">{product.description || "N/A"}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-black font-black">${product.price}</td>
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
                       {product.category === "TRADEMILL" ? "Treadmill" : product.category === "DUMMBBELL" ? "Dumbbell" : product.category?.replace("_", " ") || "N/A"}
                     </span>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <span
                       className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
-                        product.remainingStock > 2
+                        product.remainingStock >= 5
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-rose-50 text-rose-700 border-rose-200"
                       }`}
                     >
-                      {product.remainingStock} items left
+                      {product.remainingStock} left
                     </span>
                   </td>
-                  <td className="px-6 py-3 whitespace-nowrap">
+                  <td className="px-4 py-3 whitespace-nowrap">
                     <div className="flex items-center justify-center gap-2">
                       <EditProductButton product={product as IProduct} refetch={refetch} />
                       <DeleteProductButton product={product as IProduct} />
@@ -230,7 +230,7 @@ const ProductsManagement = () => {
               ))}
               {products.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
+                  <td colSpan={7} className="px-4 py-10 text-center text-secondary-01 font-semibold">
                     No products found
                   </td>
                 </tr>

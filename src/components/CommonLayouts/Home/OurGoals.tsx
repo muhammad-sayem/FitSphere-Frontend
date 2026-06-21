@@ -45,7 +45,7 @@ const OurGoals = () => {
               </div>
               <div className="relative z-10 text-center px-8 sm:px-6 flex flex-col items-center justify-center mt-2">
                 <h3 className="text-lg font-bold text-black mb-1">Crossfit</h3>
-                <p className="text-secondary-01 text-xs leading-relaxed max-w-[170px]">
+                <p className="text-secondary-01 text-xs leading-relaxed max-w-45">
                   Push your limits with high-intensity functional movements designed to improve power, agility, and overall conditioning.
                 </p>
               </div>
@@ -76,7 +76,7 @@ const OurGoals = () => {
               </div>
               <div className="relative z-10 text-center px-8 sm:px-6 flex flex-col items-center justify-center mt-2">
                 <h3 className="text-lg font-bold text-black mb-1">Healthy Life</h3>
-                <p className="text-secondary-01 text-xs leading-relaxed max-w-[170px]">
+                <p className="text-secondary-01 text-xs leading-relaxed max-w-45">
                   Adopt sustainable wellness habits and balanced routines to enhance longevity, vitality, and your daily energy.
                 </p>
               </div>
@@ -107,7 +107,7 @@ const OurGoals = () => {
               </div>
               <div className="relative z-10 text-center px-8 sm:px-6 flex flex-col items-center justify-center mt-2">
                 <h3 className="text-lg font-bold text-black mb-1">Strategies</h3>
-                <p className="text-secondary-01 text-xs leading-relaxed max-w-[170px]">
+                <p className="text-secondary-01 text-xs leading-relaxed max-w-45">
                   Receive data-driven, personalized action plans tailored specifically to optimize your milestones and fitness goals.
                 </p>
               </div>
@@ -138,7 +138,7 @@ const OurGoals = () => {
               </div>
               <div className="relative z-10 text-center px-8 sm:px-6 flex flex-col items-center justify-center mt-2">
                 <h3 className="text-lg font-bold text-black mb-1">Workout</h3>
-                <p className="text-secondary-01 text-xs leading-relaxed max-w-[170px]">
+                <p className="text-secondary-01 text-xs leading-relaxed max-w-45">
                   Engage in structured physical exercises targeting key muscle groups to maximize strength and functional fat loss.
                 </p>
               </div>
@@ -149,7 +149,7 @@ const OurGoals = () => {
         <div
           data-aos="fade-left"
           data-aos-duration="1500"
-          className="w-full lg:w-1/2 flex items-center justify-center relative min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] mt-6 lg:mt-0">
+          className="w-full lg:w-1/2 flex items-center justify-center relative min-h-75 sm:min-h-100 lg:min-h-125 mt-6 lg:mt-0">
           <div
             className="absolute inset-0 bg-primary-01 opacity-95 z-0"
             style={{ clipPath: "polygon(10% 20%, 100% 10%, 90% 90%, 15% 80%)" }}
@@ -161,7 +161,7 @@ const OurGoals = () => {
               alt="Our Programs Image"
               width={480}
               height={480}
-              className="w-auto h-[280px] sm:h-[400px] lg:h-[480px] object-contain filter drop-shadow-2xl"
+              className="w-auto h-70 sm:h-100 lg:h-120 object-contain filter drop-shadow-2xl"
               priority
             />
           </div>

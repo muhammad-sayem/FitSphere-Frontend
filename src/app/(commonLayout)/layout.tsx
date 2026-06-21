@@ -10,7 +10,8 @@ export default async function CommonLayout({
 
   return (
     <div>
-      <Navbar loggedInUser={loggedInUser} />
+      <Navbar 
+      loggedInUser={loggedInUser} />
       <div className="mx-auto">
         {children}
       </div>

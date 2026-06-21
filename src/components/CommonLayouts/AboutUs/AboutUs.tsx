@@ -6,11 +6,12 @@ import aboutImage3 from "../../../../public/assets/about image 3.jpeg";
 const AboutUs = () => {
   return (
     <div className="w-11/12 max-w-7xl mx-auto py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-150">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-auto md:h-150">
+
         <div
           data-aos="zoom-in"
           data-aos-duration="1000"
-          className="relative group overflow-hidden rounded-2xl h-full">
+          className="relative group overflow-hidden rounded-2xl h-80 md:h-full">
           <Image
             src={aboutImage1}
             alt="Our Vision"
@@ -29,8 +30,9 @@ const AboutUs = () => {
         <div
           data-aos="zoom-in"
           data-aos-duration="1000"
-          className="grid grid-rows-2 gap-6 h-full">
-          <div className="relative group overflow-hidden rounded-2xl h-full">
+          className="grid grid-cols-1 sm:grid-rows-2 gap-6 h-auto md:h-full">
+          
+          <div className="relative group overflow-hidden rounded-2xl h-64 sm:h-full">
             <Image
               src={aboutImage2}
               alt="Our Mission"
@@ -49,7 +51,7 @@ const AboutUs = () => {
           <div
             data-aos="zoom-in"
             data-aos-duration="1000"
-            className="relative group overflow-hidden rounded-2xl h-full">
+            className="relative group overflow-hidden rounded-2xl h-64 sm:h-full">
             <Image
               src={aboutImage3}
               alt="Why Choose Us"
@@ -65,6 +67,7 @@ const AboutUs = () => {
             </div>
           </div>
         </div>
+
       </div>
     </div>
   );

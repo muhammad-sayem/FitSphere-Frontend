@@ -10,10 +10,9 @@ import { logoutAction } from "@/services/auth.services";
 import logo from "../../../public/assets/logo.png";
 import Image from "next/image";
 
-const linkClassName =
-  "text-sm font-medium transition-colors";
+const linkClassName = "text-sm font-medium transition-colors";
 
-const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
+const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -30,7 +29,6 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
     { label: "Trainers", href: "/trainers" },
     { label: "Products", href: "/products" },
     { label: "About Us", href: "/about-us" },
-    // { label: "Contact Us", href: "/" },
     { label: "BMI Calculator", href: "/bmi-calculator" },
     { label: "Dashboard", href: dashboardHref || "/login" },
   ];
@@ -47,8 +45,6 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
         <Link href="/" className="text-xl font-black tracking-tight text-foreground sm:text-2xl">
           <Image
             src={logo}
-            // width={32}
-            // height={32}
             alt="FitSphere Logo"
             className="h-25 w-25 object-contain" />
         </Link>
@@ -67,9 +63,21 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any }) => {
 
         <div className="flex items-center gap-2">
           {loggedInUser ? (
-            <Button size="sm" variant="outline" className="hidden md:inline-flex border border-primary-01 text-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer" onClick={handleLogout}>
-              Logout
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button size="sm" variant="outline" className="hidden md:inline-flex border border-primary-01 text-primary-01 hover:bg-primary-01 hover:text-white hover:cursor-pointer" onClick={handleLogout}>
+                Logout
+              </Button>
+              {loggedInUser?.image && (
+                <div className="relative h-9 w-9 overflow-hidden rounded-full border border-primary-01">
+                  <Image
+                    src={loggedInUser.image}
+                    alt={loggedInUser.name || "User profile"}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              )}
+            </div>
           ) : (
             <div className="hidden items-center gap-2 md:flex">
               <Button asChild size="sm" variant="outline" className="text-primary-01 border border-primary-01 hover:bg-primary-01 hover:text-white">
