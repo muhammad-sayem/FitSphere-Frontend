@@ -5,7 +5,7 @@
 import { slotServices } from "@/services/slot.services";
 import { useQuery } from "@tanstack/react-query";
 import { PaginationState, SortingState } from "@tanstack/react-table";
-import { CalendarIcon, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { CalendarIcon, X, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -33,13 +33,14 @@ interface SlotData {
 }
 
 const MySlots = ({ trainerId }: { trainerId: string }) => {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "date", desc: false }]);
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
   const [customInput, setCustomInput] = useState("10");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+  const [bookingFilter, setBookingFilter] = useState<string>("all");
 
   const queryParams = useMemo(() => {
     const params: Record<string, any> = {
@@ -63,8 +64,14 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
       params["date[lte]"] = endOfDay.toISOString();
     }
 
+    if (bookingFilter === "true") {
+      params.isBooked = true;
+    } else if (bookingFilter === "false") {
+      params.isBooked = false;
+    }
+
     return params;
-  }, [sorting, pagination, selectedDate]);
+  }, [sorting, pagination, selectedDate, bookingFilter]);
 
   const { data: mySlotsResponse, isLoading, refetch } = useQuery({
     queryKey: ["my-slots-trainer", trainerId, queryParams],
@@ -96,6 +103,19 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
     setPagination((prev) => ({ ...prev, pageIndex: 0 }));
   };
 
+  const toggleSort = () => {
+    setSorting((prev) => {
+      if (prev.length === 0 || prev[0].id !== "date") {
+        return [{ id: "date", desc: false }];
+      }
+      if (!prev[0].desc) {
+        return [{ id: "date", desc: true }];
+      }
+      return [{ id: "date", desc: false }];
+    });
+    setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+  };
+
   const handleApplyCustomLimit = () => {
     const val = Number(customInput);
     if (val > 0) {
@@ -121,14 +141,28 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
             <CreateNewSlotModal refetch={refetch} />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <select
+              value={bookingFilter}
+              onChange={(e) => {
+                setBookingFilter(e.target.value);
+                setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+              }}
+              className="px-3 py-1.5 border border-primary-01 rounded-md text-sm font-medium bg-white text-black focus:outline-none h-9 cursor-pointer"
+              disabled={isLoading}
+            >
+              <option value="all">All Status</option>
+              <option value="true">Booked</option>
+              <option value="false">Not Booked</option>
+            </select>
+
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
                     "justify-start text-left font-normal h-9 w-full sm:w-auto",
-                    !selectedDate && "text-primary-01 border border-primary-01 text-lg",
+                    !selectedDate && "text-primary-01 border border-primary-01 text-sm",
                     selectedDate && "border-primary text-primary"
                   )}
                   disabled={isLoading}
@@ -175,7 +209,23 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
           <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
-                <th className="px-3 py-4 lg:px-4 text-center">Date</th>
+                <th className="px-3 py-4 lg:px-4 text-center">
+                  <button
+                    onClick={toggleSort}
+                    className="flex items-center gap-1 mx-auto hover:text-black transition-colors"
+                  >
+                    <span>Date</span>
+                    {sorting[0]?.id === "date" ? (
+                      sorting[0].desc ? (
+                        <ArrowDown className="w-3.5 h-3.5" />
+                      ) : (
+                        <ArrowUp className="w-3.5 h-3.5" />
+                      )
+                    ) : (
+                      <ArrowUpDown className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </th>
                 <th className="px-3 py-4 lg:px-4 text-center">Time</th>
                 <th className="px-3 py-4 lg:px-4 text-center">Session Charge</th>
                 <th className="px-3 py-4 lg:px-4 text-center w-24">Status</th>
