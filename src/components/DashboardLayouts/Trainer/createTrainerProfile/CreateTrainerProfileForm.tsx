@@ -41,7 +41,7 @@ const CreateTrainerProfileForm = () => {
           return;
         }
 
-        toast.success("Trainer Profile created successfully!", { position: "top-center" });
+        toast.success("Trainer Profile creation application submitted successfully!", { position: "top-center" });
         router.push("/");
       }
 
@@ -61,10 +61,10 @@ const CreateTrainerProfileForm = () => {
           <p className="inline-flex rounded-full border border-primary-02 bg-primary-02/20 px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-primary-01">
             Trainer Profile
           </p>
-          <h1 className="text-2xl font-semibold tracking-tight text-secondary-01 md:text-3xl">
+          <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
             Create trainer profile
           </h1>
-          <p className="max-w-2xl text-sm leading-6 text-secondary-02">
+          <p className="max-w-2xl text-sm leading-6 text-secondary-01">
             Add your bio, specialties, experience, and fee information in a clean minimal layout.
           </p>
         </div>
@@ -80,8 +80,8 @@ const CreateTrainerProfileForm = () => {
           <form.Field name="bio">
             {(field) => (
               <div className="space-y-2">
-                <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
-                  Bio <span className="text-secondary-02">(optional)</span>
+                <label htmlFor={field.name} className="text-sm font-medium ">
+                  Bio (optional)
                 </label>
                 <textarea
                   id={field.name}
@@ -101,7 +101,7 @@ const CreateTrainerProfileForm = () => {
             <form.Field name="specialties">
               {(field) => (
                 <div className="space-y-2">
-                  <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
+                  <label htmlFor={field.name} className="text-sm font-medium">
                     Specialties
                   </label>
                   <input
@@ -121,17 +121,21 @@ const CreateTrainerProfileForm = () => {
             <form.Field name="experience">
               {(field) => (
                 <div className="space-y-2">
-                  <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
+                  <label htmlFor={field.name} className="text-sm font-medium">
                     Experience
                   </label>
                   <input
                     id={field.name}
                     name={field.name}
                     type="number"
+                    min="0"
                     placeholder="e.g. 5 years"
                     value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(event) => field.handleChange(Number(event.target.value))}
+                    onChange={(event) => {
+                      const val = Number(event.target.value);
+                      field.handleChange(val < 0 ? 0 : val);
+                    }}
                     className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-3 text-sm text-secondary-01 outline-none transition-colors placeholder:text-secondary-02 focus:border-primary-01 focus:ring-2 focus:ring-primary-02/30"
                   />
                 </div>
@@ -142,7 +146,7 @@ const CreateTrainerProfileForm = () => {
           <form.Field name="feePerHour">
             {(field) => (
               <div className="space-y-2 md:max-w-xs">
-                <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
+                <label htmlFor={field.name} className="text-sm font-medium">
                   Fee per hour
                 </label>
                 <input
@@ -153,7 +157,10 @@ const CreateTrainerProfileForm = () => {
                   placeholder="e.g. 1200"
                   value={field.state.value}
                   onBlur={field.handleBlur}
-                  onChange={(event) => field.handleChange(Number(event.target.value))}
+                  onChange={(event) => {
+                    const val = Number(event.target.value);
+                    field.handleChange(val < 0 ? 0 : val);
+                  }}
                   className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-3 text-sm text-secondary-01 outline-none transition-colors placeholder:text-secondary-02 focus:border-primary-01 focus:ring-2 focus:ring-primary-02/30"
                 />
               </div>

@@ -31,7 +31,21 @@ export const trainerServices = {
 
   getAllTrainers: async (options?: ApiRequestOptions) => {
     try {
-      const response = await httpClient.get("/trainer-profiles", options);
+      const response = await httpClient.get("/trainer-profiles/", options);
+      return response;
+    }
+    catch (error) {
+      console.error("Error fetching trainers:", error);
+      return {
+        data: null,
+        error: { message: "Failed to fetch trainers" }
+      };
+    }
+  },
+
+  getAllTrainersApprovedOnly: async (options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.get("/trainer-profiles/approved-trainers", options);
       return response;
     }
     catch (error) {

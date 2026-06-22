@@ -32,23 +32,24 @@ const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonPro
   const [serverError, setServerError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const userData = currentUser?.data;
-  const isUserRole = userData?.role === "USER";
+  const isUserRole = currentUser?.role === "USER";
+  console.log("Current user data from trainer details:", currentUser);
+  console.log("User role from trainer details:", isUserRole);
 
   const { data: alreadyReviewedData } = useQuery({
-    queryKey: ["already-reviewed", trainerProfileId, userData?.id],
+    queryKey: ["already-reviewed", trainerProfileId, currentUser?.id],
     queryFn: async () => {
       const res = await reviewServices.alreadyReviewedOrNot(trainerProfileId);
       return res?.data ?? false;
     },
-    enabled: !!userData && isUserRole,
+    enabled: !!currentUser && isUserRole,
   });
 
   const hasReviewed = !!alreadyReviewedData;
-  const isButtonDisabled = !userData || !isUserRole || hasReviewed;
+  const isButtonDisabled = !currentUser || !isUserRole || hasReviewed;
 
   const getButtonText = () => {
-    if (!userData) {
+    if (!currentUser) {
       return "Login to Review";
     };
 
@@ -109,7 +110,7 @@ const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonPro
         await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["reviews", trainerProfileId] }),
           queryClient.invalidateQueries({ queryKey: ["trainer", trainerProfileId] }),
-          queryClient.invalidateQueries({ queryKey: ["already-reviewed", trainerProfileId, userData?.id] })
+          queryClient.invalidateQueries({ queryKey: ["already-reviewed", trainerProfileId, currentUser?.id] })
         ]);
       }
       catch (error: any) {

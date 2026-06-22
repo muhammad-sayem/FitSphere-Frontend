@@ -11,9 +11,9 @@ import { Eye, EyeOff } from "lucide-react";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { useState } from "react";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const LoginForm = () => {
   const [serverError, setServerError] = useState<string | null>(null);

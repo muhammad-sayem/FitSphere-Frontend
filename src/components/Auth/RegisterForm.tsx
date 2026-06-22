@@ -74,18 +74,19 @@ const RegisterForm = () => {
 
         toast.success("Registration successful!", { position: "top-center" });
 
-        const normalizedRole =
-          responseData?.data?.user?.role?.toLowerCase() ??
-          responseData?.user?.role?.toLowerCase() ??
-          responseData?.role?.toLowerCase();
+        // const normalizedRole =
+        //   responseData?.data?.user?.role?.toLowerCase() ??
+        //   responseData?.user?.role?.toLowerCase() ??
+        //   responseData?.role?.toLowerCase();
 
-        if (normalizedRole === "trainer") {
-          router.push("/trainer-dashboard");
-          return;
-        }
+        // if (normalizedRole === "trainer") {
+        //   router.push("/trainer-dashboard");
+        //   return;
+        // }
 
-        router.push("/dashboard");
-      } catch (error: any) {
+        router.push("/");
+      } 
+      catch (error: any) {
         const errorMsg = `Registration failed: ${error.message}`;
         setServerError(errorMsg);
         toast.error(errorMsg, { position: "top-center" });

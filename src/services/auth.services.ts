@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 import { deleteCookie } from "@/lib/cookieUtils";
 import { setTokenInCookies } from "@/lib/tokenUtils";

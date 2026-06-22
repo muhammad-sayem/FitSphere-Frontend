@@ -9,7 +9,7 @@ import Link from "next/link";
 const MostPopularTrainers = () => {
   const { data: trainersResponse } = useQuery({
     queryKey: ["trainers-home"],
-    queryFn: () => trainerServices.getAllTrainers(),
+    queryFn: () => trainerServices.getAllTrainersApprovedOnly(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -20,7 +20,7 @@ const MostPopularTrainers = () => {
   return (
     <div className="mx-auto w-9/10 mb-8 md:mb-16">
       <div className="text-center mb-10 md:mb-14 px-4">
-        <h2 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-wide uppercase">
+        <h2 className="text-2xl md:text-3xl font-black text-center tracking-wide uppercase">
           Most Popular <span className="text-primary-01"> Trainers </span>
         </h2>
         <p className="text-lg text-secondary-01 mt-2 max-w-xl mx-auto">

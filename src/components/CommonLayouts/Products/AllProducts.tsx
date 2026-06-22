@@ -68,16 +68,20 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
     if (sortBy === "name") {
       params.sortBy = "name";
       params.sortOrder = "asc";
-    } else if (sortBy === "priceDesc") {
+    } 
+    else if (sortBy === "priceDesc") {
       params.sortBy = "price";
       params.sortOrder = "desc";
-    } else if (sortBy === "priceAsc") {
+    } 
+    else if (sortBy === "priceAsc") {
       params.sortBy = "price";
       params.sortOrder = "asc";
-    } else if (sortBy === "stockDesc") {
+    } 
+    else if (sortBy === "stockDesc") {
       params.sortBy = "remainingStock";
       params.sortOrder = "desc";
-    } else if (sortBy === "stockAsc") {
+    } 
+    else if (sortBy === "stockAsc") {
       params.sortBy = "remainingStock";
       params.sortOrder = "asc";
     }
@@ -108,10 +112,10 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
   const isFiltered = searchTerm || selectedCategory || minPrice || maxPrice || sortBy !== "name";
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
-      <h1 className="text-3xl font-bold mb-4">All Products</h1>
+    <div className="max-w-7xl mx-auto px-4">
+      <h1 className="text-2xl md:text-4xl font-black mb-4 text-center">All <span className="text-primary-01"> Products </span> </h1>
 
-      <div className="bg-slate-50 border border-primary-01 rounded-xl p-4 mb-6">
+      <div className="bg-slate-50 rounded-xl p-4 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
           <div className="relative lg:col-span-1">
             <input

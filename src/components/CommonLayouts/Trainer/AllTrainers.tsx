@@ -97,7 +97,7 @@ const AllTrainers = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["trainers", queryParams],
-    queryFn: () => trainerServices.getAllTrainers({ params: queryParams }),
+    queryFn: () => trainerServices.getAllTrainersApprovedOnly({ params: queryParams }),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -118,7 +118,7 @@ const AllTrainers = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-4">
-      <div className="bg-gray-50 border border-primary-01 rounded-xl p-4 mb-6">
+      <div className="bg-gray-50 border rounded-xl p-4 mb-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
           <div className="relative lg:col-span-1">
             <input

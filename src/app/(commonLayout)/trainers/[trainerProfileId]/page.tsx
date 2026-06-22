@@ -132,7 +132,7 @@ const TrainerDetailsPage = async ({ params }: { params: Promise<{ trainerProfile
 
           <div className="w-full flex items-center justify-center">
             <Link href={`/trainers/${trainerProfile.id}/available-slots`} className="w-full bg-primary-01 text-white text-xs md:text-sm font-bold py-3 px-5 rounded-xl transition-all active:scale-[0.98] duration-200 hover:bg-orange-500 hover:cursor-pointer text-center shadow-lg shadow-primary-01/20">
-              Book Session with {trainerProfile.user?.name?.split(' ')[0]}
+              View Availability for {trainerProfile.user?.name?.split(' ')[0]}
             </Link>
           </div>
         </div>
