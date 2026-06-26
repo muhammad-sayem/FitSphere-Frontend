@@ -43,6 +43,17 @@ export const slotServices = {
     }
   },
 
+  updateBookingStatus: async (slotId: string, options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.patch(`/slots/update-booking-status/${slotId}`, options);
+      return response;
+    }
+    catch (error) {
+      console.error('Error updating booking status:', error);
+      throw error;
+    }
+  },
+
   deleteMySlot: async (slotId: string, options?: ApiRequestOptions) => {
     try{
       const response = await httpClient.delete(`/slots/delete-slot/${slotId}`, options);

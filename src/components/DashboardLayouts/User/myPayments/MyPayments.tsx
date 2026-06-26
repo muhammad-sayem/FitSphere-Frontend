@@ -98,6 +98,7 @@ const MyPayments = () => {
 
   const myPayments = (myPaymentsResponse?.data ?? []) as PaymentRecord[];
   const meta = myPaymentsResponse?.meta;
+  console.log("myPayments", myPayments);
 
   const columns = useMemo<ColumnDef<PaymentRecord>[]>(() => [
     {
@@ -153,33 +154,33 @@ const MyPayments = () => {
         );
       },
     },
-    {
-      id: "lifecycleStatus",
-      header: "Booking / Order Status",
-      cell: ({ row }) => {
-        const record = row.original;
-        const targetStatus = record.purpose === "TRAINER_BOOKING"
-          ? record.bookingSlot?.status
-          : record.order?.status;
+    // {
+    //   id: "lifecycleStatus",
+    //   header: "Booking / Order Status",
+    //   cell: ({ row }) => {
+    //     const record = row.original;
+    //     const targetStatus = record.purpose === "TRAINER_BOOKING"
+    //       ? record.bookingSlot?.status
+    //       : record.order?.status;
 
-        if (!targetStatus) return <span className="text-muted-foreground">-</span>;
+    //     if (!targetStatus) return <span className="text-muted-foreground">-</span>;
 
-        const lifecycleColorMap: Record<string, string> = {
-          PENDING: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50",
-          COMPLETED: "bg-green-50 text-green-700 border-green-200 hover:bg-green-50",
-          PAID: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50",
-          SHIPPED: "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-50",
-          DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50",
-          CANCELLED: "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50",
-        };
+    //     const lifecycleColorMap: Record<string, string> = {
+    //       PENDING: "bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-50",
+    //       COMPLETED: "bg-green-50 text-green-700 border-green-200 hover:bg-green-50",
+    //       PAID: "bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-50",
+    //       SHIPPED: "bg-indigo-50 text-indigo-700 border-indigo-200 hover:bg-indigo-50",
+    //       DELIVERED: "bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-50",
+    //       CANCELLED: "bg-rose-50 text-rose-700 border-rose-200 hover:bg-rose-50",
+    //     };
 
-        return (
-          <Badge variant="outline" className={`uppercase tracking-wider ${lifecycleColorMap[targetStatus] || "bg-slate-50 text-slate-700"}`}>
-            {targetStatus}
-          </Badge>
-        );
-      },
-    },
+    //     return (
+    //       <Badge variant="outline" className={`uppercase tracking-wider ${lifecycleColorMap[targetStatus] || "bg-slate-50 text-slate-700"}`}>
+    //         {targetStatus}
+    //       </Badge>
+    //     );
+    //   },
+    // },
     {
       accessorKey: "createdAt",
       header: "Date Created",

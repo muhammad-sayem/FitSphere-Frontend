@@ -1,6 +1,7 @@
+"use client";
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-"use client";
 
 import { slotServices } from "@/services/slot.services";
 import { useQuery } from "@tanstack/react-query";
@@ -13,6 +14,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import CreateNewSlotModal from "./CreateNewSlotModal";
 import DeleteMySlotButton from "./DeleteMySlotButton";
+import MarkAsCompleteButton from "./MarkAsCompleteButton";
 
 interface SlotData {
   id: string;
@@ -41,6 +43,7 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
   const [customInput, setCustomInput] = useState("10");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
   const [bookingFilter, setBookingFilter] = useState<string>("all");
+  const [completedSlotIds, setCompletedSlotIds] = useState<Set<string>>(new Set());
 
   const queryParams = useMemo(() => {
     const params: Record<string, any> = {
@@ -265,7 +268,20 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
                     </span>
                   </td>
 
-                  <td className="px-3 py-2.5 lg:px-4 flex whitespace-nowrap text-center items-center justify-center">
+                  <td className="px-3 py-2.5 lg:px-4 flex whitespace-nowrap text-center items-center justify-center gap-2">
+                    <MarkAsCompleteButton
+                      isBooked={slot.isBooked}
+                      slotId={slot.id}
+                      isCompleted={completedSlotIds.has(slot.id)}
+                      onCompleted={() => {
+                        setCompletedSlotIds((prev) => {
+                          const next = new Set(prev);
+                          next.add(slot.id);
+                          return next;
+                        });
+                      }}
+                      refetch={refetch}
+                    />
                     <DeleteMySlotButton
                       isBooked={slot.isBooked}
                       slotId={slot.id}

@@ -11,8 +11,8 @@ export const bookingServices = {
     try {
       const response = await httpClient.post("/bookings/create-booking", payload);
       return response;
-    } 
-    
+    }
+
     catch (error: any) {
       console.error("[bookingServices.createBooking] api error:", error);
       const serverErrorMessage = error || "Failed to create booking";
@@ -34,6 +34,19 @@ export const bookingServices = {
         data: null,
         error: { message: serverErrorMessage }
       };
+    }
+  },
+
+  updateBookingStatus: async (bookingId: string, options?: ApiRequestOptions) => {
+    try {
+      const response = await httpClient.patch(`/bookings/update-booking/${bookingId}`, options);
+      return response;
+    }
+
+    catch (error: any) {
+      console.error("Error creating slot:", error);
+      const serverErrorMessage = error?.response?.data?.message || error?.message || "Failed to create slot";
+      throw new Error(serverErrorMessage);
     }
   },
 

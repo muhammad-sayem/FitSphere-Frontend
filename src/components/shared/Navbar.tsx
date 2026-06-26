@@ -7,6 +7,7 @@ import { MenuIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { logoutAction } from "@/services/auth.services";
+import { useQueryClient } from "@tanstack/react-query";
 import logo from "../../../public/assets/logo.png";
 import Image from "next/image";
 
@@ -15,6 +16,7 @@ const linkClassName = "text-sm font-medium transition-colors";
 const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
   const router = useRouter();
   const pathname = usePathname();
+  const queryClient = useQueryClient();
 
   const dashboardHref = loggedInUser
     ? loggedInUser.role?.toUpperCase() === "ADMIN"
@@ -35,6 +37,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
 
   const handleLogout = async () => {
     await logoutAction();
+    await queryClient.clear();
     router.push("/login");
     router.refresh();
   };
