@@ -86,6 +86,15 @@ export const trainerServices = {
   },
 
   getTrainerProfileByUserId: async (userId: string, options?: ApiRequestOptions) => {
+    //* Guard: undefined/empty userId diye backend call pathanor dorkar nei,
+    //  karon URL "/trainer-profiles/userId/undefined" hit kore 404/500 ashe. *//
+    if (!userId) {
+      return {
+        data: null,
+        error: { message: "Missing userId" }
+      };
+    }
+
     try {
       const trainerProfile = await httpClient.get(`/trainer-profiles/userId/${userId}`, options);
       return trainerProfile;

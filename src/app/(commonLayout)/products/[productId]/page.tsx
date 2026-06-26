@@ -2,11 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { productServices } from "@/services/product.services";
 import BuyProductButton from "@/components/CommonLayouts/Products/BuyProductButton";
+import { userServices } from "@/services/user.services";
 
 const ProductDetails = async ({ params }: { params: Promise<{ productId: string }> }) => {
   const { productId } = await params;
 
   const { data: product } = await productServices.getProductById(productId);
+
+  const loggedInUser = await userServices.getLoggedInUser();
 
   if (!product) {
     return (
@@ -121,8 +124,9 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
               <div className="flex flex-col sm:flex-row gap-4">
                 <BuyProductButton
                   key={product.id}
-                  productId={product.id}
                   isDisabled={product.remainingStock === 0}
+                  productId={product.id}
+                  loggedInUser={loggedInUser}
                 />
 
               </div>

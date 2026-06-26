@@ -1,10 +1,19 @@
 import UserDashboardHome from "@/components/DashboardLayouts/User/UserDashboardHome";
 import { statServices } from "@/services/stat.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 
 const UserDashboardPage = async () => {
   const cookieStore = await cookies();
+
+  //* Logout er por cookie clear hoye thake. Auth nai tokhon /stats e hit
+  //  korle backend 500 dey — tai loggedInUser null hole seedha /login e
+  //  pathiye dibo. *//
+  const accessToken = cookieStore.get("access_token")?.value;
+  if (!accessToken) {
+    redirect("/login");
+  }
 
   const cookieHeader = cookieStore
     .getAll()
@@ -14,7 +23,7 @@ const UserDashboardPage = async () => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["admin-dashboard-data"],
+    queryKey: ["user-dashboard-data"],
     queryFn: () => statServices.getDashboardStats({
       headers: {
         Cookie: cookieHeader,

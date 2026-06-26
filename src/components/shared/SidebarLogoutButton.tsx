@@ -10,11 +10,20 @@ const SidebarLogoutButton = () => {
   const queryClient = useQueryClient();
 
   const handleLogout = async () => {
-    await logoutAction();
-    await queryClient.clear();
-    router.push("/login");
-    router.refresh();
+    try {
+      await logoutAction();
+      queryClient.clear();
+      
+      router.push("/login");
+      
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
+
   return (
     <div>
       <Button variant="outline" className="w-full" onClick={handleLogout}>

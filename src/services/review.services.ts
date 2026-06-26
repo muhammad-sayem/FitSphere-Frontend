@@ -34,6 +34,15 @@ export const reviewServices = {
   },
 
   getReviewsForTrainer: async (trainerId: string) => {
+    //* Guard: undefined trainerId diye backend call pathanor dorkar nei,
+    //  karon URL "/reviews/trainer/undefined/reviews" 404 dibe. *//
+    if (!trainerId) {
+      return {
+        data: [],
+        error: { message: "Missing trainerId" }
+      };
+    }
+
     try {
       const response = await httpClient.get(`reviews/trainer/${trainerId}/reviews`);
       return response;
