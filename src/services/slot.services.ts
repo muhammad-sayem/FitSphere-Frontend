@@ -2,7 +2,7 @@
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
 export interface ICreateSlotPayload {
-  date: Date;
+  date: string; // YYYY-MM-DD format (local date, no timezone shift)
   startTime: string;
   endTime: string;
 }

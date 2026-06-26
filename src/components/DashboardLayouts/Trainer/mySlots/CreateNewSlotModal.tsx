@@ -58,8 +58,20 @@ const CreateNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
 
       setServerError(null);
 
+      //* Convert local Date to YYYY-MM-DD to avoid UTC shift (e.g. picking
+      //  2026-06-26 in BST would otherwise become 2026-06-25 in JSON). *//
+      const d = value.date;
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      const dateString = `${yyyy}-${mm}-${dd}`;
+
       try {
-        const result = await mutateAsync(value) as any;
+        const result = await mutateAsync({
+          date: dateString,
+          startTime: value.startTime,
+          endTime: value.endTime,
+        }) as any;
 
         if (result && !result.success) {
           const errorMsg = result.message || "Failed to create slot!";
