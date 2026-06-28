@@ -15,7 +15,7 @@ import { toast } from "sonner";
 
 type RegisterFormValues = {
   name: string;
-  image: File | null;
+  image: string;
   role: "USER" | "TRAINER";
   email: string;
   password: string;
@@ -29,22 +29,13 @@ const RegisterForm = () => {
 
   const { mutateAsync } = useMutation({
     mutationFn: async (payload: RegisterFormValues) => {
-      const formData = new FormData();
-      formData.append(
-        "data",
-        JSON.stringify({
-          name: payload.name,
-          role: payload.role,
-          email: payload.email,
-          password: payload.password,
-        })
-      );
-
-      if (payload.image instanceof File) {
-        formData.append("file", payload.image);
-      }
-
-      const response = await httpClient.post("/auth/register", formData);
+      const response = await httpClient.post("/auth/register", {
+        name: payload.name,
+        image: payload.image,
+        role: payload.role,
+        email: payload.email,
+        password: payload.password,
+      });
       return response;
     },
   });
@@ -52,7 +43,7 @@ const RegisterForm = () => {
   const form = useForm({
     defaultValues: {
       name: "",
-      image: null,
+      image: "",
       role: "USER",
       email: "",
       password: "",
@@ -153,20 +144,13 @@ const RegisterForm = () => {
                 <div className="space-y-2">
                   <Label className="text-black">Image</Label>
                   <Input
-                    type="file"
-                    accept="image/*"
+                    type="text"
+                    placeholder="Enter image URL"
+                    value={field.state.value}
                     onBlur={field.handleBlur}
-                    onChange={(event) => {
-                      const file = event.target.files?.[0] ?? null;
-                      field.handleChange(file);
-                    }}
+                    onChange={(e) => field.handleChange(e.target.value)}
                     className="border-gray-300 focus:border-primary-01 focus:ring-primary-01 text-black rounded-xl"
                   />
-                  {field.state.value ? (
-                    <p className="text-xs text-secondary-01">
-                      Selected: {field.state.value.name}
-                    </p>
-                  ) : null}
                 </div>
               )}
             </form.Field>

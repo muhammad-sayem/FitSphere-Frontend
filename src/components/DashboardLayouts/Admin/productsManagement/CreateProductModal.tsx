@@ -24,11 +24,17 @@ interface CreateProductModalProps {
 const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { mutateAsync } = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const res = await productServices.createProduct(formData as any);
+    mutationFn: async (payload: {
+      name: string;
+      description: string;
+      price: number;
+      category: string;
+      remainingStock: number;
+      image: string;
+    }) => {
+      const res = await productServices.createProduct(payload as any);
       return res;
     },
   });
@@ -40,23 +46,22 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
       price: 0,
       category: "",
       remainingStock: 0,
+      image: "",
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
 
-      const formData = new FormData();
-      formData.append("name", value.name);
-      formData.append("description", value.description);
-      formData.append("price", String(value.price));
-      formData.append("category", value.category);
-      formData.append("remainingStock", String(value.remainingStock));
-
-      if (selectedFile) {
-        formData.append("file", selectedFile);
-      }
+      const payload = {
+        name: value.name,
+        description: value.description,
+        price: value.price,
+        category: value.category,
+        remainingStock: value.remainingStock,
+        image: value.image,
+      };
 
       try {
-        const result = (await mutateAsync(formData)) as any;
+        const result = (await mutateAsync(payload)) as any;
 
         if (!result.success) {
           const errorMsg = result.message || "Product creation failed!";
@@ -67,7 +72,6 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
 
         toast.success("Product created successfully!", { position: "top-center" });
         form.reset();
-        setSelectedFile(null);
         setIsOpen(false);
         refetch();
       } 
@@ -229,22 +233,25 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
               )}
             </form.Field>
 
-          <div className="space-y-2">
-            <label htmlFor="product-image" className="text-sm font-medium text-secondary-01">
-              Product Image
-            </label>
-            <input
-              id="product-image"
-              type="file"
-              accept="image/*"
-              onChange={(event) => {
-                if (event.target.files && event.target.files[0]) {
-                  setSelectedFile(event.target.files[0]);
-                }
-              }}
-              className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-2.5 text-sm text-secondary-01 outline-none transition-colors file:mr-4 file:rounded-xl file:border-0 file:bg-secondary-01 file:px-4 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-secondary-01/90"
-            />
-          </div>
+            <form.Field name="image">
+              {(field) => (
+                <div className="space-y-2">
+                  <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
+                    Product Image
+                  </label>
+                  <input
+                    id={field.name}
+                    name={field.name}
+                    type="text"
+                    placeholder="Enter image URL"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-3 text-sm text-secondary-01 outline-none transition-colors placeholder:text-secondary-02 focus:border-primary-01 focus:ring-2 focus:ring-primary-02/30"
+                  />
+                </div>
+              )}
+            </form.Field>
         </div>
 
         <div className="flex items-center justify-end gap-3 border-t border-secondary-03 pt-6">

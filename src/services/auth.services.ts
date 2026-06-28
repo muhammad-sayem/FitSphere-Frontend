@@ -11,35 +11,82 @@ interface ILoginPayload {
   password: string;
 }
 
+// export const registerAction = async (formData: FormData) => {
+//   const rawPayload = {
+//     name: formData.get("name"),
+//     role: formData.get("role"),
+//     email: formData.get("email"),
+//     password: formData.get("password"),
+//   };
+
+//   const image = formData.get("image");
+//   const parsedPayload = registerZodSchema.safeParse(rawPayload);
+
+//   if (!parsedPayload.success) {
+//     const firstError = parsedPayload.error.issues[0].message || "Invalid input";
+
+//     return {
+//       success: false,
+//       message: firstError
+//     }
+//   }
+
+//   try {
+//     const requestPayload = new FormData();
+//     requestPayload.append("data", JSON.stringify(parsedPayload.data));
+
+//     if (image instanceof File) {
+//       requestPayload.append("file", image);
+//     }
+
+//     const response = await httpClient.post("/auth/register", requestPayload);
+//     const responseBody = response?.data ?? response;
+//     const responseData = responseBody?.data ?? responseBody;
+
+//     const { access_token, refresh_token, token, user } = responseData;
+//     const role = user?.role;
+
+//     await setTokenInCookies("access_token", access_token);
+//     await setTokenInCookies("refresh_token", refresh_token);
+//     await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7)    //* 7 days;
+
+//     return {
+//       success: true,
+//       message: "Registration successful",
+//       role
+//     };
+
+//   }
+
+//   catch (error: any) {
+//     const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+//     return {
+//       success: false,
+//       message: errorMessage
+//     };
+//   }
+// }
 export const registerAction = async (formData: FormData) => {
   const rawPayload = {
     name: formData.get("name"),
     role: formData.get("role"),
     email: formData.get("email"),
     password: formData.get("password"),
+    image: formData.get("image"),
   };
 
-  const image = formData.get("image");
   const parsedPayload = registerZodSchema.safeParse(rawPayload);
 
   if (!parsedPayload.success) {
     const firstError = parsedPayload.error.issues[0].message || "Invalid input";
-
     return {
       success: false,
       message: firstError
-    }
+    };
   }
 
   try {
-    const requestPayload = new FormData();
-    requestPayload.append("data", JSON.stringify(parsedPayload.data));
-
-    if (image instanceof File) {
-      requestPayload.append("file", image);
-    }
-
-    const response = await httpClient.post("/auth/register", requestPayload);
+    const response = await httpClient.post("/auth/register", parsedPayload.data);
     const responseBody = response?.data ?? response;
     const responseData = responseBody?.data ?? responseBody;
 
@@ -48,16 +95,14 @@ export const registerAction = async (formData: FormData) => {
 
     await setTokenInCookies("access_token", access_token);
     await setTokenInCookies("refresh_token", refresh_token);
-    await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7)    //* 7 days;
+    await setTokenInCookies("better-auth.session_token", token, 60 * 60 * 24 * 7);
 
     return {
       success: true,
       message: "Registration successful",
       role
     };
-
   }
-
   catch (error: any) {
     const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
     return {
