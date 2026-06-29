@@ -251,8 +251,7 @@ const MyPayments = () => {
         }}
         sorting={{
           state: sorting,
-          onSortingChange: (updater) => {
-            const nextState = typeof updater === "function" ? updater(sorting) : updater;
+          onSortingChange: (nextState) => {
             setSorting(nextState);
             setPagination((prev) => ({ ...prev, pageIndex: 0 }));
           },

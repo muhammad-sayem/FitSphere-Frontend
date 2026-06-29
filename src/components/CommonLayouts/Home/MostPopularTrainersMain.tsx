@@ -7,7 +7,7 @@ const MostPopularTrainersMain = async () => {
 
   await queryClient.prefetchQuery({
     queryKey: ["trainers-home"],
-    queryFn: () => trainerServices.getAllTrainers(),
+    queryFn: () => trainerServices.getAllTrainersApprovedOnly(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

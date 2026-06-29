@@ -15,7 +15,7 @@ import DeleteMyBookingButton from "./DeleteMyBookingButton";
 const MyBookings = ({ initialUser }: { initialUser?: any }) => {
   const { data: loggedInUserResponse, refetch } = useQuery({
     queryKey: ["loggedin-user"],
-    queryFn: getMe,
+    queryFn: () => getMe(),
     initialData: initialUser ? { data: initialUser } : undefined,
   });
 

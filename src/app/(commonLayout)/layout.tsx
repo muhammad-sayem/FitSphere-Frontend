@@ -23,7 +23,6 @@ export default function CommonLayout({
 }>) {
   return (
     <Suspense fallback={null}>
-      {/* @ts-expect-error Async Server Component */}
       <CommonChrome>{children}</CommonChrome>
     </Suspense>
   );

@@ -40,7 +40,6 @@ export default function RootDashboardLayout({
   return (
     <div className="flex h-screen overflow-hidden w-full bg-gray-50/20">
       <Suspense fallback={null}>
-        {/* @ts-expect-error Async Server Component */}
         <DashboardChrome>{children}</DashboardChrome>
       </Suspense>
     </div>
