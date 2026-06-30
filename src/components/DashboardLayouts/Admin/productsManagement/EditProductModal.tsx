@@ -25,11 +25,10 @@ interface EditProductModalProps {
 
 const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductModalProps) => {
   const [serverError, setServerError] = useState<string | null>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { mutateAsync } = useMutation({
-    mutationFn: async (formData: FormData) => {
-      const res = await productServices.updateProduct(product.id, formData as any);
+    mutationFn: async (payload: any) => {
+      const res = await productServices.updateProduct(product.id, payload);
       return res;
     },
   });
@@ -41,23 +40,22 @@ const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductMo
       price: product?.price || 0,
       category: product?.category || "",
       remainingStock: product?.remainingStock || 0,
+      image: product?.image || "",
     },
     onSubmit: async ({ value }) => {
       setServerError(null);
 
-      const formData = new FormData();
-      formData.append("name", value.name);
-      formData.append("description", value.description);
-      formData.append("price", String(value.price));
-      formData.append("category", value.category);
-      formData.append("remainingStock", String(value.remainingStock));
-
-      if (selectedFile) {
-        formData.append("file", selectedFile);
-      }
+      const jsonPayload = {
+        name: value.name,
+        description: value.description,
+        price: Number(value.price),
+        category: value.category,
+        remainingStock: Number(value.remainingStock),
+        image: value.image,
+      };
 
       try {
-        const result = (await mutateAsync(formData)) as any;
+        const result = (await mutateAsync(jsonPayload)) as any;
 
         if (!result.success) {
           const errorMsg = result.message || "Product update failed!";
@@ -67,7 +65,6 @@ const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductMo
         }
 
         toast.success("Product updated successfully!", { position: "top-center" });
-        setSelectedFile(null);
         setIsOpen(false);
         refetch();
       } catch (error: any) {
@@ -221,23 +218,25 @@ const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductMo
               )}
             </form.Field>
 
-            {/* ইমেজ আপলোড ইনপুট ফিল্ডটি এখানে আবার যুক্ত করা হয়েছে */}
-            <div className="space-y-2">
-              <label htmlFor="product-image" className="text-sm font-medium text-secondary-01">
-                Product Image
-              </label>
-              <input
-                id="product-image"
-                type="file"
-                accept="image/*"
-                onChange={(event) => {
-                  if (event.target.files && event.target.files[0]) {
-                    setSelectedFile(event.target.files[0]);
-                  }
-                }}
-                className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-2.5 text-sm text-secondary-01 outline-none transition-colors file:mr-4 file:rounded-xl file:border-0 file:bg-secondary-01 file:px-4 file:py-1.5 file:text-xs file:font-semibold file:text-white hover:file:bg-secondary-01/90"
-              />
-            </div>
+            <form.Field name="image">
+              {(field) => (
+                <div className="space-y-2">
+                  <label htmlFor={field.name} className="text-sm font-medium text-secondary-01">
+                    Product Image URL
+                  </label>
+                  <input
+                    id={field.name}
+                    name={field.name}
+                    type="text"
+                    placeholder="https://example.com/image.jpg"
+                    value={field.state.value}
+                    onBlur={field.handleBlur}
+                    onChange={(event) => field.handleChange(event.target.value)}
+                    className="w-full rounded-2xl border border-secondary-03 bg-secondary-03/20 px-4 py-3 text-sm text-secondary-01 outline-none transition-colors placeholder:text-secondary-02 focus:border-primary-01 focus:ring-2 focus:ring-primary-02/30"
+                  />
+                </div>
+              )}
+            </form.Field>
           </div>
 
           <div className="flex items-center justify-end gap-3 border-t border-secondary-03 pt-6">
