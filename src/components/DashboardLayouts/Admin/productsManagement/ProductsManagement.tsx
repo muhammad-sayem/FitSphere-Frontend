@@ -6,7 +6,7 @@ import { productServices } from "@/services/product.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo, useEffect } from "react";
-import { Search, ChevronLeft, ChevronRight, Filter, ArrowUpDown } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Filter, ArrowUpDown, Loader2 } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import DeleteProductButton from "./DeleteProductButton";
 import EditProductButton from "./EditProductButton";
@@ -49,7 +49,8 @@ const ProductsManagement = () => {
     return params;
   }, [searchTerm, categoryFilter, sortField, sortOrder, pagination]);
 
-  const { data: productsResponse, refetch } = useQuery({
+  // isFetching property-ti ekhane add kora hoyeche
+  const { data: productsResponse, refetch, isFetching } = useQuery({
     queryKey: ["admin-products-management", queryParams],
     queryFn: () =>
       productServices.getAllProducts({
@@ -181,54 +182,66 @@ const ProductsManagement = () => {
                 <th className="px-4 py-4 text-center w-28">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium">
-              {products.map((product) => (
-                <tr key={product.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-4 py-3">
-                    <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
-                      {product.image ? (
-                        <Image
-                          src={product.image}
-                          alt={product.name}
-                          width={40}
-                          height={40}
-                          className="w-10 h-10 rounded-xl object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
-                          {getInitials(product.name)}
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 wrap-break-word text-black font-bold max-w-40">{product.name}</td>
-                  <td className="px-4 py-3 max-w-50 truncate text-secondary-01">{product.description || "N/A"}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-black font-black">${product.price}</td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
-                      {product.category === "TRADEMILL" ? "Treadmill" : product.category === "DUMMBBELL" ? "Dumbbell" : product.category?.replace("_", " ") || "N/A"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
-                        product.remainingStock >= 5
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                          : "bg-rose-50 text-rose-700 border-rose-200"
-                      }`}
-                    >
-                      {product.remainingStock} left
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap">
-                    <div className="flex items-center justify-center gap-2">
-                      <EditProductButton product={product as IProduct} refetch={refetch} />
-                      <DeleteProductButton product={product as IProduct} />
+            <tbody className="divide-y divide-secondary-01/10 text-sm text-neutral-800 font-medium relative">
+              {/* Data Loading State */}
+              {isFetching ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                      <span>Loading products...</span>
                     </div>
                   </td>
                 </tr>
-              ))}
-              {products.length === 0 && (
+              ) : products.length > 0 ? (
+                products.map((product) => (
+                  <tr key={product.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                    <td className="px-4 py-3">
+                      <div className="w-10 h-10 rounded-xl overflow-hidden border border-primary-02/30 bg-neutral-50 flex items-center justify-center shrink-0">
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            width={40}
+                            height={40}
+                            className="w-10 h-10 rounded-xl object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-primary-02/40 text-primary-01 flex items-center justify-center text-xs font-black">
+                            {getInitials(product.name)}
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 wrap-break-word text-black font-bold max-w-40">{product.name}</td>
+                    <td className="px-4 py-3 max-w-50 truncate text-secondary-01">{product.description || "N/A"}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-black font-black">${product.price}</td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-neutral-50 text-neutral-700 border-neutral-200 uppercase">
+                        {product.category === "TRADEMILL" ? "Treadmill" : product.category === "DUMMBBELL" ? "Dumbbell" : product.category?.replace("_", " ") || "N/A"}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
+                          product.remainingStock >= 5
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : "bg-rose-50 text-rose-700 border-rose-200"
+                        }`}
+                      >
+                        {product.remainingStock} left
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
+                      <div className="flex items-center justify-center gap-2">
+                        <EditProductButton product={product as IProduct} refetch={refetch} />
+                        <DeleteProductButton product={product as IProduct} />
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                /* No Data State */
                 <tr>
                   <td colSpan={7} className="px-4 py-10 text-center text-secondary-01 font-semibold">
                     No products found
@@ -239,11 +252,12 @@ const ProductsManagement = () => {
           </table>
         </div>
 
+        {/* Pagination Section */}
         <div className="px-6 py-4 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <button
               onClick={() => handlePageChange(Math.max(pagination.pageIndex - 1, 0))}
-              disabled={meta.page === 1 || meta.totalPages <= 1}
+              disabled={meta.page === 1 || meta.totalPages <= 1 || isFetching}
               className="inline-flex items-center gap-1 px-3 py-1.5 border border-secondary-01/20 rounded-xl bg-white hover:bg-neutral-50 text-sm font-medium text-neutral-700 disabled:opacity-50 disabled:hover:bg-white transition-colors duration-200"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -254,6 +268,7 @@ const ProductsManagement = () => {
               <button
                 key={index}
                 onClick={() => handlePageChange(index)}
+                disabled={isFetching}
                 className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
                   meta.page === index + 1
                     ? "bg-black text-white border-black"
@@ -266,8 +281,8 @@ const ProductsManagement = () => {
 
             <button
               onClick={() => handlePageChange(Math.min(pagination.pageIndex + 1, meta.totalPages - 1))}
-              disabled={meta.page === meta.totalPages || meta.totalPages <= 1}
-              className="inline-flex items-center gap-1 px-3 py-1.5 border border-secondary-01/20 rounded-xl bg-white hover:bg-neutral-50 text-sm font-medium text-neutral-700 disabled:opacity-50 disabled:hover:bg-white transition-colors duration-200"
+              disabled={meta.page === meta.totalPages || meta.totalPages <= 1 || isFetching}
+              className="inline-flex items-xl gap-1 px-3 py-1.5 border border-secondary-01/20 rounded-xl bg-white hover:bg-neutral-50 text-sm font-medium text-neutral-700 disabled:opacity-50 disabled:hover:bg-white transition-colors duration-200"
             >
               <span>Next</span>
               <ChevronRight className="w-4 h-4" />
@@ -278,11 +293,12 @@ const ProductsManagement = () => {
             <div className="flex items-center gap-2">
               <select
                 value={pagination.pageSize}
+                disabled={isFetching}
                 onChange={(e) => {
                   const size = Number(e.target.value);
                   setPagination({ pageIndex: 0, pageSize: size });
                 }}
-                className="pl-3 pr-8 py-1.5 border border-secondary-01/20 rounded-xl text-sm font-medium bg-white text-black cursor-pointer focus:outline-none"
+                className="pl-3 pr-8 py-1.5 border border-secondary-01/20 rounded-xl text-sm font-medium bg-white text-black cursor-pointer focus:outline-none disabled:opacity-50"
               >
                 <option value={5}>5 rows</option>
                 <option value={10}>10 rows</option>
@@ -294,14 +310,16 @@ const ProductsManagement = () => {
               <input
                 type="number"
                 value={customInput}
+                disabled={isFetching}
                 onChange={(e) => setCustomInput(e.target.value)}
                 min="1"
-                className="w-16 px-2 py-1 border border-secondary-01/20 rounded-xl text-sm font-medium text-center focus:outline-none focus:border-primary-01/40"
+                className="w-16 px-2 py-1 border border-secondary-01/20 rounded-xl text-sm font-medium text-center focus:outline-none focus:border-primary-01/40 disabled:opacity-50"
               />
               <button
                 type="button"
                 onClick={handleApplyCustomLimit}
-                className="px-3 py-1.5 border border-black rounded-xl bg-white hover:bg-neutral-50 text-sm font-bold text-black transition-colors duration-200"
+                disabled={isFetching}
+                className="px-3 py-1.5 border border-black rounded-xl bg-white hover:bg-neutral-50 text-sm font-bold text-black transition-colors duration-200 disabled:opacity-50"
               >
                 Apply
               </button>
