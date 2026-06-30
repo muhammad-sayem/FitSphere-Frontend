@@ -61,6 +61,8 @@ const UsersManagement = () => {
     gcTime: 10 * 60 * 1000,
   });
 
+  console.log("Users Response:", usersResponse);
+
   const users = (usersResponse?.data as IUser[]) || [];
   const meta = usersResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
 

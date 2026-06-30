@@ -1,12 +1,10 @@
-"use client";
-
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
 import { slotServices } from "@/services/slot.services";
 import { useQuery } from "@tanstack/react-query";
 import { PaginationState, SortingState } from "@tanstack/react-table";
-import { CalendarIcon, X, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { CalendarIcon, X, ChevronLeft, ChevronRight, ArrowUpDown, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -237,61 +235,70 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
             </thead>
 
             <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
-              {slotsData.map((slot) => (
-                <tr key={slot.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    {new Date(slot.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    {`${formatTo12Hour(slot.startTime)} - ${formatTo12Hour(slot.endTime)}`}
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    {`$${slot.trainer?.feePerHour || 0}`}
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    <span
-                      className={cn(
-                        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
-                        slot.isBooked
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-rose-50 text-rose-700 border-rose-200"
-                      )}
-                    >
-                      {slot.isBooked ? "Booked" : "Not Booked"}
-                    </span>
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 flex whitespace-nowrap text-center items-center justify-center gap-2">
-                    <MarkAsCompleteButton
-                      isBooked={slot.isBooked}
-                      slotId={slot.id}
-                      isCompleted={completedSlotIds.has(slot.id)}
-                      onCompleted={() => {
-                        setCompletedSlotIds((prev) => {
-                          const next = new Set(prev);
-                          next.add(slot.id);
-                          return next;
-                        });
-                      }}
-                      refetch={refetch}
-                    />
-                    <DeleteMySlotButton
-                      isBooked={slot.isBooked}
-                      slotId={slot.id}
-                      refetch={refetch}
-                    />
+              {isLoading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                      <span>Loading slots...</span>
+                    </div>
                   </td>
                 </tr>
-              ))}
+              ) : slotsData.length > 0 ? (
+                slotsData.map((slot) => (
+                  <tr key={slot.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      {new Date(slot.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </td>
 
-              {slotsData.length === 0 && (
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      {`${formatTo12Hour(slot.startTime)} - ${formatTo12Hour(slot.endTime)}`}
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      {`$${slot.trainer?.feePerHour || 0}`}
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      <span
+                        className={cn(
+                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
+                          slot.isBooked
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : "bg-rose-50 text-rose-700 border-rose-200"
+                        )}
+                      >
+                        {slot.isBooked ? "Booked" : "Not Booked"}
+                      </span>
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 flex whitespace-nowrap text-center items-center justify-center gap-2">
+                      <MarkAsCompleteButton
+                        isBooked={slot.isBooked}
+                        slotId={slot.id}
+                        isCompleted={completedSlotIds.has(slot.id)}
+                        onCompleted={() => {
+                          setCompletedSlotIds((prev) => {
+                            const next = new Set(prev);
+                            next.add(slot.id);
+                            return next;
+                          });
+                        }}
+                        refetch={refetch}
+                      />
+                      <DeleteMySlotButton
+                        isBooked={slot.isBooked}
+                        slotId={slot.id}
+                        refetch={refetch}
+                      />
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan={5} className="px-6 py-10 text-center text-secondary-01 font-semibold">
                     No slots found for the selected criteria.

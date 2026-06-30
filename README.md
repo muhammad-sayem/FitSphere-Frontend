@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏋️ Fit Sphere
 
-## Getting Started
+## Project Description
 
-First, run the development server:
+Fit Sphere is a full-stack fitness solution platform where users can find trainers, book training sessions, purchase fitness products, and manage their fitness journey from a single platform.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+The platform has three different roles: **User**, **Trainer**, and **Admin**. Trainers can create professional profiles and manage their available training slots after admin approval. Users can book trainer sessions and buy fitness products using secure Stripe payment. The platform also includes a BMI Calculator to help users check their BMI and health status.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Live URLs
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Frontend:** 
+- **Backend:** 
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Authentication
+- User registration and login
+- Register as User or Trainer
+- Secure authentication using Better Auth and JWT
+- Role-based access control
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### User Features
+- View all trainers and trainer details
+- Book trainer slots
+- Secure payment using Stripe
+- Purchase fitness products
+- BMI Calculator
+- View booked sessions
+- View payment history
+- View product order history
+- View submitted reviews
+- Manage personal profile
 
-## Deploy on Vercel
+### Trainer Features
+- Create trainer profile
+- Admin approval required before becoming an active trainer
+- Create available training slots
+- View and delete created slots
+- Update booked slot status
+- View reviews from users
+- Manage personal profile
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Admin Features
+- Dashboard with system statistics
+- Manage users
+- Manage trainers
+- Approve trainer applications
+- Activate, ban, or delete users and trainers
+- Manage fitness products
+- Create, update, and delete products
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## Technologies Used
+
+### Frontend
+- Next.js
+- TypeScript
+- Tailwind CSS
+- Shadcn UI
+- TanStack Query
+- Axios
+
+### Backend
+- Node.js
+- Express.js
+- PostgreSQL
+- Prisma ORM
+- Better Auth
+- JWT Authentication
+- Stripe Payment Gateway
+
+---
+
+## User Roles
+
+| Role | Permissions |
+|------|-------------|
+| User | Book trainer slots, purchase products, calculate BMI, manage profile |
+| Trainer | Create profile, manage slots, update booking status, view reviews |
+| Admin | Manage users, trainers, products, approve trainers, view dashboard statistics |

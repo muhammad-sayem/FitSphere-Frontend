@@ -56,7 +56,7 @@ const MyBookings = ({ initialUser }: { initialUser?: any }) => {
     return params;
   }, [pageIndex, pageSize, searchTerm, sorting, filters]);
 
-  const { data: myBookingsResponse, isFetching } = useQuery({
+  const { data: myBookingsResponse, isFetching, isPending } = useQuery({
     queryKey: ["my-bookings", loggedInUser?.userId, queryParams, filters],
     queryFn: () => bookingServices.getBookingsByUserId({ params: queryParams }),
     enabled: !!loggedInUser?.userId,
@@ -185,43 +185,55 @@ const MyBookings = ({ initialUser }: { initialUser?: any }) => {
   };
 
   return (
-    <div>
+    <div className="w-full">
       <h1 className="text-2xl font-semibold mb-4">My Booked Slots</h1>
 
-      <DataTable
-        data={bookings}
-        columns={columnDefs}
-        isLoading={isFetching}
-        emptyMessage="No bookings found"
-        search={{
-          initialValue: searchTerm,
-          placeholder: "Search by trainer name or email...",
-          onDebouncedChange: (v) => {
-            setSearchTerm(v);
-            setPageIndex(0);
-          },
-        }}
-        filters={{
-          configs: dtFilters,
-          values: filters,
-          onFilterChange: handleFilterChange,
-        }}
-        sorting={{
-          state: sorting,
-          onSortingChange: (next) => {
-            setSorting(next);
-            setPageIndex(0);
-          },
-        }}
-        pagination={{
-          state: { pageIndex, pageSize },
-          onPaginationChange: (next) => {
-            setPageIndex(next.pageIndex);
-            setPageSize(next.pageSize);
-          },
-        }}
-        toolbarAction={<div />}
-      />
+      {isFetching ? (
+        /* Dedicated Primary Color Spinner Section */
+        <div className="flex flex-col items-center justify-center min-h-[300px] w-full bg-white rounded-lg border border-gray-100 shadow-sm">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-100 border-t-primary-01" />
+            <span className="text-base font-medium text-primary-01 animate-pulse">
+              Loading bookings...
+            </span>
+          </div>
+        </div>
+      ) : (
+        <DataTable
+          data={bookings}
+          columns={columnDefs}
+          isLoading={isPending || isFetching}
+          emptyMessage="No bookings found"
+          search={{
+            initialValue: searchTerm,
+            placeholder: "Search by trainer name or email...",
+            onDebouncedChange: (v) => {
+              setSearchTerm(v);
+              setPageIndex(0);
+            },
+          }}
+          filters={{
+            configs: dtFilters,
+            values: filters,
+            onFilterChange: handleFilterChange,
+          }}
+          sorting={{
+            state: sorting,
+            onSortingChange: (next) => {
+              setSorting(next);
+              setPageIndex(0);
+            },
+          }}
+          pagination={{
+            state: { pageIndex, pageSize },
+            onPaginationChange: (next) => {
+              setPageIndex(next.pageIndex);
+              setPageSize(next.pageSize);
+            },
+          }}
+          toolbarAction={<div />}
+        />
+      )}
     </div>
   );
 };

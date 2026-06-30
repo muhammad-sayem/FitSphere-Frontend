@@ -4,7 +4,7 @@ import { trainerServices } from "@/services/trainer.services";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Filter, Loader2 } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import ApprovalControl from "./ApprovalControl";
@@ -61,7 +61,7 @@ const TrainersManagement = () => {
     return params;
   }, [searchTerm, statusFilter, pagination]);
 
-  const { data: trainersResponse, refetch } = useQuery({
+  const { data: trainersResponse, refetch, isFetching } = useQuery({
     queryKey: ["admin-trainers-management", queryParams],
     queryFn: () =>
       trainerServices.getAllTrainers({
@@ -73,7 +73,6 @@ const TrainersManagement = () => {
 
   const trainers = (trainersResponse?.data as ITrainerProfile[]) || [];
   const meta = trainersResponse?.meta || { page: 1, limit: 10, total: 0, totalPages: 1 };
-  console.log("Trainers Data:", trainers);
 
   const getInitials = (name: string) => {
     if (!name) return "";
@@ -154,7 +153,16 @@ const TrainersManagement = () => {
             </thead>
 
             <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
-              {
+              {isFetching ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                      <span>Loading trainers...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : trainers.length > 0 ? (
                 trainers.map((trainer) => (
                   <tr key={trainer.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
                     <td className="px-3 py-2.5 lg:px-4 text-center">
@@ -183,26 +191,25 @@ const TrainersManagement = () => {
                     </td>
                     <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                       <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${trainer.user?.status === "ACTIVE"
-                          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                          : "bg-amber-50 text-amber-700 border-amber-200"
-                          }`}
+                        className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
+                          trainer.user?.status === "ACTIVE"
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                            : "bg-amber-50 text-amber-700 border-amber-200"
+                        }`}
                       >
                         {trainer.user?.status}
                       </span>
                     </td>
                     <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                      {
-                        trainer.isApproved ? (
-                          <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 w-12">
-                            Yes
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-rose-50 text-red-600 border border-rose-200 w-12">
-                            No
-                          </span>
-                        )
-                      }
+                      {trainer.isApproved ? (
+                        <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 w-12">
+                          Yes
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold bg-rose-50 text-red-600 border border-rose-200 w-12">
+                          No
+                        </span>
+                      )}
                     </td>
                     <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                       {trainer.user?.isDeleted ? (
@@ -227,16 +234,14 @@ const TrainersManagement = () => {
                         currentStatus={trainer.user?.status || "ACTIVE"}
                         onSuccessCallback={refetch}
                       />
-                      <DeleteTrainerControl 
+                      <DeleteTrainerControl
                         trainerId={trainer.id}
                         onSuccessCallback={refetch}
                       />
                     </td>
                   </tr>
                 ))
-              }
-
-              {trainers.length === 0 && (
+              ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
                     No trainers found
@@ -262,10 +267,11 @@ const TrainersManagement = () => {
               <button
                 key={index}
                 onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${meta.page === index + 1
-                  ? "bg-black text-white border-black"
-                  : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                  }`}
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
+                  meta.page === index + 1
+                    ? "bg-black text-white border-black"
+                    : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
+                }`}
               >
                 {index + 1}
               </button>

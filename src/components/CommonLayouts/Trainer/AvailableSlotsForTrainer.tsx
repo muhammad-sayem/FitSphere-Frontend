@@ -3,7 +3,7 @@
 import { slotServices } from "@/services/slot.services";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Calendar, ArrowUpDown, Filter, User } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, ArrowUpDown, Filter, User, Loader2 } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import Image from "next/image";
 import BookSessionButton from "./BookSessionButton";
@@ -34,7 +34,7 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
   });
   const [customInput, setCustomInput] = useState("10");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
-  const [bookingFilter, setBookingFilter] = useState<string>("");
+  const [bookingFilter, setBookingFilter] = useState<string>("all");
 
   const queryParams = useMemo(() => {
     const params: Record<string, string> = {
@@ -44,14 +44,14 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
       sortOrder: sortOrder,
     };
 
-    if (bookingFilter !== "") {
+    if (bookingFilter !== "all" && bookingFilter !== "") {
       params.isBooked = bookingFilter;
     }
 
     return params;
   }, [pagination, sortOrder, bookingFilter]);
 
-  const { data: SlotsResponse } = useQuery({
+  const { data: SlotsResponse, isLoading } = useQuery({
     queryKey: ["individual-trainer-slots", trainerProfileId, queryParams],
     queryFn: () => slotServices.getSlotsByTrainerId(trainerProfileId, { params: queryParams }),
     staleTime: 5 * 60 * 1000,
@@ -117,9 +117,10 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
             <select
               value={bookingFilter}
               onChange={handleBookingFilterChange}
+              disabled={isLoading}
               className="w-full pl-9 pr-8 py-2 border border-secondary-01/20 rounded-xl text-sm focus:outline-none focus:border-primary-01/40 bg-white transition-colors duration-200 text-black font-medium appearance-none cursor-pointer"
             >
-              <option value="">All Status</option>
+              <option value="all">All Status</option>
               <option value="false">Available</option>
               <option value="true">Booked</option>
             </select>
@@ -152,67 +153,74 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
             </thead>
 
             <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
-              {slots.map((slot) => (
-                <tr key={slot.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    <div className="flex items-center justify-center">
-                      {slot.trainer?.user?.image ? (
-                        <div className="relative w-10 h-10 rounded-full overflow-hidden border border-secondary-01/10">
-                          <Image
-                            src={slot.trainer.user.image}
-                            alt={slot.trainer.user.name || "Trainer"}
-                            fill
-                            className="object-cover"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center border border-secondary-01/10 text-neutral-400">
-                          <User className="w-5 h-5" />
-                        </div>
-                      )}
+              {isLoading ? (
+                <tr>
+                  <td colSpan={7} className="px-4 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                      <span>Loading slots...</span>
                     </div>
                   </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-black font-bold max-w-35 truncate text-center">
-                    {slot.trainer?.user?.name}
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-secondary-01 text-center">
-                    <span className="inline-flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-secondary-01/60" />
-                      {formatDate(slot.date)}
-                    </span>
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-neutral-700 text-center font-semibold">
-                    {formatTo12Hour(slot.startTime)} - {formatTo12Hour(slot.endTime)}
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center text-primary-01 font-black">
-                    ${slot.trainer?.feePerHour}/hr
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
-                    <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${slot.isBooked
-                          ? "bg-rose-50 text-rose-700 border-rose-200"
-                          : "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        }`}
-                    >
-                      {slot.isBooked ? "Booked" : "Available"}
-                    </span>
-                  </td>
-
-                  <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center items-center justify-center">
-                    <BookSessionButton
-                      key={slot.id}
-                      slot={slot}
-                    />
-                  </td>
                 </tr>
-              ))}
+              ) : slots.length > 0 ? (
+                slots.map((slot) => (
+                  <tr key={slot.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      <div className="flex items-center justify-center">
+                        {slot.trainer?.user?.image ? (
+                          <div className="relative w-10 h-10 rounded-full overflow-hidden border border-secondary-01/10">
+                            <Image
+                              src={slot.trainer.user.image}
+                              alt={slot.trainer.user.name || "Trainer"}
+                              fill
+                              className="object-cover"
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center border border-secondary-01/10 text-neutral-400">
+                            <User className="w-5 h-5" />
+                          </div>
+                        )}
+                      </div>
+                    </td>
 
-              {slots.length === 0 && (
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-black font-bold max-w-35 truncate text-center">
+                      {slot.trainer?.user?.name}
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-secondary-01 text-center">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-secondary-01/60" />
+                        {formatDate(slot.date)}
+                      </span>
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-neutral-700 text-center font-semibold">
+                      {formatTo12Hour(slot.startTime)} - {formatTo12Hour(slot.endTime)}
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center text-primary-01 font-black">
+                      ${slot.trainer?.feePerHour}/hr
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
+                          slot.isBooked
+                            ? "bg-rose-50 text-rose-700 border-rose-200"
+                            : "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        }`}
+                      >
+                        {slot.isBooked ? "Booked" : "Available"}
+                      </span>
+                    </td>
+
+                    <td className="px-3 py-2.5 lg:px-4 flex gap-x-2 whitespace-nowrap text-center items-center justify-center">
+                      <BookSessionButton key={slot.id} slot={slot} />
+                    </td>
+                  </tr>
+                ))
+              ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-10 text-center text-secondary-01 font-semibold">
                     No slots found
@@ -238,10 +246,11 @@ const AvailableSlotsForTrainer = ({ trainerProfileId }: { trainerProfileId: stri
               <button
                 key={index}
                 onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${meta.page === index + 1
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
+                  meta.page === index + 1
                     ? "bg-black text-white border-black"
                     : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                  }`}
+                }`}
               >
                 {index + 1}
               </button>

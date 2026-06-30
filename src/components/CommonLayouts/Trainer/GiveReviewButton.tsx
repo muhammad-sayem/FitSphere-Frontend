@@ -2,7 +2,7 @@
 "use client";
 
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { reviewServices } from "@/services/review.services";
@@ -30,7 +30,6 @@ interface ICreateReviewPayload {
 const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
-  const queryClient = useQueryClient();
 
   const isUserRole = currentUser?.role === "USER";
   console.log("Current user data from trainer details:", currentUser);
@@ -51,15 +50,15 @@ const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonPro
   const getButtonText = () => {
     if (!currentUser) {
       return "Login to Review";
-    };
+    }
 
     if (!isUserRole) {
       return "Only Users Can Review";
-    };
+    }
 
     if (hasReviewed) {
       return "Already Reviewed";
-    };
+    }
 
     return "Give Review";
   };
@@ -107,13 +106,10 @@ const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonPro
         form.reset();
         setIsOpen(false);
 
-        await Promise.all([
-          queryClient.invalidateQueries({ queryKey: ["reviews", trainerProfileId] }),
-          queryClient.invalidateQueries({ queryKey: ["trainer", trainerProfileId] }),
-          queryClient.invalidateQueries({ queryKey: ["already-reviewed", trainerProfileId, currentUser?.id] })
-        ]);
-      }
-      catch (error: any) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      } catch (error: any) {
         const errorMsg = error?.message || "Review submission failed";
         setServerError(errorMsg);
         toast.error(errorMsg, { position: "top-center" });
