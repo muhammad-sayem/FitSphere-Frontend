@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { ColumnDef, PaginationState, SortingState } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { paymentServices } from "@/services/payment.services";
+import { getMyPaymentsAction } from "@/actions/payment.action";
 import { Badge } from "@/components/ui/badge";
 import { DataTableFilterConfig, DataTableFilterValues } from "@/components/table/DataTableFilters";
 import DataTable from "@/components/table/DataTable";
@@ -91,7 +91,14 @@ const MyPayments = () => {
 
   const { data: myPaymentsResponse, isLoading } = useQuery({
     queryKey: ["my-payments", queryParams],
-    queryFn: () => paymentServices.getMyPayments({ params: queryParams }),
+    queryFn: () =>
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling paymentServices.getMyPayments directly from the client
+       * loses auth.
+       */
+      getMyPaymentsAction(queryParams),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

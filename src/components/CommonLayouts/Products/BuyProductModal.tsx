@@ -10,22 +10,25 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreditCard, ShoppingBag } from "lucide-react";
-import { orderServices } from "@/services/order.services";
+import { createOrderAction } from "@/actions/order.action";
 
 interface BuyProductModalProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   productId: string;
+  productPrice: number;
 }
 
-const BuyProductModal = ({ isOpen, setIsOpen, productId }: BuyProductModalProps) => {
+const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProductModalProps) => {
   const [quantity, setQuantity] = useState<number>(1);
   const [address, setAddress] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [paymentUrl, setPaymentUrl] = useState<string>("");
   const [showPaymentStep, setShowPaymentStep] = useState<boolean>(false);
-  const [totalAmount, setTotalAmount] = useState<number>(0);
+  const [serverTotalAmount, setServerTotalAmount] = useState<number | null>(null);
+
+  const totalAmount = serverTotalAmount ?? productPrice * quantity;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,16 +42,31 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId }: BuyProductModalProps)
         phone,
       };
 
-      const result = await orderServices.createOrder(payload as any);
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling orderServices.createOrder directly from the client loses auth.
+       */
+      const result: any = await createOrderAction(payload as any);
 
-      if (result?.success && result?.data?.paymentUrl) {
-        setPaymentUrl(result.data.paymentUrl);
+      const paymentUrl =
+        result?.data?.paymentUrl ?? result?.data?.data?.paymentUrl;
+      const serverAmount =
+        result?.data?.order?.totalAmount ??
+        result?.data?.data?.order?.totalAmount;
+
+      if (paymentUrl) {
+        setPaymentUrl(paymentUrl);
         setShowPaymentStep(true);
-        setTotalAmount(result.data.order.totalAmount);
-      } 
-      else if (result?.data?.data?.paymentUrl) {
-        setPaymentUrl(result.data.data.paymentUrl);
-        setShowPaymentStep(true);
+
+        if (typeof serverAmount === "number") {
+          setServerTotalAmount(serverAmount);
+        }
+      } else {
+        const errorMsg =
+          result?.message || result?.data?.message || "Failed to create order";
+        console.error("[BuyProductModal] createOrder response:", result, errorMsg);
+        alert(errorMsg);
       }
     } catch (error) {
       console.error(error);
@@ -72,6 +90,7 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId }: BuyProductModalProps)
       setAddress("");
       setPhone("");
       setPaymentUrl("");
+      setServerTotalAmount(null);
     }, 200);
   };
 

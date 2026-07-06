@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { trainerServices } from "@/services/trainer.services";
+import { deleteTrainerAction } from "@/actions/trainer.action";
 import { useMutation } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
@@ -15,7 +15,7 @@ const DeleteTrainerControl = ({ trainerId, onSuccessCallback }: DeleteTrainerCon
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await trainerServices.deleteTrainer(trainerId);
+      const response = await deleteTrainerAction(trainerId);
       return response;
     },
 

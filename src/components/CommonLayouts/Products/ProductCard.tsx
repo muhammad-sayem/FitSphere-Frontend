@@ -63,6 +63,7 @@ const ProductCard = ({ product, loggedInUser }: { product: IProductProps; logged
             <BuyProductButton
               key={product.id}
               productId={product.id}
+              productPrice={product.price}
               isDisabled={product.remainingStock === 0}
               loggedInUser={loggedInUser}
             />

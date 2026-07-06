@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
-interface ICreateOrderPayload {
+export interface ICreateOrderPayload {
   productId: string;
   quantity: number;
   address: string;
@@ -22,16 +22,16 @@ export const orderServices = {
     }
   },
 
-  getMyOrders: (options?: ApiRequestOptions) => {
+  getMyOrders: async (options?: ApiRequestOptions) => {
     try {
-      const response = httpClient.get("/orders/user/my-orders", options);
+      const response = await httpClient.get("/orders/user/my-orders", options);
       return response;
-    } 
-    
-    catch (error) {
+    }
+
+    catch (error: any) {
       console.error("[orderServices.getMyOrders] api error:", error);
-      const serverErrorMessage = error || "Failed to fetch orders";
-      throw serverErrorMessage;
+      const serverErrorMessage = error?.response?.data?.message || error?.message || "Failed to fetch orders";
+      throw new Error(serverErrorMessage);
     }
   },
 };

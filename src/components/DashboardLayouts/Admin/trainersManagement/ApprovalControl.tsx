@@ -4,7 +4,7 @@
 import { CheckCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
-import { trainerServices } from "@/services/trainer.services";
+import { approveTrainerAction } from "@/actions/trainer.action";
 
 interface ApprovalControlProps {
   trainerId: string;
@@ -13,10 +13,15 @@ interface ApprovalControlProps {
 }
 
 const ApprovalControl = ({ trainerId, isApproved, onSuccessCallback }: ApprovalControlProps) => {
-  
+
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await trainerServices.approveTrainer(trainerId);
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling trainerServices.approveTrainer directly from the client loses auth.
+       */
+      const response = await approveTrainerAction(trainerId);
       return response;
     },
     

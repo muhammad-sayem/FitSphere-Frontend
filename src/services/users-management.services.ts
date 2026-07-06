@@ -13,9 +13,9 @@ export const usersManagementServices = {
     }
   },
 
-  changeUserStatus: async (userId: string, newStatus: string) => {
+  changeUserStatus: async (userId: string, newStatus: string, options?: ApiRequestOptions) => {
     try {
-      const response = await httpClient.patch(`/users/change-user-status/${userId}`, { status: newStatus });
+      const response = await httpClient.patch(`/users/change-user-status/${userId}`, { status: newStatus }, options);
       return response;
     }
 

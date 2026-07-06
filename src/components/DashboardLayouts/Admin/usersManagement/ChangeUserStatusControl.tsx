@@ -4,7 +4,7 @@
 import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { usersManagementServices } from "@/services/users-management.services";
+import { changeUserStatusAction } from "@/actions/user.action";
 
 interface ChangeUserStatusControlProps {
   userId: string;
@@ -16,30 +16,24 @@ const ChangeUserStatusControl = ({ userId, currentStatus, onSuccessCallback }: C
 
   const { mutate, isPending } = useMutation({
     mutationFn: async (targetStatus: string) => {
-      const response = await usersManagementServices.changeUserStatus(userId, targetStatus);
+      const response = await changeUserStatusAction(userId, targetStatus);
       return response;
     },
 
-    onSuccess: (response: any) => {
-      if (response?.data?.success || response?.success !== false) {
-        Swal.fire({
-          title: "Updated!",
-          text: "The user status has been successfully updated.",
-          icon: "success",
-        });
-        if (onSuccessCallback) {
-          onSuccessCallback();
-        }
-      } else {
-        Swal.fire({
-          title: "Error!",
-          text: response?.message || "Failed to update user status.",
-          icon: "error",
-        });
+    onSuccess: () => {
+      Swal.fire({
+        title: "Updated!",
+        text: "The user status has been successfully updated.",
+        icon: "success",
+      });
+
+      if (onSuccessCallback) {
+        onSuccessCallback();
       }
     },
+
     onError: (error: any) => {
-      const errorMessage = error?.response?.data?.message || "Something went wrong.";
+      const errorMessage = error?.message || "Something went wrong.";
       Swal.fire({
         title: "Error!",
         text: errorMessage,

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { usersManagementServices } from "@/services/users-management.services";
+import { getAllUsersAction } from "@/actions/trainer.action";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo } from "react";
@@ -54,9 +54,7 @@ const UsersManagement = () => {
   const { data: usersResponse, refetch } = useQuery({
     queryKey: ["admin-users-management", queryParams],
     queryFn: () =>
-      usersManagementServices.getAllUsers({
-        params: queryParams,
-      }),
+      getAllUsersAction(queryParams),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
@@ -181,11 +179,10 @@ const UsersManagement = () => {
                   {/* Status Column */}
                   <td className="px-3 py-2.5 lg:px-4 whitespace-nowrap text-center">
                     <span
-                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${
-                        user.status === "ACTIVE"
+                      className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] lg:text-xs font-bold border ${user.status === "ACTIVE"
                           ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                           : "bg-amber-50 text-amber-700 border-amber-200"
-                      }`}
+                        }`}
                     >
                       {user.status}
                     </span>
@@ -211,7 +208,7 @@ const UsersManagement = () => {
                       currentStatus={user.status || "ACTIVE"}
                       onSuccessCallback={refetch}
                     />
-                    <DeleteUserControl 
+                    <DeleteUserControl
                       userId={user.id}
                       onSuccessCallback={refetch}
                     />
@@ -246,11 +243,10 @@ const UsersManagement = () => {
               <button
                 key={index}
                 onClick={() => setPagination((prev) => ({ ...prev, pageIndex: index }))}
-                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${
-                  meta.page === index + 1
+                className={`w-8 h-8 rounded-xl text-sm font-bold border transition-colors duration-200 ${meta.page === index + 1
                     ? "bg-black text-white border-black"
                     : "bg-white text-neutral-700 border-secondary-01/20 hover:bg-neutral-50"
-                }`}
+                  }`}
               >
                 {index + 1}
               </button>

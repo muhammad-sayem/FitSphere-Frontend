@@ -86,8 +86,6 @@ export const trainerServices = {
   },
 
   getTrainerProfileByUserId: async (userId: string, options?: ApiRequestOptions) => {
-    //* Guard: undefined/empty userId diye backend call pathanor dorkar nei,
-    //  karon URL "/trainer-profiles/userId/undefined" hit kore 404/500 ashe. *//
     if (!userId) {
       return {
         data: null,
@@ -138,9 +136,9 @@ export const trainerServices = {
     }
   },
 
-  deleteTrainer: async (trainerId: string) => {
+  deleteTrainer: async (trainerId: string, options?: ApiRequestOptions) => {
     try{
-      const response = await httpClient.delete(`/trainer-profiles/delete-trainer-profile/${trainerId}`);
+      const response = await httpClient.delete(`/trainer-profiles/delete-trainer-profile/${trainerId}`, options);
       return response;
     }
 

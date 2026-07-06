@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { bookingServices } from "@/services/booking.services";
+import { createBookingAction } from "@/actions/booking.action";
 import BookSessionModal from "./BookSessionModal";
 
 interface BookSessionButtonProps {
@@ -31,7 +31,7 @@ const BookSessionButton = ({ slot }: BookSessionButtonProps) => {
       if (result.isConfirmed) {
         try {
           setIsLoading(true);
-          const response = await bookingServices.createBooking({
+          const response = await createBookingAction({
             slotId: slot.id,
             trainerId: slot.trainerId,
           });

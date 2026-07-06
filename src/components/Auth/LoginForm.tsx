@@ -138,6 +138,56 @@ const LoginForm = () => {
             </form.Subscribe>
           </form>
 
+          {/* Demo quick-login buttons. Each one fills the email field with a
+              pre-seeded account (password is identical for all three). */}
+          <div className="mt-6">
+            <div className="relative flex items-center justify-center mb-3">
+              <span className="px-3 text-xs uppercase tracking-wider text-secondary-01 bg-white">
+                Quick Login Options
+              </span>
+              <div className="absolute inset-x-0 top-1/2 -z-10 h-px bg-gray-200" />
+            </div>
+
+            <form.Subscribe selector={(state) => ({ canSubmit: state.canSubmit })}>
+              {() => (
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      form.setFieldValue("email", "alex@gmail.com");
+                      form.setFieldValue("password", "123456Aa");
+                    }}
+                    className="w-full rounded-xl border border-primary-01 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-primary-01 transition hover:bg-primary-01 hover:text-white"
+                  >
+                    Login as User
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      form.setFieldValue("email", "mitchel@gmail.com");
+                      form.setFieldValue("password", "123456Aa");
+                    }}
+                    className="w-full rounded-xl border border-primary-01 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-primary-01 transition hover:bg-primary-01 hover:text-white"
+                  >
+                    Login as Trainer
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      form.setFieldValue("email", "admin1@gmail.com");
+                      form.setFieldValue("password", "123456Aa");
+                    }}
+                    className="w-full rounded-xl border border-primary-01 bg-white px-3 py-2 text-xs sm:text-sm font-semibold text-primary-01 transition hover:bg-primary-01 hover:text-white"
+                  >
+                    Login as Admin
+                  </button>
+                </div>
+              )}
+            </form.Subscribe>
+          </div>
+
           <p className="mt-6 text-sm text-secondary-01 text-center">
             Don’t have an account?{" "}
             <Link href="/register" className="text-primary-01 font-semibold underline">

@@ -6,6 +6,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
 import { reviewServices } from "@/services/review.services";
+import { createReviewAction } from "@/actions/review.action";
 import {
   Dialog,
   DialogContent,
@@ -65,7 +66,7 @@ const GiveReviewButton = ({ trainerProfileId, currentUser }: GiveReviewButtonPro
 
   const { mutateAsync } = useMutation({
     mutationFn: async (payload: ICreateReviewPayload) => {
-      const res = await reviewServices.createReview(payload);
+      const res = await createReviewAction(payload);
       return res;
     },
   });

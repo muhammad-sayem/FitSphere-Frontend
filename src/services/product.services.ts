@@ -29,16 +29,16 @@ export interface IUpdateProductPayload {
 }
 
 export const productServices = {
-  createProduct: async (payload: ICreateProductPayload) => {
+  createProduct: async (payload: ICreateProductPayload, options?: ApiRequestOptions) => {
     try {
-      const response = await httpClient.post("/products/create-product", payload);
+      const response = await httpClient.post("/products/create-product", payload, options);
       return response;
     }
 
-    catch (error) {
+    catch (error: any) {
       console.error("[productServices.createProduct] api error:", error);
-      const serverErrorMessage = error || "Failed to create product";
-      throw serverErrorMessage;
+      const serverErrorMessage = error?.response?.data?.message || error?.message || "Failed to create product";
+      throw new Error(serverErrorMessage);
     }
   },
 
@@ -68,16 +68,16 @@ export const productServices = {
     }
   },
 
-  updateProduct: async (productId: string, payload: IUpdateProductPayload) => {
+  updateProduct: async (productId: string, payload: IUpdateProductPayload, options?: ApiRequestOptions) => {
     try {
-      const response = await httpClient.patch(`/products/update-product/${productId}`, payload);
+      const response = await httpClient.patch(`/products/update-product/${productId}`, payload, options);
       return response;
     }
 
-    catch (error) {
+    catch (error: any) {
       console.error("[productServices.updateProduct] api error:", error);
-      const serverErrorMessage = error || "Failed to update product";
-      throw serverErrorMessage;
+      const serverErrorMessage = error?.response?.data?.message || error?.message || "Failed to update product";
+      throw new Error(serverErrorMessage);
     }
   },
 
@@ -87,10 +87,10 @@ export const productServices = {
       return response;
     }
 
-    catch (error) {
+    catch (error: any) {
       console.error("[productServices.deleteProduct] api error:", error);
-      const serverErrorMessage = error || "Failed to delete product";
-      throw serverErrorMessage;
+      const serverErrorMessage = error?.response?.data?.message || error?.message || "Failed to delete product";
+      throw new Error(serverErrorMessage);
     }
   }
 }

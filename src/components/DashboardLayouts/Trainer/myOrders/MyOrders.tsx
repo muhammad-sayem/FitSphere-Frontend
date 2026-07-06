@@ -1,12 +1,13 @@
 "use client";
 
 import { orderServices } from "@/services/order.services";
+import { getMyOrdersAction } from "@/actions/order.action";
 import { useQuery } from "@tanstack/react-query";
 
 const MyOrders = () => {
   const { data: myOrdersResponse } = useQuery({
     queryKey: ["my-orders-trainer"],
-    queryFn: () => orderServices.getMyOrders(),
+    queryFn: () => getMyOrdersAction(),
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });

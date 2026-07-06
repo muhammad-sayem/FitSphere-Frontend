@@ -5,6 +5,7 @@
 import DataTable from "@/components/table/DataTable";
 import { DataTableFilterConfig, DataTableFilterValues, DataTableFilterValue } from "@/components/table/DataTableFilters";
 import { orderServices } from "@/services/order.services";
+import { getMyOrdersAction } from "@/actions/order.action";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ColumnDef, PaginationState, SortingState } from "@tanstack/react-table";
 import { useState, useEffect, useMemo } from "react";
@@ -153,7 +154,7 @@ const MyOrders = () => {
 
   const { data: myOrdersResponse, isPending, isFetching } = useQuery({
     queryKey: ["my-orders", queryParams],
-    queryFn: () => orderServices.getMyOrders({ params: queryParams }),
+    queryFn: () => getMyOrdersAction(queryParams),
     placeholderData: keepPreviousData,
     staleTime: 5 * 1000,
   });

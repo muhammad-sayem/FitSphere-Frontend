@@ -46,10 +46,12 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const access_token = request.cookies.get("access_token")?.value;
-  const role = access_token ? decodeRoleFromToken(access_token) : null;
+  // const access_token = request.cookies.get("access_token")?.value;
+  const sessionToken = request.cookies.get("better-auth.session_token");
+  // const role = access_token ? decodeRoleFromToken(access_token) : null;
+  const role = sessionToken ? decodeRoleFromToken(sessionToken.value) : null;
 
-  if (!access_token || !role) {
+  if (!sessionToken || !role) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

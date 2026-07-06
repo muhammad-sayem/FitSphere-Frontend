@@ -2,7 +2,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { slotServices } from "@/services/slot.services";
+import { deleteMySlotAction } from "@/actions/trainer.action";
 import { useMutation } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
@@ -17,7 +17,12 @@ const DeleteMySlotButton = ({ slotId, isBooked, refetch }: DeleteMySlotButtonPro
 
   const { mutate } = useMutation({
     mutationFn: async () => {
-      const response = await slotServices.deleteMySlot(slotId);
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling slotServices.deleteMySlot directly from the client loses auth.
+       */
+      const response = await deleteMySlotAction(slotId);
       return response;
     },
 

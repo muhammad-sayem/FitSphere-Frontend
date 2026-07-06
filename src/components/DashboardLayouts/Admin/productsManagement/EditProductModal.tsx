@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
-import { productServices } from "@/services/product.services";
+import { updateProductAction } from "@/actions/product.action";
 import { IProduct } from "./ProductsManagement";
 import {
   Dialog,
@@ -28,7 +28,7 @@ const EditProductModal = ({ product, refetch, isOpen, setIsOpen }: EditProductMo
 
   const { mutateAsync } = useMutation({
     mutationFn: async (payload: any) => {
-      const res = await productServices.updateProduct(product.id, payload);
+      const res = await updateProductAction(product.id, payload);
       return res;
     },
   });

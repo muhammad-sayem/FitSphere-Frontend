@@ -2,7 +2,7 @@
 
 import { IProduct } from "./ProductsManagement";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { productServices } from "@/services/product.services";
+import { deleteProductAction } from "@/actions/product.action";
 import Swal from "sweetalert2";
 import { Trash2 } from "lucide-react";
 
@@ -10,7 +10,7 @@ const DeleteProductButton = ({ product }: { product: IProduct }) => {
   const queryClient = useQueryClient();
 
   const { mutate: deleteProductQuery } = useMutation({
-    mutationFn: (productId: string) => productServices.deleteProduct(productId),
+    mutationFn: (productId: string) => deleteProductAction(productId),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products-management"] });

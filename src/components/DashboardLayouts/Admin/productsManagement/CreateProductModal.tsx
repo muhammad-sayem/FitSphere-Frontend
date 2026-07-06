@@ -6,7 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { PlusCircle } from "lucide-react";
 import { toast } from "sonner";
-import { productServices } from "@/services/product.services";
+import { createProductAction } from "@/actions/product.action";
 import {
   Dialog,
   DialogContent,
@@ -34,7 +34,7 @@ const CreateProductModal = ({ refetch }: CreateProductModalProps) => {
       remainingStock: number;
       image: string;
     }) => {
-      const res = await productServices.createProduct(payload as any);
+      const res = await createProductAction(payload as any);
       return res;
     },
   });

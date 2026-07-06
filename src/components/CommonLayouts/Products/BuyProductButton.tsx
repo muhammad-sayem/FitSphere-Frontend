@@ -7,16 +7,17 @@ import BuyProductModal from "./BuyProductModal";
 interface BuyProductButtonProps {
   isDisabled: boolean;
   productId: string;
+  productPrice: number;
   loggedInUser: any;
 }
 
-const BuyProductButton = ({ isDisabled, productId, loggedInUser }: BuyProductButtonProps) => {
+const BuyProductButton = ({ isDisabled, productId, productPrice, loggedInUser }: BuyProductButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const isButtonDisabled = 
-    isDisabled || 
-    !loggedInUser || 
-    loggedInUser.role === "TRAINER" || 
+  const isButtonDisabled =
+    isDisabled ||
+    !loggedInUser ||
+    loggedInUser.role === "TRAINER" ||
     loggedInUser.role === "ADMIN";
 
   return (
@@ -29,7 +30,12 @@ const BuyProductButton = ({ isDisabled, productId, loggedInUser }: BuyProductBut
         Buy Now
       </button>
 
-      <BuyProductModal isOpen={isOpen} setIsOpen={setIsOpen} productId={productId} />
+      <BuyProductModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        productId={productId}
+        productPrice={productPrice}
+      />
     </div>
   );
 };

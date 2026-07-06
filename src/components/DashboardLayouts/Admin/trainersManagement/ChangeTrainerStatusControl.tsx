@@ -4,7 +4,7 @@
 import Swal from "sweetalert2";
 import { useMutation } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { usersManagementServices } from "@/services/users-management.services";
+import { changeUserStatusAction } from "@/actions/user.action";
 
 interface ChangeStatusControlProps {
   currentStatus: string;
@@ -18,7 +18,13 @@ const ChangeTrainerStatusControl = ({ currentStatus, userId, onSuccessCallback }
 
   const { mutate, isPending } = useMutation({
     mutationFn: async () => {
-      const response = await usersManagementServices.changeUserStatus(userId, newStatus);
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling usersManagementServices.changeUserStatus directly from
+       * the client loses auth.
+       */
+      const response = await changeUserStatusAction(userId, newStatus);
       return response;
     },
 

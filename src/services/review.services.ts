@@ -34,7 +34,7 @@ export const reviewServices = {
   },
 
   getReviewsForTrainer: async (trainerId: string) => {
-    //* Guard: undefined trainerId diye backend call pathanor dorkar nei,
+
     //  karon URL "/reviews/trainer/undefined/reviews" 404 dibe. *//
     if (!trainerId) {
       return {

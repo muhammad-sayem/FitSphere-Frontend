@@ -7,7 +7,8 @@ import { format, isBefore, startOfDay } from "date-fns";
 import { useMutation } from "@tanstack/react-query";
 import { useForm } from "@tanstack/react-form";
 import { toast } from "sonner";
-import { ICreateSlotPayload, slotServices } from "@/services/slot.services";
+import { ICreateSlotPayload } from "@/services/slot.services";
+import { createSlotAction } from "@/actions/trainer.action";
 
 import {
   Dialog,
@@ -35,7 +36,12 @@ const CreateNewSlotModal = ({ refetch }: AddNewSlotModalProps) => {
 
   const { mutateAsync } = useMutation({
     mutationFn: async (payload: ICreateSlotPayload) => {
-      const response = await slotServices.createSlot(payload);
+      /*
+       * Route through a server action so the Cookie header can be attached
+       * server-side. The browser can't send httpOnly cookies cross-origin,
+       * so calling slotServices.createSlot directly from the client loses auth.
+       */
+      const response = await createSlotAction(payload);
       return response;
     },
   });

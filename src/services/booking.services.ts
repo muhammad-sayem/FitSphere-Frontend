@@ -9,7 +9,7 @@ export interface IBookingSlotPayload {
 export const bookingServices = {
   createBooking: async (payload: IBookingSlotPayload, options?: ApiRequestOptions) => {
     try {
-      const response = await httpClient.post("/bookings/create-booking", payload);
+      const response = await httpClient.post("/bookings/create-booking", payload, options);
       return response;
     }
 
