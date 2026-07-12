@@ -1,11 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import EditMyProfileButton from "@/components/shared/EditMyProfileButton";
 import { getMe } from "@/services/auth.services";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { User, Mail, Calendar, ShoppingBag, BookmarkCheck, CreditCard, Star, ShieldCheck, Activity } from "lucide-react";
 import Image from "next/image";
 
 const MyUserProfile = () => {
+  const queryClient = useQueryClient();
   const { data: myProfileResponse } = useQuery({
     queryKey: ["my-profile-user"],
     queryFn: () => getMe(),
@@ -15,6 +18,8 @@ const MyUserProfile = () => {
 
   const profile = myProfileResponse?.profile || {};
   const roleData = myProfileResponse?.roleData || {};
+
+  console.log("Me: ", profile)
 
   const stats = [
     {
@@ -64,11 +69,11 @@ const MyUserProfile = () => {
             <div className="relative w-28 h-28 rounded-2xl bg-neutral-50 flex items-center justify-center border-2 border-primary-01/30 p-1 overflow-hidden shrink-0 shadow-sm">
               {profile.image ? (
                 <Image
-                  width={100}
-                  height={100}
-                  src={profile.image}
-                  alt={profile.name}
-                  className="w-full h-full object-cover rounded-xl" />
+                width={100}
+                height={100}
+                src={profile.image}
+                alt={profile.name}
+                className="w-full h-full object-cover rounded-xl" />
               ) : (
                 <User className="w-14 h-14 text-secondary-01" />
               )}
@@ -95,16 +100,39 @@ const MyUserProfile = () => {
             </div>
           </div>
 
-          <div className="flex flex-row md:flex-col items-center gap-2 bg-neutral-50 border border-neutral-200 px-4 py-3 rounded-2xl md:text-right w-full md:w-auto justify-center">
-            <div className="text-xs text-secondary-01 font-bold uppercase tracking-wider">Account Status</div>
-            <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-200 text-xs font-black uppercase tracking-widest">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              {profile.status || "ACTIVE"}
+          <div className="flex flex-col items-stretch md:items-end gap-3 w-full md:w-auto">
+            <EditMyProfileButton
+              initialName={profile.name}
+              initialImage={profile.image}
+              onSaved={(savedName, savedImage) => {
+                queryClient.setQueryData(
+                  ["my-profile-user"],
+                  (previous: any) => {
+                    if (!previous) return previous;
+                    return {
+                      ...previous,
+                      profile: {
+                        ...(previous.profile || {}),
+                        name: savedName,
+                        image: savedImage,
+                      },
+                    };
+                  },
+                );
+              }}
+            />
+
+            <div className="flex flex-row md:flex-col items-center gap-2 bg-neutral-50 border border-neutral-200 px-4 py-3 rounded-2xl md:text-right w-full md:w-auto justify-center">
+              <div className="text-xs text-secondary-01 font-bold uppercase tracking-wider">Account Status</div>
+              <div className="flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-lg border border-emerald-200 text-xs font-black uppercase tracking-widest">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                {profile.status || "ACTIVE"}
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
+        <div className="grid grid-cols-2 min-[1025px]:grid-cols-4 gap-4 pt-6">
           {stats.map((stat, index) => {
             const Icon = stat.icon;
             return (

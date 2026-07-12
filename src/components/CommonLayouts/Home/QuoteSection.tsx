@@ -3,7 +3,7 @@ import QuoteSectionImage from "../../../../public/assets/quote section image.web
 
 const QuoteSection = () => {
   return (
-    <div className=" relative w-full min-h-120 md:min-h-125 flex items-center justify-center overflow-hidden mb-8 md:mb-16">
+    <div className=" relative w-full min-h-100 md:min-h-125 flex items-center justify-center overflow-hidden mb-8 md:mb-16">
       <Image
         src={QuoteSectionImage}
         alt="Quote Section Background"

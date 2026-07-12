@@ -1,3 +1,4 @@
+import CommonStats from "@/components/CommonLayouts/Home/CommonStats";
 import Gallery from "@/components/CommonLayouts/Home/Gallery";
 import HealthTips from "@/components/CommonLayouts/Home/HealthTips";
 import HeroSection from "@/components/CommonLayouts/Home/HeroSection";
@@ -19,13 +20,14 @@ export default async function Home() {
   console.log("Logged In User:", user);
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       <HeroSection />
       <HealthTips />
       <OurGoals />
+      <MostPopularTrainersMain />
       <QuoteSection />
       <WhyChooseFitSphere />
-      <MostPopularTrainersMain />
+      <CommonStats />
       <Gallery />
       <Footer />
     </div>

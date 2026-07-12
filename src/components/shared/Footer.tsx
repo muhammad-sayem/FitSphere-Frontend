@@ -21,16 +21,16 @@ const Footer = () => {
           <h3 className="text-lg font-bold tracking-wide">Quick Links</h3>
           <ul className="flex flex-col gap-2.5 text-sm text-gray-400">
             <li>
-              <a href="#" className="hover:text-primary-01 transition-colors">Trainers</a>
+              <a href="/trainers" className="hover:text-primary-01 transition-colors">Trainers</a>
             </li>
             <li>
-              <a href="#" className="hover:text-primary-01 transition-colors">Products</a>
+              <a href="/products" className="hover:text-primary-01 transition-colors">Products</a>
             </li>
             <li>
-              <a href="#" className="hover:text-primary-01 transition-colors">About Us</a>
+              <a href="/about-us" className="hover:text-primary-01 transition-colors">About Us</a>
             </li>
             <li>
-              <a href="#" className="hover:text-primary-01 transition-colors">BMI Calculator</a>
+              <a href="/bmi-calculator" className="hover:text-primary-01 transition-colors">BMI Calculator</a>
             </li>
           </ul>
         </div>
@@ -39,17 +39,41 @@ const Footer = () => {
           <h3 className="text-lg font-bold tracking-wide">Stay Connected</h3>
           <p className="text-sm text-gray-400">Stay connected with us for more updates</p>
           <div className="flex items-center gap-5 mt-2 text-white">
-            <a href="#" className="hover:text-primary-01 transition-colors">
-              <FaFacebookF className="w-5 h-5" />
+            <a
+              href="https://www.linkedin.com/in/md-shahrul-islam-sayem/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hover:text-primary-01 transition-colors"
+            >
+              <FaLinkedinIn className="w-5 h-5" />
             </a>
-            <a href="#" className="hover:text-primary-01 transition-colors">
+            <a
+              href="https://www.instagram.com/_muhammad_sayem/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="hover:text-primary-01 transition-colors"
+            >
               <FaInstagram className="w-5 h-5" />
             </a>
-            <a href="#" className="hover:text-primary-01 transition-colors">
-              <FaXTwitter className="w-5 h-5" />
+            <a
+              href="https://www.facebook.com/shahrulislam.sayem/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="hover:text-primary-01 transition-colors"
+            >
+              <FaFacebookF className="w-5 h-5" />
             </a>
-            <a href="#" className="hover:text-primary-01 transition-colors">
-              <FaLinkedinIn className="w-5 h-5" />
+            <a
+              href="https://x.com/IslamShahr98540"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X (Twitter)"
+              className="hover:text-primary-01 transition-colors"
+            >
+              <FaXTwitter className="w-5 h-5" />
             </a>
           </div>
         </div>

@@ -5,7 +5,7 @@ import { getAllUsersAction } from "@/actions/trainer.action";
 import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import { Search, ChevronLeft, ChevronRight, Filter } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, Filter, Loader2 } from "lucide-react";
 import { PaginationState } from "@tanstack/react-table";
 import ChangeUserStatusControl from "./ChangeUserStatusControl";
 import DeleteUserControl from "./DeleteUserControl";
@@ -51,7 +51,7 @@ const UsersManagement = () => {
     return params;
   }, [searchTerm, statusFilter, pagination]);
 
-  const { data: usersResponse, refetch } = useQuery({
+  const { data: usersResponse, refetch, isFetching } = useQuery({
     queryKey: ["admin-users-management", queryParams],
     queryFn: () =>
       getAllUsersAction(queryParams),
@@ -131,8 +131,8 @@ const UsersManagement = () => {
 
       {/* Table Section */}
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="w-full overflow-x-auto lg:overflow-x-visible">
-          <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-center border-collapse min-w-200 table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
                 <th className="px-3 py-4 lg:px-4 text-center w-14">Image</th>
@@ -145,6 +145,17 @@ const UsersManagement = () => {
             </thead>
 
             <tbody className="divide-y divide-secondary-01/10 text-xs lg:text-sm text-neutral-800 font-medium">
+              {isFetching ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-16 text-center">
+                    <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                      <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                      <span>Loading users...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : (
+                <>
               {users.map((user) => (
                 <tr key={user.id} className="hover:bg-neutral-50/40 transition-colors duration-150">
                   {/* Image Column */}
@@ -222,6 +233,8 @@ const UsersManagement = () => {
                     No users found
                   </td>
                 </tr>
+              )}
+                </>
               )}
             </tbody>
           </table>

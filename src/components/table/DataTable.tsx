@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ColumnDef, flexRender, getCoreRowModel, getSortedRowModel, PaginationState, SortingState, useReactTable } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, Loader2, MoreHorizontal } from "lucide-react";
 import { useEffect, useState, useMemo } from "react";
 import DataTableFilters, {
   DataTableFilterConfig,
@@ -159,15 +159,6 @@ const DataTable = <TData,>({
 
   return (
     <div className="relative">
-      {showLoadingOverlay && (
-        <div className="absolute inset-0 bg-background/50 backdrop-blur-sm z-10 flex items-center justify-center">
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary-01 border-t-transparent" />
-            <span className="text-lg font-bold text-primary-01">Loading...</span>
-          </div>
-        </div>
-      )}
-
       {(search || filters || toolbarAction) && (
         <div className="mb-4 flex flex-wrap items-start gap-3">
           {search && (
@@ -229,7 +220,16 @@ const DataTable = <TData,>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel()?.rows?.length ? (
+            {showLoadingOverlay ? (
+              <TableRow>
+                <TableCell colSpan={tableColumns.length} className="px-4 py-16 text-center">
+                  <div className="flex flex-col items-center justify-center gap-2 text-primary-01 font-semibold">
+                    <Loader2 className="w-8 h-8 animate-spin text-primary-01" />
+                    <span>Loading...</span>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel()?.rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (

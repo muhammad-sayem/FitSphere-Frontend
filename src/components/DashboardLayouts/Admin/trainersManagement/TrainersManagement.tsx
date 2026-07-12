@@ -138,8 +138,8 @@ const TrainersManagement = () => {
       </div>
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="w-full overflow-x-auto lg:overflow-x-visible">
-          <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-center border-collapse min-w-200 table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
                 <th className="px-3 py-4 lg:px-4 text-center w-14">Image</th>

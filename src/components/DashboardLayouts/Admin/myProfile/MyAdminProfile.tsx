@@ -1,24 +1,26 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import EditMyProfileButton from "@/components/shared/EditMyProfileButton";
 import { getMe } from "@/services/auth.services";
-import { useQuery } from "@tanstack/react-query";
-import { 
-  User, 
-  Mail, 
-  Calendar, 
-  BookmarkCheck, 
-  ShieldCheck, 
-  DollarSign, 
-  Users, 
-  ShoppingBag, 
-  CreditCard, 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  User,
+  Mail,
+  Calendar,
+  BookmarkCheck,
+  ShieldCheck,
+  DollarSign,
+  Users,
+  ShoppingBag,
+  CreditCard,
   TrendingUp,
   Activity
 } from "lucide-react";
 import Image from "next/image";
 
 const MyAdminProfile = () => {
+  const queryClient = useQueryClient();
   const { data: myProfileResponse } = useQuery({
     queryKey: ["my-profile-admin"],
     queryFn: () => getMe(),
@@ -120,11 +122,34 @@ const MyAdminProfile = () => {
             </div>
           </div>
 
-          <div className="flex flex-row md:flex-col items-center gap-2 bg-neutral-50 border border-neutral-200 px-4 py-3 rounded-2xl md:text-right w-full md:w-auto justify-center">
-            <div className="text-xs text-secondary-01 font-bold uppercase tracking-wider">System Status</div>
-            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-black uppercase tracking-widest bg-emerald-50 text-emerald-700 border-emerald-200">
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse bg-emerald-500"></span>
-              {profile.status || "ACTIVE"}
+          <div className="flex flex-col items-stretch md:items-end gap-3 w-full md:w-auto">
+            <EditMyProfileButton
+              initialName={profile.name}
+              initialImage={profile.image}
+              onSaved={(savedName, savedImage) => {
+                queryClient.setQueryData(
+                  ["my-profile-admin"],
+                  (previous: any) => {
+                    if (!previous) return previous;
+                    return {
+                      ...previous,
+                      profile: {
+                        ...(previous.profile || {}),
+                        name: savedName,
+                        image: savedImage,
+                      },
+                    };
+                  },
+                );
+              }}
+            />
+
+            <div className="flex flex-row md:flex-col items-center gap-2 bg-neutral-50 border border-neutral-200 px-4 py-3 rounded-2xl md:text-right w-full md:w-auto justify-center">
+              <div className="text-xs text-secondary-01 font-bold uppercase tracking-wider">System Status</div>
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-black uppercase tracking-widest bg-emerald-50 text-emerald-700 border-emerald-200">
+                <span className="w-1.5 h-1.5 rounded-full animate-pulse bg-emerald-500"></span>
+                {profile.status || "ACTIVE"}
+              </div>
             </div>
           </div>
         </div>

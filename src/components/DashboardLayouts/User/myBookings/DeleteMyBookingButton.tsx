@@ -76,7 +76,7 @@ const DeleteMyBookingButton = ({ bookingId, paymentStatus, refetch }: DeleteMyBo
       <button
         onClick={handleDeleteMyBooking}
         disabled={isPaid}
-        className={`flex justify-center items-center rounded-md h-8 w-2/3 p-0 text-white space-x-1 font-bold ${
+        className={`flex justify-center items-center rounded-md h-8 w-2/3 px-4 text-white space-x-1 font-bold ${
           isPaid 
             ? "bg-red-200 cursor-not-allowed" 
             : "bg-red-500 hover:bg-red-900 hover:text-white hover:cursor-pointer"

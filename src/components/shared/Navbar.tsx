@@ -11,7 +11,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import logo from "../../../public/assets/logo.png";
 import Image from "next/image";
 
-const linkClassName = "text-sm font-medium transition-colors";
+const linkClassName = "text-sm font-medium transition-colors whitespace-nowrap";
 
 const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
   const router = useRouter();
@@ -32,7 +32,9 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
     { label: "Products", href: "/products" },
     { label: "About Us", href: "/about-us" },
     { label: "BMI Calculator", href: "/bmi-calculator" },
-    { label: "Dashboard", href: dashboardHref || "/login" },
+    ...(loggedInUser && dashboardHref
+      ? [{ label: "Dashboard", href: dashboardHref }]
+      : []),
   ];
 
   const handleLogout = async () => {
@@ -52,7 +54,7 @@ const Navbar = ({ loggedInUser }: { loggedInUser: any}) => {
             className="h-25 w-25 object-contain" />
         </Link>
 
-        <nav className="hidden items-center gap-6 md:flex">
+        <nav className="hidden items-center gap-3 lg:gap-6 md:flex">
           {navItems.map((item) => (
             <Link 
               key={item.label} 

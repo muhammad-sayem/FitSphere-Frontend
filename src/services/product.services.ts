@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ApiRequestOptions, httpClient } from "@/lib/axios/httpClient";
 
 enum ProductCategories {

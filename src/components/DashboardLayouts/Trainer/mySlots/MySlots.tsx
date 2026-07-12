@@ -206,8 +206,8 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
       </div>
 
       <div className="bg-white border border-secondary-01/10 rounded-2xl shadow-sm overflow-hidden w-full">
-        <div className="w-full overflow-x-auto lg:overflow-x-visible">
-          <table className="w-full text-center border-collapse min-w-200 lg:min-w-full table-auto">
+        <div className="w-full overflow-x-auto">
+          <table className="w-full text-center border-collapse min-w-200 table-auto">
             <thead>
               <tr className="bg-neutral-50/80 border-b border-secondary-01/10 text-[11px] lg:text-xs font-black uppercase tracking-wider">
                 <th className="px-3 py-4 lg:px-4 text-center">
@@ -309,7 +309,8 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
           </table>
         </div>
 
-        <div className="px-4 py-4 lg:px-6 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4">
+        <div className="w-full overflow-x-auto">
+        <div className="px-4 py-4 lg:px-6 bg-neutral-50/50 border-t border-secondary-01/10 flex flex-col md:flex-row items-center justify-between gap-4 min-w-200">
           <div className="flex items-center gap-2">
             <button
               onClick={() => setPagination((prev) => ({ ...prev, pageIndex: Math.max(prev.pageIndex - 1, 0) }))}
@@ -375,6 +376,7 @@ const MySlots = ({ trainerId }: { trainerId: string }) => {
               Total {metaData.total} items, {metaData.totalPages || 1} pages
             </span>
           </div>
+        </div>
         </div>
       </div>
     </div>

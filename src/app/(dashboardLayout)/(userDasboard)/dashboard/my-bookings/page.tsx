@@ -1,9 +1,9 @@
 import MyBookings from "@/components/DashboardLayouts/User/myBookings/MyBookings";
 import { bookingServices } from "@/services/booking.services";
-import { userServices } from "@/services/user.services";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { userServices } from "@/services/user.services";
 
 const MyBookedSlots = async () => {
   const loggedInUser = await userServices.getLoggedInUser();
@@ -18,17 +18,16 @@ const MyBookedSlots = async () => {
     .join("; ");
 
   const queryClient = new QueryClient();
-  
+
   const initialQueryParams = {
     page: "1",
     limit: "10",
     sortBy: "slot.date",
     sortOrder: "desc",
   };
-  const initialFilters = {};
 
   await queryClient.prefetchQuery({
-    queryKey: ["my-bookings", loggedInUser.userId, initialQueryParams, initialFilters],
+    queryKey: ["my-bookings", initialQueryParams],
     queryFn: () =>
       bookingServices.getBookingsByUserId({
         headers: {
@@ -41,7 +40,7 @@ const MyBookedSlots = async () => {
   return (
     <div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <MyBookings initialUser={loggedInUser} />
+        <MyBookings />
       </HydrationBoundary>
     </div>
   );

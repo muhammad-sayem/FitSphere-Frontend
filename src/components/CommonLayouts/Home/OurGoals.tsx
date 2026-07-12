@@ -7,7 +7,7 @@ const OurGoals = () => {
     <div className="w-full max-w-7xl mx-auto mb-12 md:mb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 items-center">
         
-        <div className="w-full lg:w-1/2">
+        <div className="w-3/4 lg:w-1/2">
           <div className="text-center lg:text-left flex flex-col items-center lg:items-start">
             <h2 className="text-2xl sm:text-3xl font-black text-black tracking-wide uppercase mb-2">
               OUR <span className='text-primary-01'> GOALS </span>

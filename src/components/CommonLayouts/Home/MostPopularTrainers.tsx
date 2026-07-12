@@ -19,7 +19,7 @@ const MostPopularTrainers = () => {
 
   return (
     <div className="mx-auto w-9/10 mb-8 md:mb-16">
-      <div className="text-center mb-10 md:mb-14 px-4">
+      <div className="text-center mb-10 md:mb-10 px-4">
         <h2 className="text-2xl md:text-3xl font-black text-center tracking-wide uppercase">
           Most Popular <span className="text-primary-01"> Trainers </span>
         </h2>

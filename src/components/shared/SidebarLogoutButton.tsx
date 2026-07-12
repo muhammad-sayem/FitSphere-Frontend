@@ -13,12 +13,8 @@ const SidebarLogoutButton = () => {
     try {
       await logoutAction();
       queryClient.clear();
-      
-      router.push("/login");
-      
-      setTimeout(() => {
-        window.location.reload();
-      }, 100);
+
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
     }

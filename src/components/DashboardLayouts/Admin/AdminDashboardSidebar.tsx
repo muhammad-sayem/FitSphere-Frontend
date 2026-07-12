@@ -17,7 +17,7 @@ const AdminDashboardSidebar = () => {
 
   return (
     <div className="rounded-2xl border h-full bg-background p-4">
-      <h2 className="mb-4 text-lg font-semibold text-foreground">User Dashboard</h2>
+      <h2 className="mb-4 text-lg font-semibold text-foreground">Admin Dashboard</h2>
 
       {
         sidebarMenus.map((menu) => {

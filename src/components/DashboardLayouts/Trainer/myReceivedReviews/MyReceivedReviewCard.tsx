@@ -44,7 +44,7 @@ const MyReceivedReviewCard = ({ review }: { review: IRecievedReviewData }) => {
                   />
                 )}
               </div>
-              <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 flex items-center gap-0.5 bg-primary-01 text-white px-1 sm:px-1.5 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-black shadow-sm">
+              <div className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 flex items-center gap-0.5 bg-black text-primary-01 border border-primary-01 px-1 sm:px-1.5 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-bold shadow-sm">
                 <span>★</span>
                 <span>{review.rating.toFixed(1)}</span>
               </div>
@@ -54,7 +54,7 @@ const MyReceivedReviewCard = ({ review }: { review: IRecievedReviewData }) => {
               <h3 className="text-black font-black text-sm sm:text-base tracking-tight group-hover:text-primary-01 transition-colors duration-200 truncate">
                 {review.user.name}
               </h3>
-              <span className="inline-block bg-primary-02 text-primary-01 text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-md mt-0.5">
+              <span className="inline-block border border-primary-01 text-primary-01 text-[10px] sm:text-[11px] font-bold px-2 sm:px-2.5 py-0.5 rounded-full mt-0.5">
                 Client
               </span>
             </div>
@@ -71,7 +71,7 @@ const MyReceivedReviewCard = ({ review }: { review: IRecievedReviewData }) => {
 
       <div className="mt-1 sm:mt-2 pt-2 sm:pt-3 border-t border-dashed border-secondary-01/20 flex items-center justify-between text-[11px] sm:text-xs text-secondary-01 font-semibold gap-2">
         <div className="flex items-center gap-1 min-w-0">
-          <span className="w-1.5 h-1.5 rounded-full bg-secondary-01/60 shrink-0" />
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
           <span className="truncate max-w-30 sm:max-w-45 md:max-w-50">{review.user.email}</span>
         </div>
         <span className="bg-neutral-100 px-1.5 sm:px-2 py-0.5 rounded text-neutral-600 font-medium shrink-0">{formattedDate}</span>

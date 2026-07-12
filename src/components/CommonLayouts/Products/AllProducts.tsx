@@ -112,21 +112,21 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
   const isFiltered = searchTerm || selectedCategory || minPrice || maxPrice || sortBy !== "name";
 
   return (
-    <div className="max-w-7xl mx-auto px-4">
-      <h1 className="text-2xl md:text-4xl font-black mb-4 text-center">All <span className="text-primary-01"> Products </span> </h1>
+    <div className="max-w-7xl mx-auto px-3 py-4 sm:px-4 sm:py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-4 sm:mb-6 md:mb-8 text-center">All <span className="text-primary-01"> Products </span> </h1>
 
-      <div className="bg-slate-50 rounded-xl p-4 mb-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-center">
-          <div className="relative lg:col-span-1">
+      <div className="bg-slate-50 border rounded-xl p-3 mb-5 sm:p-4 sm:mb-6 md:p-5 md:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 items-center">
+          <div className="relative">
             <input
               type="text"
               placeholder="Search by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs text-slate-800 transition-all"
+              className="w-full pl-9 pr-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs sm:text-sm text-slate-800 transition-all"
             />
-            <div className="absolute left-3 top-2.5 text-slate-400">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-3.5 h-3.5">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.604 10.604z" />
               </svg>
             </div>
@@ -136,7 +136,7 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs text-slate-700 transition-all"
+              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs sm:text-sm text-slate-700 transition-all"
             >
               <option value="name">Sort by: Alphabetical</option>
               <option value="priceDesc">Sort by: Price (High-Low)</option>
@@ -150,7 +150,7 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-2 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs text-slate-700 transition-all"
+              className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs sm:text-sm text-slate-700 transition-all"
             >
               <option value="">All Categories</option>
               {Object.values(ProductCategories).map((cat) => (
@@ -167,14 +167,14 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
               placeholder="Min Price"
               value={minPrice}
               onChange={(e) => setMinPrice(e.target.value)}
-              className="w-1/2 px-2 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs transition-all"
+              className="w-1/2 px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs sm:text-sm transition-all"
             />
             <input
               type="number"
               placeholder="Max Price"
               value={maxPrice}
               onChange={(e) => setMaxPrice(e.target.value)}
-              className="w-1/2 px-2 py-1.5 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs transition-all"
+              className="w-1/2 px-3 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-slate-500 text-xs sm:text-sm transition-all"
             />
           </div>
 
@@ -182,9 +182,9 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
             {isFiltered && (
               <button
                 onClick={handleClearFilters}
-                className="w-full py-1.5 px-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs transition-all flex items-center justify-center gap-1.5"
+                className="w-full py-2 px-3 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-lg text-xs sm:text-sm transition-all flex items-center justify-center gap-1.5"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-4 h-4">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
                 Clear Filters
@@ -200,10 +200,10 @@ const AllProducts = ({ loggedInUser }: { loggedInUser: any }) => {
         </div>
       ) : products.length === 0 ? (
         <div className="text-center py-10 bg-white border border-dashed border-slate-200 rounded-xl">
-          <p className="text-slate-400 text-xs">No products match your matching filters.</p>
+          <p className="text-slate-400 text-xs sm:text-sm">No products match your matching filters.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
           {products.map((product: IProductProps) => (
             <ProductCard
               key={product.id}

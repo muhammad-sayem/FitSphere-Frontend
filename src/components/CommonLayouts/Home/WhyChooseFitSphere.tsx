@@ -4,31 +4,32 @@ import whyChooseFitSphereImage from "../../../../public/assets/why choose fit sp
 
 const WhyChooseFitSphere = () => {
   return (
-    <section className="w-11/12 xl:w-9/10 mx-auto py-12 md:py-16 lg:py-20">
+    <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20 overflow-hidden">
       <style
         dangerouslySetInnerHTML={{
           __html: `
             @keyframes runningMotion {
               0%, 100% {
-                transform: translateY(0) translateX(0);
+                transform: translateY(0);
               }
               50% {
-                transform: translateY(-12px) translateX(12px);
+                transform: translateY(-12px);
               }
             }
 
             .running-animation {
               animation: runningMotion 2s infinite ease-in-out;
+              will-change: transform;
             }
           `,
         }}
       />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 xl:gap-12 items-center">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-8 xl:gap-12 items-center">
         {/* Left Side Image */}
         <div
           data-aos="zoom-out-right"
-          className="relative w-full flex items-center justify-center"
+          className="relative w-full flex items-center justify-center overflow-hidden order-2 lg:order-1"
         >
           <div
             className="absolute inset-0 bg-primary-01"
@@ -38,12 +39,13 @@ const WhyChooseFitSphere = () => {
             }}
           />
 
-          <div className="relative z-10 w-full h-85 sm:h-110 md:h-135 lg:h-150 xl:h-175 running-animation">
+          <div className="relative z-10 w-full max-w-md sm:max-w-lg lg:max-w-none mx-auto aspect-square sm:aspect-4/5 lg:aspect-square running-animation">
             <Image
               src={whyChooseFitSphereImage}
               alt="Why Choose FitSphere"
               fill
               priority
+              sizes="(max-width: 1024px) 90vw, 45vw"
               className="object-contain"
             />
           </div>
@@ -52,7 +54,7 @@ const WhyChooseFitSphere = () => {
         {/* Right Side Content */}
         <div
           data-aos="zoom-out-left"
-          className="flex flex-col justify-center"
+          className="flex flex-col justify-center order-1 lg:order-2"
         >
           <div className="mb-8 text-center lg:text-left">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black uppercase tracking-wide text-black">

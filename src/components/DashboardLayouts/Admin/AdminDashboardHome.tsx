@@ -3,32 +3,11 @@
 
 import { statServices } from "@/services/stat.services";
 import { useQuery } from "@tanstack/react-query";
-import { 
-  Users, 
-  UserCheck, 
-  ShoppingBag, 
-  DollarSign,
-  Package,
-  CalendarCheck2,
-  Star,
-  CreditCard
+import {
+  Users, UserCheck, ShoppingBag, DollarSign, Package, CalendarCheck2, Star, CreditCard
 } from "lucide-react";
-import { 
-  Pie, 
-  PieChart, 
-  PieLabelRenderProps, 
-  PieSectorShapeProps, 
-  Sector,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  BarShapeProps,
-  LabelList,
-  LabelProps,
-  Tooltip,
-  Label
+import {
+  Pie, PieChart, PieLabelRenderProps, PieSectorShapeProps, Sector, BarChart, Bar, XAxis, YAxis, CartesianGrid, BarShapeProps, LabelList, LabelProps, Tooltip, Label
 } from 'recharts';
 import { RechartsDevtools } from '@recharts/devtools';
 
@@ -162,8 +141,8 @@ const AdminDashboardHome = () => {
     {
       id: "revenue",
       title: "Total Revenue",
-      value: dashboardData?.totalRevenue !== undefined 
-        ? `$${dashboardData.totalRevenue}` 
+      value: dashboardData?.totalRevenue !== undefined
+        ? `$${dashboardData.totalRevenue}`
         : "$0",
       icon: DollarSign,
       iconColor: "text-purple-600",
@@ -193,7 +172,7 @@ const AdminDashboardHome = () => {
           <div className="h-8 bg-gray-200 rounded w-1/4"></div>
           <div className="h-4 bg-gray-200 rounded w-1/3"></div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 min-[1025px]:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
             <div key={i} className="h-32 bg-gray-100 rounded-2xl border border-gray-200"></div>
           ))}
@@ -213,24 +192,24 @@ const AdminDashboardHome = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
         {stats.map((item) => {
           const IconComponent = item.icon;
           return (
             <div
               key={item.id}
-              className={`${item.cardBg} ${item.borderColor} p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between group relative overflow-hidden`}
+              className={`${item.cardBg} ${item.borderColor} p-4 sm:p-5 lg:p-6 rounded-2xl border shadow-sm hover:shadow-md transition-all duration-300 flex items-center justify-between group relative overflow-hidden min-w-0`}
             >
-              <div className="space-y-2.5 relative z-10">
-                <span className="text-xs font-bold text-gray-500/80 uppercase tracking-wider block">
+              <div className="space-y-1.5 sm:space-y-2.5 relative z-10 min-w-0">
+                <span className="text-[10px] sm:text-xs font-bold text-gray-500/80 uppercase tracking-wider block truncate">
                   {item.title}
                 </span>
-                <span className="text-2xl md:text-3xl font-extrabold text-gray-900 block tracking-tight">
+                <span className="text-xl sm:text-2xl md:text-3xl font-extrabold text-gray-900 block tracking-tight truncate">
                   {item.value}
                 </span>
               </div>
-              
-              <div className="p-3 rounded-xl bg-white shadow-sm border border-white/60 relative z-10 transition-transform group-hover:scale-105 duration-300">
+
+              <div className="p-2.5 sm:p-3 rounded-xl bg-white shadow-sm border border-white/60 relative z-10 transition-transform group-hover:scale-105 duration-300 shrink-0">
                 <IconComponent className={`w-5 h-5 ${item.iconColor}`} strokeWidth={2.5} />
               </div>
             </div>
