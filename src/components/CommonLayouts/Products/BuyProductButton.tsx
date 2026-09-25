@@ -8,10 +8,11 @@ interface BuyProductButtonProps {
   isDisabled: boolean;
   productId: string;
   productPrice: number;
+  remainingStock: number;
   loggedInUser: any;
 }
 
-const BuyProductButton = ({ isDisabled, productId, productPrice, loggedInUser }: BuyProductButtonProps) => {
+const BuyProductButton = ({ isDisabled, productId, productPrice, remainingStock, loggedInUser }: BuyProductButtonProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const isButtonDisabled =
@@ -35,6 +36,7 @@ const BuyProductButton = ({ isDisabled, productId, productPrice, loggedInUser }:
         setIsOpen={setIsOpen}
         productId={productId}
         productPrice={productPrice}
+        remainingStock={remainingStock}
       />
     </div>
   );

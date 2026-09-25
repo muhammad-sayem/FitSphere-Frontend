@@ -10,6 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreditCard, ShoppingBag } from "lucide-react";
+import { toast } from "sonner";
 import { createOrderAction } from "@/actions/order.action";
 
 interface BuyProductModalProps {
@@ -17,10 +18,11 @@ interface BuyProductModalProps {
   setIsOpen: (open: boolean) => void;
   productId: string;
   productPrice: number;
+  remainingStock: number;
 }
 
-const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProductModalProps) => {
-  const [quantity, setQuantity] = useState<number>(1);
+const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice, remainingStock }: BuyProductModalProps) => {
+  const [quantity, setQuantity] = useState<number | "">(1);
   const [address, setAddress] = useState<string>("");
   const [phone, setPhone] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -28,7 +30,7 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProd
   const [showPaymentStep, setShowPaymentStep] = useState<boolean>(false);
   const [serverTotalAmount, setServerTotalAmount] = useState<number | null>(null);
 
-  const totalAmount = serverTotalAmount ?? productPrice * quantity;
+  const totalAmount = serverTotalAmount ?? productPrice * (quantity || 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +39,7 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProd
     try {
       const payload = {
         productId,
-        quantity,
+        quantity: quantity || 0,
         address,
         phone,
       };
@@ -119,9 +121,25 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProd
                 <input
                   type="number"
                   min="1"
+                    max={remainingStock}
                   required
                   value={quantity}
-                  onChange={(e) => setQuantity(Number(e.target.value))}
+                    onChange={(e) => {
+                        if (e.target.value === "") {
+                          setQuantity("");
+                          return;
+                        }
+
+                        const nextQuantity = Number(e.target.value);
+
+                      if (nextQuantity > remainingStock) {
+                        toast.error(`Only ${remainingStock} units available.`, { position: "top-center" });
+                        setQuantity(remainingStock);
+                        return;
+                      }
+
+                      setQuantity(nextQuantity);
+                    }}
                   className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-primary-01 transition-colors"
                 />
               </div>
@@ -144,10 +162,12 @@ const BuyProductModal = ({ isOpen, setIsOpen, productId, productPrice }: BuyProd
                   Phone
                 </label>
                 <input
-                  type="tel"
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={10}
                   required
                   value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, "").slice(0, 10))}
                   className="w-full px-3 py-2 text-sm border border-neutral-200 rounded-xl focus:outline-none focus:border-primary-01 transition-colors"
                 />
               </div>

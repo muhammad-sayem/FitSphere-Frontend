@@ -64,6 +64,7 @@ const ProductCard = ({ product, loggedInUser }: { product: IProductProps; logged
               key={product.id}
               productId={product.id}
               productPrice={product.price}
+              remainingStock={product.remainingStock}
               isDisabled={product.remainingStock === 0}
               loggedInUser={loggedInUser}
             />

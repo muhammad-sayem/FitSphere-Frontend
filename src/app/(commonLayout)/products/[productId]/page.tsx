@@ -127,6 +127,7 @@ const ProductDetails = async ({ params }: { params: Promise<{ productId: string 
                   isDisabled={product.remainingStock === 0}
                   productId={product.id}
                   productPrice={product.price}
+                  remainingStock={product.remainingStock}
                   loggedInUser={loggedInUser}
                 />
 
